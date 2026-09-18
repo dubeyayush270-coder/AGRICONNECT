@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AgriConnect - Register</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<div class="login-container">
+
+    <div class="login-card">
+
+
+        <h1>AgriConnect</h1>
+
+        <p class="subtitle">
+            Create Your Account
+        </p>
+
+
+        <!-- ========================================= -->
+        <!-- STEP 1 : BASIC INFORMATION -->
+        <!-- ========================================= -->
+
+        {% if not selected_state %}
+
+
+        <form
+            action="/register"
+            method="POST"
+        >
+
+            <input
+                type="hidden"
+                name="step"
+                value="state"
+            >
+
+
+            <!-- NAME -->
+
+            <div class="input-group">
+
+                <label for="name">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="input-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="input-group">
+
+                <label for="phone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter 10 digit phone number"
+                    maxlength="10"
+                    pattern="[0-9]{10}"
+                    required
+                >
+
+            </div>
+
+
+            <!-- ROLE -->
+
+            <div class="input-group">
+
+                <label for="role">
+                    Register As
+                </label>
+
+
+                <select
+                    id="role"
+                    name="role"
+                    required
+                >
+
+                    <option
+                        value=""
+                        disabled
+                        selected
+                    >
+                        Select your role
+                    </option>
+
+
+                    <option value="farmer">
+                        Farmer
+                    </option>
+
+
+                    <option value="Logistics">
+                        Logistics Provider
+                    </option>
+
+
+                    <option value="buyer">
+                        Buyer
+                    </option>
+
+
+                    <option value="Admin">
+                        Admin
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- STATE -->
+
+            <div class="input-group">
+
+                <label for="state">
+                    State
+                </label>
+
+
+                <select
+                    id="state"
+                    name="state"
+                    required
+                >
+
+                    <option
+                        value=""
+                        disabled
+                        selected
+                    >
+                        Select your state
+                    </option>
+
+
+                    {% for state in states %}
+
+                    <option value="{{ state }}">
+                        {{ state }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <button type="submit">
+
+                Continue
+
+            </button>
+
+
+            {% if message %}
+
+                <p>{{ message }}</p>
+
+            {% endif %}
+
+
+        </form>
+
+
+        <!-- ========================================= -->
+        <!-- STEP 2 : DISTRICT -->
+        <!-- ========================================= -->
+
+
+        {% elif selected_state and not selected_district %}
+
+
+        <form
+            action="/register"
+            method="POST"
+        >
+
+            <input
+                type="hidden"
+                name="step"
+                value="district"
+            >
+
+
+            <div class="input-group">
+
+                <label>
+                    Selected State
+                </label>
+
+
+                <input
+                    type="text"
+                    value="{{ selected_state }}"
+                    readonly
+                >
+
+            </div>
+
+
+            <!-- DISTRICT -->
+
+            <div class="input-group">
+
+                <label for="district">
+                    District
+                </label>
+
+
+                <select
+                    id="district"
+                    name="district"
+                    required
+                >
+
+                    <option
+                        value=""
+                        disabled
+                        selected
+                    >
+                        Select your district
+                    </option>
+
+
+                    {% for district in districts %}
+
+                    <option value="{{ district }}">
+
+                        {{ district }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <button type="submit">
+
+                Continue
+
+            </button>
+
+
+        </form>
+
+
+        <!-- ========================================= -->
+        <!-- STEP 3 : MARKET + PASSWORD -->
+        <!-- ========================================= -->
+
+
+        {% else %}
+
+
+        <form
+            action="/register"
+            method="POST"
+            onsubmit="this.querySelector('button[type=submit]').disabled = true;"
+        >
+
+            <input
+                type="hidden"
+                name="step"
+                value="register"
+            >
+
+
+            <!-- STATE -->
+
+            <div class="input-group">
+
+                <label>
+                    State
+                </label>
+
+
+                <input
+                    type="text"
+                    value="{{ selected_state }}"
+                    readonly
+                >
+
+            </div>
+
+
+            <!-- DISTRICT -->
+
+            <div class="input-group">
+
+                <label>
+                    District
+                </label>
+
+
+                <input
+                    type="text"
+                    value="{{ selected_district }}"
+                    readonly
+                >
+
+            </div>
+
+
+            <!-- MARKET -->
+
+            <div class="input-group">
+
+                <label for="market">
+                    Mandi / Market
+                </label>
+
+
+                <select
+                    id="market"
+                    name="market"
+                    required
+                >
+
+                    <option
+                        value=""
+                        disabled
+                        selected
+                    >
+                        Select your mandi / market
+                    </option>
+
+
+                    {% for market in markets %}
+
+                    <option value="{{ market }}">
+
+                        {{ market }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="input-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    required
+                >
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="input-group">
+
+                <label for="confirm_password">
+                    Confirm Password
+                </label>
+
+
+                <input
+                    type="password"
+                    id="confirm_password"
+                    name="confirm_password"
+                    placeholder="Confirm your password"
+                    required
+                >
+
+            </div>
+
+
+            <button type="submit">
+
+                Register
+
+            </button>
+
+
+            {% if message %}
+
+                <p>{{ message }}</p>
+
+            {% endif %}
+
+
+        </form>
+
+
+        {% endif %}
+
+
+        <p class="register-text">
+
+            Already have an account?
+
+            <a href="/">
+                Login
+            </a>
+
+        </p>
+
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

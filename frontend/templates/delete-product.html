@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Delete Product</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="delete-product-page">
+
+        <div class="delete-product-container">
+
+            <h1>Select Product to Delete</h1>
+
+            <p class="delete-subtitle">
+                Select the product you want to remove from your listings.
+            </p>
+
+
+            {% if products %}
+
+                <form action="/delete-product" method="POST">
+
+                    <div class="delete-product-list">
+
+                        {% for product in products %}
+
+                            <label class="delete-product-card">
+
+                                <input
+                                    type="radio"
+                                    name="product_id"
+                                    value="{{ product['product_id'] }}"
+                                    required
+                                >
+
+                                <div class="delete-product-info">
+
+                                    <h2>
+                                        {{ product["crop_name"] }}
+                                    </h2>
+
+                                    <p>
+                                        <strong>Quantity:</strong>
+                                        {{ product["quantity"] }} kg
+                                    </p>
+
+                                    <p>
+                                        <strong>Quality:</strong>
+                                        {{ product["quality"] }}
+                                    </p>
+
+                                    <p>
+                                        <strong>Price:</strong>
+                                        ₹{{ product["price_per_kg"] }}/kg
+                                    </p>
+
+                                    <p>
+                                        <strong>Location:</strong>
+                                        {{ product["district"] }},
+                                        {{ product["state"] }}
+                                    </p>
+
+                                </div>
+
+                            </label>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <button type="submit" class="delete-selected-btn">
+                        Delete Selected Product
+                    </button>
+
+                </form>
+
+            {% else %}
+
+                <div class="no-products-delete">
+
+                    <h2>No Products to Delete</h2>
+
+                    <p>
+                        You currently have no listed products.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+            <a href="/my-products" class="back-products-link">
+                ← Back to My Products
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

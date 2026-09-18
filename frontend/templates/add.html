@@ -1,0 +1,1103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Product - AgriConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f4;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #2e7d32;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+            margin-top: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2e7d32;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .row .field {
+            flex: 1;
+        }
+
+        .readonly {
+            background: #eeeeee;
+        }
+
+        .location-status {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #2e7d32;
+        }
+
+        .error {
+            color: #d32f2f;
+        }
+
+        .info {
+            color: #555;
+        }
+
+        .gps-section {
+            margin: 15px 0;
+        }
+
+        .gps-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            border: none;
+            border-radius: 7px;
+            background: #1565c0;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .gps-btn:hover:not(:disabled) {
+            background: #0d47a1;
+        }
+
+        .gps-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        .gps-status {
+            margin: 8px 0 0;
+            font-size: 14px;
+        }
+
+        #map {
+            width: 100%;
+            height: 400px;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .coordinates {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 6px;
+        }
+
+        .coordinates p {
+            margin: 5px 0;
+        }
+
+        .map-help {
+            margin-top: 10px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 13px;
+            border: none;
+            border-radius: 7px;
+            background: #2e7d32;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover:not(:disabled) {
+            background: #256628;
+        }
+
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 20px;
+            background: #fff3cd;
+            color: #856404;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 700px) {
+            .row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>List Your Product</h1>
+
+    {% if message %}
+        <div class="message">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <form
+        id="productForm"
+        action="/add-product"
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        <!-- ================= PRODUCT DETAILS ================= -->
+
+        <h2>Product Details</h2>
+
+        <label for="crop_name">Crop Name</label>
+        <input
+            type="text"
+            id="crop_name"
+            name="crop_name"
+            placeholder="Enter crop name"
+            required
+        >
+
+        <div class="row">
+
+            <div class="field">
+                <label for="quantity">Quantity (kg)</label>
+                <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="Enter quantity"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="quality">Quality</label>
+                <select id="quality" name="quality" required>
+                    <option value="">Select Quality</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="Premium">Premium</option>
+                </select>
+            </div>
+
+        </div>
+
+        <label for="price_per_kg">Price per Kg (₹)</label>
+        <input
+            type="number"
+            id="price_per_kg"
+            name="price_per_kg"
+            min="0.01"
+            step="0.01"
+            placeholder="Enter price per kg"
+            required
+        >
+
+        <label for="product_image">Product Image</label>
+        <input
+            type="file"
+            id="product_image"
+            name="product_image"
+            accept="image/*"
+        >
+
+        <label for="description">Product Description</label>
+        <textarea
+            id="description"
+            name="description"
+            placeholder="Enter product details..."
+        ></textarea>
+
+
+        <!-- ================= PICKUP ADDRESS ================= -->
+
+        <h2>Pickup Address</h2>
+
+        <label for="pickup_house_no">House / Plot No.</label>
+        <input
+            type="text"
+            id="pickup_house_no"
+            name="pickup_house_no"
+            placeholder="Enter house or plot number"
+            required
+        >
+
+        <label for="pickup_street">Street / Locality</label>
+        <input
+            type="text"
+            id="pickup_street"
+            name="pickup_street"
+            placeholder="Enter street or locality"
+            required
+        >
+
+        <label for="pickup_village_city">Village / City</label>
+        <input
+            type="text"
+            id="pickup_village_city"
+            name="pickup_village_city"
+            placeholder="Enter village or city"
+            required
+        >
+
+        <label for="pickup_pincode">Pincode</label>
+        <input
+            type="text"
+            id="pickup_pincode"
+            name="pickup_pincode"
+            maxlength="6"
+            inputmode="numeric"
+            placeholder="Enter 6-digit pincode"
+            required
+        >
+
+        <div
+            id="pincode_status"
+            class="location-status info"
+        >
+            Enter pincode to locate the pickup area.
+        </div>
+
+        <div class="row">
+
+            <div class="field">
+                <label for="pickup_state">State</label>
+
+                <input
+                    type="text"
+                    id="pickup_state"
+                    name="pickup_state"
+                    class="readonly"
+                    readonly
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="pickup_district">District</label>
+
+                <input
+                    type="text"
+                    id="pickup_district"
+                    name="pickup_district"
+                    class="readonly"
+                    readonly
+                    required
+                >
+            </div>
+
+        </div>
+
+
+        <!-- ================= MAP ================= -->
+
+        <h2>Pickup Location</h2>
+
+        <p class="map-help">
+            Enter your pincode first. The map will move to the
+            pincode area. You can also use your current GPS location.
+            Then drag the marker or click on the map to select your
+            exact pickup location.
+        </p>
+
+        <div class="gps-section">
+            <button
+                type="button"
+                id="useGpsBtn"
+                class="gps-btn"
+            >
+                📍 Use Current Location
+            </button>
+
+            <p
+                id="gpsStatus"
+                class="gps-status info"
+            >
+                GPS se apni current location automatically select karein.
+            </p>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="coordinates">
+
+            <p>
+                <strong>Latitude:</strong>
+                <span id="latitude_text">Not confirmed</span>
+            </p>
+
+            <p>
+                <strong>Longitude:</strong>
+                <span id="longitude_text">Not confirmed</span>
+            </p>
+
+        </div>
+
+
+        <!-- Hidden coordinates sent to Flask -->
+
+        <input
+            type="hidden"
+            name="pickup_latitude"
+            id="pickup_latitude"
+        >
+
+        <input
+            type="hidden"
+            name="pickup_longitude"
+            id="pickup_longitude"
+        >
+
+
+        <!-- ================= SUBMIT ================= -->
+
+        <button
+            type="submit"
+            id="submitBtn"
+            disabled
+        >
+            Select Pickup Location First
+        </button>
+
+    </form>
+
+</div>
+
+
+<script>
+
+    // =========================================================
+    // ELEMENTS
+    // =========================================================
+
+    const form =
+        document.getElementById("productForm");
+
+    const pincodeInput =
+        document.getElementById("pickup_pincode");
+
+    const stateInput =
+        document.getElementById("pickup_state");
+
+    const districtInput =
+        document.getElementById("pickup_district");
+
+    const statusText =
+        document.getElementById("pincode_status");
+
+    const latitudeInput =
+        document.getElementById("pickup_latitude");
+
+    const longitudeInput =
+        document.getElementById("pickup_longitude");
+
+    const latitudeText =
+        document.getElementById("latitude_text");
+
+    const longitudeText =
+        document.getElementById("longitude_text");
+
+    const submitBtn =
+        document.getElementById("submitBtn");
+
+    const useGpsBtn =
+        document.getElementById("useGpsBtn");
+
+    const gpsStatus =
+        document.getElementById("gpsStatus");
+
+
+    // =========================================================
+    // MAP VARIABLES
+    // =========================================================
+
+    let map;
+    let marker;
+
+    const defaultCenter = {
+        lat: 22.7196,
+        lng: 75.8577
+    };
+
+
+    // =========================================================
+    // INITIALIZE GOOGLE MAP
+    // =========================================================
+
+    function initMap() {
+
+        map = new google.maps.Map(
+            document.getElementById("map"),
+            {
+                center: defaultCenter,
+                zoom: 10,
+
+                mapTypeControl: true,
+
+                streetViewControl: false,
+
+                fullscreenControl: true
+            }
+        );
+
+
+        marker = new google.maps.Marker({
+
+            position: defaultCenter,
+
+            map: map,
+
+            draggable: true,
+
+            title: "Pickup Location"
+        });
+
+
+        // When marker is dragged
+
+        marker.addListener(
+            "dragend",
+            function () {
+
+                const position =
+                    marker.getPosition();
+
+                setCoordinates(
+                    position.lat(),
+                    position.lng()
+                );
+            }
+        );
+
+
+        // User can click directly on map
+
+        map.addListener(
+            "click",
+            function (event) {
+
+                setMarkerLocation(
+                    event.latLng.lat(),
+                    event.latLng.lng()
+                );
+            }
+        );
+    }
+
+
+    // =========================================================
+    // SET MARKER LOCATION
+    // =========================================================
+
+    function setMarkerLocation(latitude, longitude) {
+
+        marker.setPosition({
+            lat: latitude,
+            lng: longitude
+        });
+
+        map.panTo({
+            lat: latitude,
+            lng: longitude
+        });
+
+        setCoordinates(
+            latitude,
+            longitude
+        );
+    }
+
+
+    // =========================================================
+    // SAVE COORDINATES
+    // =========================================================
+
+    function setCoordinates(latitude, longitude) {
+
+        latitudeInput.value =
+            latitude.toFixed(7);
+
+        longitudeInput.value =
+            longitude.toFixed(7);
+
+
+        latitudeText.textContent =
+            latitude.toFixed(7);
+
+        longitudeText.textContent =
+            longitude.toFixed(7);
+
+
+        submitBtn.disabled = false;
+
+        submitBtn.textContent =
+            "List Product";
+
+
+        statusText.textContent =
+            "Pickup location selected ✓";
+
+        statusText.className =
+            "location-status success";
+    }
+
+
+    // =========================================================
+    // RESET LOCATION
+    // =========================================================
+
+    function resetLocation() {
+
+        latitudeInput.value = "";
+
+        longitudeInput.value = "";
+
+        latitudeText.textContent =
+            "Not confirmed";
+
+        longitudeText.textContent =
+            "Not confirmed";
+
+        submitBtn.disabled = true;
+
+        submitBtn.textContent =
+            "Select Pickup Location First";
+    }
+
+
+    // =========================================================
+    // PINCODE INPUT
+    // =========================================================
+
+    pincodeInput.addEventListener(
+        "input",
+        function () {
+
+            // Allow only numbers
+
+            this.value =
+                this.value.replace(/\D/g, "");
+
+
+            // Reset old location
+
+            resetLocation();
+
+
+            stateInput.value = "";
+
+            districtInput.value = "";
+
+
+            if (this.value.length < 6) {
+
+                statusText.textContent =
+                    "Enter a valid 6-digit pincode.";
+
+                statusText.className =
+                    "location-status info";
+
+                return;
+            }
+
+
+            const pincode =
+                this.value;
+
+
+            statusText.textContent =
+                "Finding pincode area...";
+
+            statusText.className =
+                "location-status info";
+
+
+            // =================================================
+            // POSTAL PINCODE API
+            // =================================================
+
+            fetch(
+                "https://api.postalpincode.in/pincode/"
+                + pincode
+            )
+
+            .then(function(response) {
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Pincode API error"
+                    );
+                }
+
+                return response.json();
+            })
+
+            .then(function(data) {
+
+                if (
+                    !data ||
+                    !data[0] ||
+                    data[0].Status !== "Success" ||
+                    !data[0].PostOffice ||
+                    data[0].PostOffice.length === 0
+                ) {
+
+                    throw new Error(
+                        "Invalid pincode"
+                    );
+                }
+
+
+                const postOffice =
+                    data[0].PostOffice[0];
+
+
+                // Fill State
+
+                stateInput.value =
+                    postOffice.State || "";
+
+
+                // Fill District
+
+                districtInput.value =
+                    postOffice.District || "";
+
+
+                statusText.textContent =
+                    "Pincode found. Locating area on map...";
+
+                statusText.className =
+                    "location-status info";
+
+
+                // Move Google Map
+
+                moveMapToPincode(
+                    pincode,
+                    postOffice.District,
+                    postOffice.State
+                );
+
+            })
+
+            .catch(function(error) {
+
+                console.error(
+                    "PINCODE ERROR:",
+                    error
+                );
+
+
+                statusText.textContent =
+                    "Pincode not found. Please check the pincode.";
+
+                statusText.className =
+                    "location-status error";
+
+            });
+
+        }
+    );
+
+
+    // =========================================================
+    // MOVE MAP TO PINCODE AREA
+    // =========================================================
+
+    function moveMapToPincode(
+        pincode,
+        district,
+        state
+    ) {
+
+        const geocoder =
+            new google.maps.Geocoder();
+
+
+        // Try multiple queries because
+        // Google may not recognize every
+        // pincode + district combination.
+
+        const queries = [
+
+            pincode
+            + ", "
+            + district
+            + ", "
+            + state
+            + ", India",
+
+            pincode
+            + ", "
+            + state
+            + ", India",
+
+            pincode
+            + ", India"
+        ];
+
+
+        function tryGeocode(index) {
+
+            if (index >= queries.length) {
+
+                statusText.textContent =
+                    "Google Maps could not locate this pincode area.";
+
+                statusText.className =
+                    "location-status error";
+
+                return;
+            }
+
+
+            geocoder.geocode(
+                {
+                    address: queries[index]
+                },
+
+                function(results, status) {
+
+                    if (
+                        status === "OK" &&
+                        results &&
+                        results.length > 0
+                    ) {
+
+                        const location =
+                            results[0].geometry.location;
+
+
+                        // Move map
+
+                        map.setCenter(
+                            location
+                        );
+
+
+                        // Zoom to area
+
+                        map.setZoom(13);
+
+
+                        // Move marker to area
+
+                        marker.setPosition(
+                            location
+                        );
+
+
+                        // IMPORTANT:
+                        // Area location is NOT
+                        // exact pickup location.
+
+                        resetLocation();
+
+
+                        statusText.textContent =
+                            "Map moved to pincode area. Drag the marker or click on the map to select your exact pickup location.";
+
+                        statusText.className =
+                            "location-status success";
+
+
+                        return;
+                    }
+
+
+                    // Try next query
+
+                    tryGeocode(index + 1);
+                }
+            );
+        }
+
+
+        tryGeocode(0);
+    }
+
+
+
+    // =========================================================
+    // USE CURRENT GPS LOCATION
+    // =========================================================
+
+    useGpsBtn.addEventListener(
+        "click",
+        function () {
+
+            if (!navigator.geolocation) {
+
+                gpsStatus.textContent =
+                    "GPS / Location service is not supported by this browser.";
+
+                gpsStatus.className =
+                    "gps-status error";
+
+                return;
+            }
+
+            gpsStatus.textContent =
+                "📍 Getting your current location... Please allow location access.";
+
+            gpsStatus.className =
+                "gps-status info";
+
+            useGpsBtn.disabled = true;
+
+            useGpsBtn.textContent =
+                "Getting Location...";
+
+
+            navigator.geolocation.getCurrentPosition(
+
+                function (position) {
+
+                    const latitude =
+                        position.coords.latitude;
+
+                    const longitude =
+                        position.coords.longitude;
+
+                    const accuracy =
+                        position.coords.accuracy;
+
+
+                    console.log(
+                        "GPS Latitude:",
+                        latitude
+                    );
+
+                    console.log(
+                        "GPS Longitude:",
+                        longitude
+                    );
+
+                    console.log(
+                        "GPS Accuracy:",
+                        accuracy,
+                        "meters"
+                    );
+
+
+                    // Move marker to current GPS location
+                    setMarkerLocation(
+                        latitude,
+                        longitude
+                    );
+
+
+                    // Zoom in close to current location
+                    map.setZoom(18);
+
+
+                    // Show GPS accuracy
+                    gpsStatus.textContent =
+                        "✓ Current GPS location selected. Accuracy: approximately "
+                        + Math.round(accuracy)
+                        + " meters.";
+
+                    gpsStatus.className =
+                        "gps-status success";
+
+
+                    statusText.textContent =
+                        "✓ GPS location selected. You can drag the marker to adjust it.";
+
+                    statusText.className =
+                        "location-status success";
+
+
+                    useGpsBtn.disabled = false;
+
+                    useGpsBtn.textContent =
+                        "📍 Use Current Location";
+                },
+
+
+                function (error) {
+
+                    console.error(
+                        "GPS ERROR:",
+                        error
+                    );
+
+                    let message =
+                        "Unable to get your current location.";
+
+                    if (error.code === 1) {
+
+                        message =
+                            "Location permission denied. Please allow location access in your browser.";
+                    }
+
+                    else if (error.code === 2) {
+
+                        message =
+                            "Current location is unavailable. Please try again.";
+                    }
+
+                    else if (error.code === 3) {
+
+                        message =
+                            "Location request timed out. Please try again.";
+                    }
+
+
+                    gpsStatus.textContent =
+                        message;
+
+                    gpsStatus.className =
+                        "gps-status error";
+
+
+                    useGpsBtn.disabled = false;
+
+                    useGpsBtn.textContent =
+                        "📍 Use Current Location";
+                },
+
+
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0
+                }
+            );
+        }
+    );
+
+
+    // =========================================================
+    // FORM SUBMIT VALIDATION
+    // =========================================================
+
+    form.addEventListener(
+        "submit",
+        function(event) {
+
+            const latitude =
+                latitudeInput.value.trim();
+
+            const longitude =
+                longitudeInput.value.trim();
+
+
+            if (!latitude || !longitude) {
+
+                event.preventDefault();
+
+
+                alert(
+                    "Please select your exact pickup location on the map."
+                );
+
+
+                return false;
+            }
+
+
+            return true;
+        }
+    );
+
+</script>
+
+
+<!-- =========================================================
+     GOOGLE MAPS API
+     
+     IMPORTANT:
+     Replace YOUR_GOOGLE_MAPS_API_KEY with your own API key.
+     ========================================================= -->
+
+<script
+    async
+    defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4VGYdS_UXwarTPBSp8EA5ZkfScFvzCyo&callback=initMap">
+</script>
+
+</body>
+</html>
+

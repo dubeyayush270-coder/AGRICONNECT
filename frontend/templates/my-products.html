@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Products - AgriConnect</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="products-page">
+
+        <!-- Page Header -->
+        <div class="products-header">
+
+            <div>
+                <h1>My Products</h1>
+
+                <p>
+                    Manage your listed agricultural products
+                </p>
+            </div>
+
+            <div class="products-actions">
+
+                <a href="/add-product" class="add-product-btn">
+                    + Add Product
+                </a>
+
+                <a href="/delete-product" class="delete-product-btn">
+                    Delete Product
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Products Section -->
+        {% if products %}
+
+            <div class="product-list">
+
+                {% for product in products %}
+
+                    <div class="product-card">
+
+                        <!-- Product Image -->
+                        <div class="product-image-box">
+
+                            {% if product["product_image"] %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'static',
+                                        filename='uploads/' + product['product_image']
+                                    ) }}"
+                                    alt="{{ product['crop_name'] }}"
+                                    class="product-image"
+                                >
+
+                            {% else %}
+
+                                <div class="no-image">
+                                    No Image
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Product Details -->
+                        <div class="product-info">
+
+                            <h2>
+                                {{ product["crop_name"] }}
+                            </h2>
+
+                            <p>
+                                <strong>Quantity:</strong>
+                                {{ product["quantity"] }} kg
+                            </p>
+
+                            <p>
+                                <strong>Quality:</strong>
+                                {{ product["quality"] }}
+                            </p>
+
+                            <p>
+                                <strong>Price:</strong>
+                                ₹{{ product["price_per_kg"] }}/kg
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                {{ product["district"] }},
+                                {{ product["state"] }}
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+
+                                <span class="status">
+                                    {{ product["availability"] }}
+                                </span>
+                            </p>
+
+
+                            {% if product["description"] %}
+
+                                <p class="description">
+                                    <strong>Description:</strong><br>
+
+                                    {{ product["description"] }}
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        <!-- If No Products Exist -->
+        {% else %}
+
+            <div class="no-products">
+
+                <h2>
+                    No Products Listed Yet
+                </h2>
+
+                <p>
+                    Start selling by adding your first agricultural product.
+                </p>
+
+                <a href="/add-product" class="add-product-btn">
+                    + Add Product
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Page-specific Styling -->
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f4;
+        }
+
+        .products-page {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .products-header h1 {
+            margin-bottom: 8px;
+            color: #216b38;
+        }
+
+        .products-header p {
+            color: #666;
+        }
+
+        .products-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .add-product-btn,
+        .delete-product-btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .add-product-btn {
+            background: #218838;
+        }
+
+        .add-product-btn:hover {
+            background: #176b2b;
+        }
+
+        .delete-product-btn {
+            background: #dc3545;
+        }
+
+        .delete-product-btn:hover {
+            background: #b02a37;
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(280px, 1fr)
+            );
+            gap: 25px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+            transition: transform 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .product-image-box {
+            width: 100%;
+            height: 190px;
+            background: #e9eeee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+        }
+
+        .no-image {
+            color: #777;
+            font-size: 15px;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-info h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #216b38;
+            text-transform: capitalize;
+        }
+
+        .product-info p {
+            margin: 10px 0;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        .status {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .description {
+            border-top: 1px solid #ddd;
+            padding-top: 12px;
+            word-wrap: break-word;
+        }
+
+        .no-products {
+            text-align: center;
+            background: white;
+            padding: 50px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .no-products h2 {
+            color: #216b38;
+        }
+
+        .no-products p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 700px) {
+
+            .products-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .products-page {
+                width: 94%;
+            }
+
+        }
+
+    </style>
+
+</body>
+
+</html>

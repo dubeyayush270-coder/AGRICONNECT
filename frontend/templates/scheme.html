@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriConnect - Government Schemes</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+          
+        <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+
+.government-content {
+    background: #dce8df;
+}
+
+/* INTRO SECTION */
+
+.schemes-intro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    padding: 28px 30px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    background: #d2e5d7;
+}
+
+.schemes-intro h1 {
+    margin-bottom: 12px;
+    color: #073b29;
+    font-size: 38px;
+}
+
+.schemes-intro p {
+    max-width: 950px;
+    margin: 8px 0;
+    color: #60756b;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.schemes-intro-text {
+    min-width: 220px;
+    color: #087b3e;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1.5;
+    text-align: center;
+}
+
+
+
+/* THREE SCHEMES IN ONE ROW */
+
+.scheme-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+
+/* SCHEME CARD */
+
+.scheme-card {
+    padding: 18px;
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 5px 18px rgba(35, 70, 48, 0.08);
+    border-top: 4px solid #72c59b;
+}
+
+
+/* CARD TOP */
+
+.scheme-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.scheme-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: #e4f3e8;
+    color: #087b3e;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.scheme-card h2 {
+    margin: 3px 0 5px;
+    color: #073b29;
+    font-size: 21px;
+}
+
+.scheme-full-name {
+    margin: 0;
+    color: #718178;
+    font-size: 12px;
+}
+
+.scheme-tag {
+    margin-left: auto;
+    padding: 6px 8px;
+    border-radius: 7px;
+    background: #e7f5eb;
+    color: #087b3e;
+    font-size: 11px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+
+/* DESCRIPTION */
+
+.scheme-description {
+    min-height: 72px;
+    margin: 16px 0;
+    color: #5c7066;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* BENEFIT AND ELIGIBILITY */
+
+.scheme-info {
+    padding: 10px 0;
+    border-top: 1px solid #e5eee8;
+    border-bottom: 1px solid #e5eee8;
+}
+
+.scheme-info p {
+    margin: 7px 0;
+    color: #53675d;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.scheme-info strong {
+    color: #183e2c;
+}
+
+
+.scheme-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.scheme-button {
+    flex: 1;
+    padding: 10px 8px;
+    border: 1px solid #087b3e;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+.primary-button {
+    background: #087b3e;
+    color: white;
+}
+
+.secondary-button {
+    background: white;
+    color: #087b3e;
+}
+
+.primary-button:hover {
+    background: #065d2f;
+}
+
+.secondary-button:hover {
+    background: #e7f5eb;
+}
+
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 1200px) {
+
+    .scheme-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .scheme-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .scheme-buttons {
+        flex-direction: column;
+    }
+
+}
+
+
+
+
+
+
+/* CATEGORY SECTION */
+
+.scheme-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.scheme-categories span {
+    padding: 9px 8px;
+    border-radius: 12px;
+    background: white;
+    color: #40584d;
+    font-weight: 600;
+}
+
+.scheme-categories .category-active {
+    background: #087b3e;
+    color: white;
+}
+
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+
+    .scheme-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .schemes-intro {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .schemes-intro-text {
+        text-align: left;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .scheme-card-top {
+        flex-wrap: wrap;
+    }
+
+    .scheme-tag {
+        margin-left: 0;
+    }
+
+    .schemes-intro h1 {
+        font-size: 30px;
+    }
+
+}
+
+/* GOVERNMENT SCHEMES FINAL DESIGN */
+
+.government-dashboard .scheme-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.government-dashboard .scheme-card {
+    min-width: 0;
+    padding: 18px;
+    border-radius: 18px;
+    background: #ffffff;
+    border-top: 4px solid #69c497;
+    box-shadow: 0 5px 18px rgba(35, 70, 48, 0.08);
+}
+
+.government-dashboard .scheme-card-top {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+}
+
+.government-dashboard .scheme-symbol {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: #e4f3e8;
+    color: #087b3e;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.government-dashboard .scheme-card h2 {
+    margin: 3px 0 5px;
+    color: #073b29;
+    font-size: 21px;
+    line-height: 1.25;
+}
+
+.government-dashboard .scheme-full-name {
+    margin: 0;
+    color: #718178;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.government-dashboard .scheme-tag {
+    grid-column: 1 / -1;
+    justify-self: start;
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: #e7f5eb;
+    color: #087b3e;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.government-dashboard .scheme-description {
+    min-height: 105px;
+    margin: 18px 0;
+    color: #5c7066;
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.government-dashboard .scheme-info {
+    padding: 12px 0;
+    border-top: 1px solid #e5eee8;
+    border-bottom: 1px solid #e5eee8;
+}
+
+.government-dashboard .scheme-info p {
+    margin: 8px 0;
+    color: #53675d;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.government-dashboard .scheme-info strong {
+    color: #183e2c;
+}
+
+
+/* TWO BUTTONS */
+
+.government-dashboard .scheme-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-top: 16px;
+}
+
+.government-dashboard .scheme-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 8px 6px;
+    border: 1px solid #087b3e;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.3;
+}
+
+.government-dashboard .primary-button {
+    background: #087b3e;
+    color: white;
+}
+
+.government-dashboard .secondary-button {
+    background: white;
+    color: #087b3e;
+}
+
+.government-dashboard .primary-button:hover {
+    background: #065d2f;
+}
+
+.government-dashboard .secondary-button:hover {
+    background: #e7f5eb;
+}
+
+
+/* CATEGORY BUTTONS */
+
+.government-dashboard .scheme-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.government-dashboard .scheme-categories span {
+    padding: 9px 13px;
+    border-radius: 10px;
+    background: white;
+    color: #40584d;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.government-dashboard .scheme-categories .category-active {
+    background: #087b3e;
+    color: white;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+
+    .government-dashboard .scheme-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .government-dashboard .scheme-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .government-dashboard .scheme-buttons {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+.scheme-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    background: #e4f3e8;
+    color: #087b3e;
+    font-size: 34px;
+    font-weight: bold;
+}
+
+.kcc-icon {
+    font-size: 24px;
+    font-weight: bold;
+    color: #087b3e;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<div class="dashboard government-dashboard">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2>AgriConnect</h2>
+
+        <p class="seller-label">
+            Farmer / Seller
+        </p>
+
+        <nav>
+
+            <a href="/seller">
+                Home
+            </a>
+
+            <a href="#">
+                What to Grow?
+            </a>
+
+            <a href="/demand-forecast">
+                Demand Forecast
+            </a>
+
+            <a href="/my-products">
+                My Products
+            </a>
+
+            <a href="#">
+                My Orders
+            </a>
+
+            <a href="#">
+                Logistics Support
+            </a>
+
+            <a href="#">
+                Financial Summary
+            </a>
+
+            <a href="/government-schemes"
+               class="active">
+                Government Schemes
+            </a>
+
+            <a href="#">
+                Help and Support
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <input
+                type="text"
+                placeholder="Search government schemes..."
+            >
+
+            <div class="topbar-right">
+
+                <div class="notification">
+                    🔔
+
+                    <span class="notification-count">
+                        3
+                    </span>
+                </div>
+
+                <div class="profile">
+                    <span>
+                        {{ user["name"] }}
+                    </span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+
+        <section class="content government-content">
+
+            <!-- PAGE INTRODUCTION -->
+
+            <div class="schemes-intro">
+
+                <div>
+
+                    <h1>
+                        Government Schemes
+                    </h1>
+
+                    <p>
+                        Explore government schemes, subsidies, insurance
+                        and financial support programs designed to help
+                        farmers improve productivity, reduce risks and
+                        increase their income.
+                    </p>
+
+                    <p>
+                        Select a scheme to understand its benefits and
+                        eligibility. For complete information and
+                        application details, visit the official government
+                        website.
+                    </p>
+
+                </div>
+
+                <div class="schemes-intro-text">
+                    Stronger Farmers<br>
+                    Brighter Tomorrow 🌱
+                </div>
+
+            </div>
+
+
+            <!-- CATEGORY FILTER DESIGN -->
+
+            <div class="scheme-categories">
+
+                <span class="category-active">
+                    All Schemes
+                </span>
+
+                <span>
+                    Financial Support
+                </span>
+
+                <span>
+                    Crop Insurance
+                </span>
+
+                <span>
+                    Credit Support
+                </span>
+
+                <span>
+                    Soil Management
+                </span>
+
+                <span>
+                    Market Support
+                </span>
+
+            </div>
+
+
+            <!-- SCHEME CARDS -->
+
+            <div class="scheme-grid">
+
+
+                <!-- PM-KISAN -->
+
+                <div class="scheme-card">
+
+                    <div class="scheme-card-top">
+
+                        <div class="scheme-symbol">
+                            <i class="bi bi-bank"></i>
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                PM-KISAN
+                            </h2>
+
+                            <p class="scheme-full-name">
+                                Pradhan Mantri Kisan Samman Nidhi
+                            </p>
+
+                        </div>
+
+                        <span class="scheme-tag">
+                            Financial Support
+                        </span>
+
+                    </div>
+
+                    <p class="scheme-description">
+                        PM-KISAN provides direct income support to eligible
+                        landholding farmer families. The assistance helps
+                        farmers meet agricultural expenses such as seeds,
+                        fertilizers and other farming requirements.
+                    </p>
+
+                    <div class="scheme-info">
+
+                        <p>
+                            <strong>Benefit:</strong>
+                            ₹6,000 per year in three installments
+                        </p>
+
+                        <p>
+                            <strong>Eligibility:</strong>
+                            Eligible landholding farmer families
+                        </p>
+
+                    </div>
+
+                    <div class="scheme-buttons">
+
+    <a href="#"
+       class="scheme-button secondary-button">
+        View Details
+    </a>
+
+    <a href="https://pmkisan.gov.in/"
+       target="_blank"
+       class="scheme-button primary-button">
+        Visit Official Website ↗
+    </a>
+
+</div>
+
+                </div>
+
+
+                <!-- PMFBY -->
+
+                <div class="scheme-card">
+
+                    <div class="scheme-card-top">
+
+                        <div class="scheme-symbol">
+                            <i class="bi bi-flower1"></i>
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                PMFBY
+                            </h2>
+
+                            <p class="scheme-full-name">
+                                Pradhan Mantri Fasal Bima Yojana
+                            </p>
+
+                        </div>
+
+                        <span class="scheme-tag">
+                            Crop Insurance
+                        </span>
+
+                    </div>
+
+                    <p class="scheme-description">
+                        PMFBY offers crop insurance protection against
+                        eligible crop losses caused by natural calamities,
+                        pests and diseases. It helps farmers reduce the
+                        financial impact of crop failure.
+                    </p>
+
+                    <div class="scheme-info">
+
+                        <p>
+                            <strong>Benefit:</strong>
+                            Financial protection against crop loss
+                        </p>
+
+                        <p>
+                            <strong>Eligibility:</strong>
+                            Eligible farmers as per scheme guidelines
+                        </p>
+
+                    </div>
+
+                    <div class="scheme-buttons">
+
+    <a href="#"
+       class="scheme-button secondary-button">
+        View Details
+    </a>
+
+    <a href="https://pmfby.gov.in/"
+       target="_blank"
+       class="scheme-button primary-button">
+        Visit Official Website ↗
+    </a>
+
+</div>
+
+                </div>
+
+
+                <!-- KISAN CREDIT CARD -->
+
+                <div class="scheme-card">
+
+                    <div class="scheme-card-top">
+
+                        <div class="scheme-symbol">
+                            <span class="kcc-icon">KCC</span>
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Kisan Credit Card
+                            </h2>
+
+                            <p class="scheme-full-name">
+                                Agricultural Credit Support
+                            </p>
+
+                        </div>
+
+                        <span class="scheme-tag">
+                            Credit Support
+                        </span>
+
+                    </div>
+
+                    <p class="scheme-description">
+                        The Kisan Credit Card scheme provides farmers with
+                        easier access to agricultural credit. It supports
+                        cultivation expenses and other eligible agricultural
+                        and allied activities.
+                    </p>
+
+                    <div class="scheme-info">
+
+                        <p>
+                            <strong>Benefit:</strong>
+                            Accessible and affordable agricultural credit
+                        </p>
+
+                        <p>
+                            <strong>Eligibility:</strong>
+                            Eligible farmers involved in agriculture
+                        </p>
+
+                    </div>
+
+                    <div class="scheme-buttons">
+
+    <a href="#"
+       class="scheme-button secondary-button">
+        View Details
+    </a>
+
+    <a href="https://www.farmer.gov.in/"
+       target="_blank"
+       class="scheme-button primary-button">
+        Visit Official Website ↗
+    </a>
+
+</div>
+
+                </div>
+
+
+                <!-- SOIL HEALTH CARD -->
+
+                <div class="scheme-card">
+
+                    <div class="scheme-card-top">
+
+                        <div class="scheme-symbol">
+                            <i class="bi bi-flower2"></i>
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Soil Health Card
+                            </h2>
+
+                            <p class="scheme-full-name">
+                                Soil Health Management
+                            </p>
+
+                        </div>
+
+                        <span class="scheme-tag">
+                            Soil Management
+                        </span>
+
+                    </div>
+
+                    <p class="scheme-description">
+                        The Soil Health Card provides information about
+                        the nutrient status of farm soil. It helps farmers
+                        select suitable fertilizers and improve soil health
+                        for better and sustainable crop production.
+                    </p>
+
+                    <div class="scheme-info">
+
+                        <p>
+                            <strong>Benefit:</strong>
+                            Soil testing and fertilizer recommendations
+                        </p>
+
+                        <p>
+                            <strong>Eligibility:</strong>
+                            Farmers seeking soil health information
+                        </p>
+
+                    </div>
+
+                    <div class="scheme-buttons">
+
+    <a href="#"
+       class="scheme-button secondary-button">
+        View Details
+    </a>
+
+    <a href="https://soilhealth.dac.gov.in/"
+       target="_blank"
+       class="scheme-button primary-button">
+        Visit Official Website ↗
+    </a>
+
+</div>
+
+                </div>
+
+
+                <!-- PM-KUSUM -->
+
+                <div class="scheme-card">
+
+                    <div class="scheme-card-top">
+
+                        <div class="scheme-symbol">
+                            <i class="bi bi-sun"></i>
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                PM-KUSUM
+                            </h2>
+
+                            <p class="scheme-full-name">
+                                Pradhan Mantri Kisan Urja Suraksha
+                            </p>
+
+                        </div>
+
+                        <span class="scheme-tag">
+                            Renewable Energy
+                        </span>
+
+                    </div>
+
+                    <p class="scheme-description">
+                        PM-KUSUM promotes the use of solar energy in
+                        agriculture. It supports the installation of solar
+                        pumps and renewable-energy solutions for farming
+                        and irrigation activities.
+                    </p>
+
+                    <div class="scheme-info">
+
+                        <p>
+                            <strong>Benefit:</strong>
+                            Support for eligible solar agriculture projects
+                        </p>
+
+                        <p>
+                            <strong>Eligibility:</strong>
+                            Eligible farmers, groups and agricultural users
+                        </p>
+
+                    </div>
+
+                    <div class="scheme-buttons">
+
+    <a href="#"
+       class="scheme-button secondary-button">
+        View Details
+    </a>
+
+    <a href="https://pmkusum.mnre.gov.in/"
+       target="_blank"
+       class="scheme-button primary-button">
+        Visit Official Website ↗
+    </a>
+
+</div>
+
+                </div>
+
+
+                
+                <!-- AGRICULTURE INFRASTRUCTURE FUND -->
+
+<div class="scheme-card">
+
+    <div class="scheme-card-top">
+
+        <div class="scheme-symbol">
+            <i class="bi bi-leaf"></i>
+        </div>
+
+        <div>
+
+            <h2>
+                AIF
+            </h2>
+
+            <p class="scheme-full-name">
+                Agriculture Infrastructure Fund
+            </p>
+
+        </div>
+
+        <span class="scheme-tag">
+            Infrastructure Support
+        </span>
+
+    </div>
+
+
+    <p class="scheme-description">
+        The Agriculture Infrastructure Fund supports the development
+        of agricultural infrastructure such as warehouses, cold storage
+        units, grading facilities, pack houses and post-harvest
+        management projects. It helps farmers reduce crop losses,
+        improve storage and receive better prices for their produce.
+    </p>
+
+
+    <div class="scheme-info">
+
+        <p>
+            <strong>Benefit:</strong>
+            Financial support and interest subsidy for eligible projects
+        </p>
+
+        <p>
+            <strong>Eligibility:</strong>
+            Farmers, FPOs, cooperatives and eligible agri-entrepreneurs
+        </p>
+
+    </div>
+
+
+    <div class="scheme-buttons">
+
+        <a href="#"
+           class="scheme-button secondary-button">
+            View Details
+        </a>
+
+        <a href="https://agriinfra.dac.gov.in/"
+           target="_blank"
+           class="scheme-button primary-button">
+            Official Website ↗
+        </a>
+
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

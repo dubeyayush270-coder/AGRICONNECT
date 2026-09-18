@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Demand Forecast</title>
+
+</head>
+
+<body>
+
+    <h1>AI Demand Forecast</h1>
+
+    <h3>Your Location</h3>
+
+    <p>
+        State: {{ state }}
+    </p>
+
+    <p>
+        District: {{ district }}
+    </p>
+
+    <p>
+        Market: {{ market }}
+    </p>
+
+
+    <hr>
+
+
+    {% if highest_demand_crop %}
+
+        <h2>
+            Highest Expected Demand
+        </h2>
+
+        <h1>
+            {{ highest_demand_crop.crop }}
+        </h1>
+
+        <p>
+            Expected 7-Day Demand:
+            {{ highest_demand_crop.total_demand }}
+            kg
+        </p>
+
+    {% endif %}
+
+
+    <hr>
+
+
+    <h2>7-Day Demand Forecast</h2>
+
+
+    {% for result in forecast_results %}
+
+        <h3>
+            {{ result.crop }}
+        </h3>
+
+        <p>
+            Total Expected Demand:
+            {{ result.total_demand }}
+            kg
+        </p>
+
+
+        <table border="1">
+
+            <tr>
+                <th>Date</th>
+                <th>Expected Demand</th>
+            </tr>
+
+
+            {% for day in result.daily_forecast %}
+
+                <tr>
+
+                    <td>
+                        {{ day.date }}
+                    </td>
+
+                    <td>
+                        {{ day.predicted_demand }}
+                        kg
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+        </table>
+
+        <br>
+
+    {% endfor %}
+
+</body>
+
+</html>

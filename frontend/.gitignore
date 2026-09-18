@@ -1,0 +1,154 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Environment variables / secrets
+.env
+
+# Flask
+instance/
+
+# Uploaded files
+static/uploads/
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Database files
+*.db
+*.sqlite3
+
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# =========================
+# Virtual Environment
+# =========================
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Flask
+# =========================
+instance/
+.webassets-cache/
+
+# =========================
+# Flask / Application Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Uploaded Files
+# =========================
+static/uploads/
+uploads/
+
+# =========================
+# Database
+# =========================
+*.db
+*.sqlite
+*.sqlite3
+
+# =========================
+# Testing / Coverage
+# =========================
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# =========================
+# Build / Distribution
+# =========================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# =========================
+# IDE - VS Code
+# =========================
+.vscode/
+
+# =========================
+# IDE - PyCharm
+# =========================
+.idea/
+
+# =========================
+# Jupyter Notebook
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Type Checking
+# =========================
+.mypy_cache/
+.pyre/
+
+# =========================
+# Ruff / Linter
+# =========================
+.ruff_cache/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Temporary Files
+# =========================
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# =========================
+# Secrets / Credentials
+# =========================
+*.pem
+*.key
+*.crt
+credentials.json
+secrets.json

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriConnect - Seller Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2> AgriConnect</h2>
+
+        <p class="seller-label">
+            Farmer / Seller
+        </p>
+
+        <nav>
+
+    <a href="/seller" class="active">
+        Home
+    </a>
+
+    <a href="/what-to-grow">
+        What to Grow?
+    </a>
+
+    <a href="/demand-forecast">
+        Demand Forecast
+    </a>
+
+    <a href="/my-products">
+        My Products
+    </a>
+
+    <a href="/order-requst" class="active">order request</a>
+
+    <a href="#">
+        Logistics Support
+    </a>
+
+    <a href="/financial-summary">
+        Financial Summary
+    </a>
+
+    <a href="/government-schemes">
+        Government Schemes
+    </a>
+
+    <a href="/help-support">
+    Help and Support
+</a>
+
+</nav>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <input
+                type="text"
+                placeholder="Search crops, market prices, schemes..."
+            >
+
+            <div class="topbar-right">
+
+        <div class="notification">
+            🔔
+            <span class="notification-count">3</span>
+        </div>
+
+            <div class="profile">
+
+                👤
+
+                <span>
+                    {{ user["name"] }}
+                </span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- DASHBOARD CONTENT -->
+
+        <section class="content">
+
+            <h1>
+                Welcome back, {{ user["name"] }}! 👋
+            </h1>
+
+            <p class="subtitle">
+                Plan smarter. Sell better. Earn more.
+            </p>
+
+
+            <!-- STATS -->
+
+            <div class="stats">
+
+                <!-- Products -->
+
+                <div class="stat-card">
+
+                    <h3>
+                        0
+                    </h3>
+
+                    <p>
+                        Products Listed
+                    </p>
+
+                </div>
+
+
+                <!-- Orders -->
+
+                <div class="stat-card">
+
+                    <h3>
+                        0
+                    </h3>
+
+                    <p>
+                        Orders
+                    </p>
+
+                </div>
+
+
+                <!-- Earnings -->
+
+                <div class="stat-card">
+
+                    <h3>
+                        ₹ 0
+                    </h3>
+
+                    <p>
+                        Total Earnings
+                    </p>
+
+                </div>
+
+
+                <!-- Pending Orders -->
+
+                <div class="stat-card">
+
+                    <h3>
+                        0
+                    </h3>
+
+                    <p>
+                        Pending Orders
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- FEATURE CARDS -->
+
+            <div class="features">
+
+
+                <!-- WHAT TO GROW -->
+
+                <div class="feature-card">
+
+                    <h2>
+                         What to Grow?
+                    </h2>
+
+                    <p>
+                        Get AI-based crop recommendations
+                        based on future market demand.
+                    </p>
+
+                    <button>
+                        Get Suggestions →
+                    </button>
+
+                </div>
+
+
+                <!-- DEMAND FORECAST -->
+
+                <div class="feature-card">
+
+                    <h2>
+                         Demand Forecast
+                    </h2>
+
+                    <p>
+                        Check future demand and market
+                        opportunities for your crops.
+                    </p>
+
+                    <button>
+                        View Forecast →
+                    </button>
+
+                </div>
+
+
+                <!-- MY PRODUCTS -->
+
+                <div class="feature-card">
+
+                    <h2>
+                         My Products
+                    </h2>
+
+                    <p>
+                        List your produce with quantity,
+                        quality, price and availability.
+                    </p>
+
+                    <button>
+                        Manage Products →
+                    </button>
+
+                </div>
+
+
+                <!-- LOGISTICS -->
+
+                <div class="feature-card">
+
+                    <h2>
+                         Logistics Support
+                    </h2>
+
+                    <p>
+                        Request pickup and get suitable
+                        transportation for your produce.
+                    </p>
+
+                    <button>
+                        Request Pickup →
+                    </button>
+
+                </div>
+
+
+                <!-- GOVERNMENT SCHEMES -->
+
+                <div class="feature-card">
+
+                    <h2>
+                         Government Schemes
+                    </h2>
+
+                    <p>
+                        Find government schemes and benefits
+                        relevant to your farming activities.
+                    </p>
+
+                    <button>
+                        View Schemes →
+                    </button>
+
+                </div>
+
+
+                <!-- MY ORDERS -->
+
+                <div class="feature-card">
+
+                    <h2>
+                         My Orders
+                    </h2>
+
+                    <p>
+                        Track your orders from confirmation
+                        to pickup and final delivery.
+                    </p>
+
+                    <button>
+                        View Orders →
+                    </button>
+
+                </div>
+
+            </div>
+
+                        <!-- FEATURE CARDS -->
+
+            <div class="features">
+
+                <!-- saare 6 feature cards yahan -->
+
+            </div>
+
+
+            <!-- MARKET PRICES -->
+            <div class="dashboard-lower">
+            <div class="market-prices">
+
+                <div class="section-header">
+                    <h2>Market Prices (Today)</h2>
+                    <a href="#">View All →</a>
+                </div>
+
+                <div class="price-list">
+
+                    <div class="price-item">
+                        <span> Tomato</span>
+                        <strong>₹ 28 / kg</strong>
+                        <span class="price-up">↑ +12%</span>
+                    </div>
+
+                    <div class="price-item">
+                        <span> Onion</span>
+                        <strong>₹ 22 / kg</strong>
+                        <span class="price-up">↑ +5%</span>
+                    </div>
+
+                    <div class="price-item">
+                        <span> Potato</span>
+                        <strong>₹ 18 / kg</strong>
+                        <span class="price-down">↓ -2%</span>
+                    </div>
+
+                    <div class="price-item">
+                        <span> Wheat</span>
+                        <strong>₹ 25 / kg</strong>
+                        <span class="price-up">↑ +3%</span>
+                    </div>
+
+                    <div class="price-item">
+                        <span> Maize</span>
+                        <strong>₹ 20 / kg</strong>
+                        <span class="price-up">↑ +4%</span>
+                    </div>
+
+                </div>
+
+            </div>
+            
+            <!-- RECOMMENDED BUYERS -->
+
+<div class="recommended-buyers">
+
+    <div class="section-header">
+        <h2>Recommended Buyers</h2>
+        <a href="#">View All →</a>
+    </div>
+
+    <div class="buyer-item">
+        <strong>FreshMart Retail Pvt. Ltd.</strong>
+        <p>📍 Bhopal, MP</p>
+        <span>Bulk Buyer</span>
+    </div>
+
+    <div class="buyer-item">
+        <strong>GreenChoice Foods</strong>
+        <p>📍 Indore, MP</p>
+        <span>Organic Produce</span>
+    </div>
+
+    <div class="buyer-item">
+        <strong>Sahyog FPO</strong>
+        <p>📍 Ujjain, MP</p>
+        <span>Regular Buyer</span>
+    </div>
+
+</div>
+
+<!-- AI CROP SUGGESTION -->
+
+<div class="ai-crop-suggestion">
+
+    <div class="section-header">
+        <h2>AI Crop Suggestion</h2>
+    </div>
+
+    <p>
+        Based on your location and market trends
+    </p>
+
+    <h3> Soybean</h3>
+
+    <ul>
+        <li>✓ High demand expected</li>
+        <li>✓ Good market price</li>
+        <li>✓ Suitable for your region</li>
+        <li>✓ Lower water requirement</li>
+    </ul>
+
+    <button>
+        View Detailed Report →
+    </button>
+
+</div>
+</div>
+        </section>
+            
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

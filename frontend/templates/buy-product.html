@@ -1,0 +1,1628 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Buy Product - AgriConnect</title>
+
+
+    <!-- Leaflet CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f7f6;
+        }
+
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+
+        h1 {
+            color: #2e7d32;
+        }
+
+
+        h2 {
+            color: #333;
+        }
+
+
+        .product-box {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+
+        input,
+        textarea {
+
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 10px;
+
+            border: 1px solid #ccc;
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+
+        textarea {
+            resize: vertical;
+        }
+
+
+        button {
+
+            padding: 11px 18px;
+
+            border: none;
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            margin-right: 8px;
+        }
+
+
+        .gps-btn {
+
+            background: #1976d2;
+            color: white;
+        }
+
+
+        .gps-btn:hover {
+            background: #125ca5;
+        }
+
+
+        .buy-btn {
+
+            background: #2e7d32;
+            color: white;
+
+            width: 100%;
+
+            margin-top: 20px;
+        }
+
+
+        .buy-btn:hover {
+            background: #1b5e20;
+        }
+
+
+        #map {
+
+            height: 400px;
+            width: 100%;
+
+            margin-top: 15px;
+
+            border-radius: 10px;
+
+            border: 1px solid #ccc;
+        }
+
+
+        .location-status {
+
+            margin-top: 10px;
+
+            padding: 10px;
+
+            background: #f1f8e9;
+
+            border-radius: 6px;
+        }
+
+
+        .price-box {
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            background: #f5f5f5;
+
+            border-radius: 8px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1>Buy Product</h1>
+
+
+    <!-- ========================================= -->
+    <!-- PRODUCT INFORMATION -->
+    <!-- ========================================= -->
+
+    <div class="product-box">
+
+        <h2>
+            {{ product['crop_name'] }}
+        </h2>
+
+
+        <p>
+            <strong>Available Quantity:</strong>
+            {{ product['quantity'] }} kg
+        </p>
+
+
+        <p>
+            <strong>Quality:</strong>
+            {{ product['quality'] }}
+        </p>
+
+
+        <p>
+            <strong>Price:</strong>
+            ₹{{ product['price_per_kg'] }} / kg
+        </p>
+
+
+        {% if product['description'] %}
+
+        <p>
+
+            <strong>Description:</strong>
+
+            {{ product['description'] }}
+
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- BUY FORM -->
+    <!-- ========================================= -->
+
+    <form
+        id="buyForm"
+        method="POST"
+        action="/place-order/{{ product['product_id'] }}"
+        onsubmit="return validateLocation();"
+    >
+
+
+        <!-- ========================================= -->
+        <!-- QUANTITY -->
+        <!-- ========================================= -->
+
+        <div class="form-group">
+
+            <label for="quantity">
+                Quantity (kg)
+            </label>
+
+            <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                min="0.01"
+                max="{{ product['quantity'] }}"
+                step="0.01"
+                required
+            >
+
+        </div>
+
+
+
+        <h2>Delivery Details</h2>
+
+
+
+        <!-- ========================================= -->
+        <!-- HOUSE -->
+        <!-- ========================================= -->
+
+        <div class="form-group">
+
+            <label for="delivery_house_no">
+                House / Plot No.
+            </label>
+
+            <input
+                type="text"
+                id="delivery_house_no"
+                name="delivery_house_no"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- ========================================= -->
+        <!-- STREET -->
+        <!-- ========================================= -->
+
+        <div class="form-group">
+
+            <label for="delivery_street">
+                Street / Locality
+            </label>
+
+            <input
+                type="text"
+                id="delivery_street"
+                name="delivery_street"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- ========================================= -->
+        <!-- CITY -->
+        <!-- ========================================= -->
+
+        <div class="form-group">
+
+            <label for="delivery_village_city">
+                Village / City
+            </label>
+
+            <input
+                type="text"
+                id="delivery_village_city"
+                name="delivery_village_city"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- ========================================= -->
+        <!-- PINCODE -->
+        <!-- ========================================= -->
+
+        <div class="form-group">
+
+            <label for="delivery_pincode">
+                Pincode
+            </label>
+
+            <input
+                type="text"
+                id="delivery_pincode"
+                name="delivery_pincode"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                required
+            >
+
+        </div>
+
+
+
+        <!-- ========================================= -->
+        <!-- STATE -->
+        <!-- ========================================= -->
+
+        <div class="form-group">
+
+            <label for="delivery_state">
+                State
+            </label>
+
+            <input
+                type="text"
+                id="delivery_state"
+                name="delivery_state"
+                readonly
+                required
+            >
+
+        </div>
+
+
+
+        <!-- ========================================= -->
+        <!-- DISTRICT -->
+        <!-- ========================================= -->
+
+        <div class="form-group">
+
+            <label for="delivery_district">
+                District
+            </label>
+
+            <input
+                type="text"
+                id="delivery_district"
+                name="delivery_district"
+                readonly
+                required
+            >
+
+        </div>
+
+
+
+        <!-- ========================================= -->
+        <!-- FULL ADDRESS -->
+        <!-- ========================================= -->
+
+        <div class="form-group">
+
+            <label for="delivery_address">
+                Full Delivery Address
+            </label>
+
+            <textarea
+                id="delivery_address"
+                name="delivery_address"
+                rows="3"
+                readonly
+            ></textarea>
+
+        </div>
+
+
+
+        <!-- ========================================= -->
+        <!-- EXACT LOCATION -->
+        <!-- ========================================= -->
+
+        <h2>
+            Exact Delivery Location
+        </h2>
+
+
+        <p>
+            Click on the map or use GPS to select your exact delivery location.
+        </p>
+
+
+
+        <!-- GPS BUTTON -->
+
+        <button
+            type="button"
+            class="gps-btn"
+            onclick="useCurrentLocation()"
+        >
+            📍 Use Current Location
+        </button>
+
+
+
+        <!-- MAP -->
+
+        <div id="map"></div>
+
+
+
+        <!-- LOCATION STATUS -->
+
+        <div
+            id="locationStatus"
+            class="location-status"
+        >
+            Exact location not selected.
+        </div>
+
+
+
+        <!-- ========================================= -->
+        <!-- HIDDEN COORDINATES -->
+        <!-- ========================================= -->
+
+        <input
+            type="hidden"
+            id="delivery_latitude"
+            name="delivery_latitude"
+        >
+
+
+        <input
+            type="hidden"
+            id="delivery_longitude"
+            name="delivery_longitude"
+        >
+
+
+
+        <!-- ========================================= -->
+        <!-- ORDER SUMMARY -->
+        <!-- ========================================= -->
+
+        <div class="price-box">
+
+            <h3>
+                Order Summary
+            </h3>
+
+
+            <p>
+
+                Product price:
+
+                ₹<span id="productTotal">
+                    0.00
+                </span>
+
+            </p>
+
+
+            <p>
+
+                Logistics cost:
+
+                <span id="logisticsCost">
+                    Will be calculated after location selection
+                </span>
+
+            </p>
+
+        </div>
+
+
+
+        <!-- PLACE ORDER -->
+
+        <button
+            type="submit"
+            class="buy-btn"
+        >
+            Place Order
+        </button>
+
+
+    </form>
+
+</div>
+
+
+
+<!-- ========================================= -->
+<!-- LEAFLET JS -->
+<!-- ========================================= -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+
+<script>
+
+
+/* =====================================================
+   MAP INITIALIZATION
+   ===================================================== */
+
+
+const DEFAULT_LAT = 22.9734;
+const DEFAULT_LNG = 78.6569;
+
+
+const map = L.map("map").setView(
+    [DEFAULT_LAT, DEFAULT_LNG],
+    5
+);
+
+
+L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+        maxZoom: 19,
+
+        attribution:
+            "&copy; OpenStreetMap contributors"
+    }
+).addTo(map);
+
+
+let marker = null;
+
+
+
+/* =====================================================
+   SET LOCATION
+   ===================================================== */
+
+
+function setLocation(lat, lng, zoom = 17) {
+
+    lat = Number(lat);
+    lng = Number(lng);
+
+
+    console.log(
+        "================================"
+    );
+
+    console.log(
+        "setLocation() called"
+    );
+
+    console.log(
+        "Latitude:",
+        lat
+    );
+
+    console.log(
+        "Longitude:",
+        lng
+    );
+
+
+    /* ---------------------------------------------
+       Validate coordinates
+    --------------------------------------------- */
+
+    if (
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lng)
+    ) {
+
+        console.error(
+            "Invalid coordinates:",
+            lat,
+            lng
+        );
+
+        return;
+
+    }
+
+
+
+    /* ---------------------------------------------
+       Save latitude
+    --------------------------------------------- */
+
+    document.getElementById(
+        "delivery_latitude"
+    ).value =
+        lat.toFixed(7);
+
+
+
+    /* ---------------------------------------------
+       Save longitude
+    --------------------------------------------- */
+
+    document.getElementById(
+        "delivery_longitude"
+    ).value =
+        lng.toFixed(7);
+
+
+
+    /* ---------------------------------------------
+       Move map to EXACT coordinates
+    --------------------------------------------- */
+
+    map.setView(
+        [lat, lng],
+        zoom,
+        {
+            animate: true
+        }
+    );
+
+
+
+    console.log(
+        "Map moved to:",
+        map.getCenter().lat,
+        map.getCenter().lng
+    );
+
+
+
+    /* ---------------------------------------------
+       Remove previous marker
+    --------------------------------------------- */
+
+    if (marker !== null) {
+
+        map.removeLayer(marker);
+
+    }
+
+
+
+    /* ---------------------------------------------
+       Create marker
+    --------------------------------------------- */
+
+    marker = L.marker(
+        [lat, lng],
+        {
+            draggable: true
+        }
+    ).addTo(map);
+
+
+
+    /* ---------------------------------------------
+       Popup
+    --------------------------------------------- */
+
+    marker.bindPopup(
+        "📍 Selected Delivery Location<br>" +
+        "Lat: " + lat.toFixed(7) + "<br>" +
+        "Lng: " + lng.toFixed(7)
+    ).openPopup();
+
+
+
+    /* ---------------------------------------------
+       Marker drag
+    --------------------------------------------- */
+
+    marker.on(
+        "dragend",
+        function(event) {
+
+            const position =
+                event.target.getLatLng();
+
+
+            const newLat =
+                position.lat;
+
+            const newLng =
+                position.lng;
+
+
+            console.log(
+                "Marker dragged to:",
+                newLat,
+                newLng
+            );
+
+
+            setLocation(
+                newLat,
+                newLng,
+                17
+            );
+
+
+            reverseGeocode(
+                newLat,
+                newLng
+            );
+
+        }
+    );
+
+
+
+    /* ---------------------------------------------
+       Location status
+    --------------------------------------------- */
+
+    document.getElementById(
+        "locationStatus"
+    ).innerHTML =
+
+        "✅ Exact location selected" +
+
+        "<br>" +
+
+        "Latitude: " +
+        lat.toFixed(7) +
+
+        "<br>" +
+
+        "Longitude: " +
+        lng.toFixed(7);
+
+
+
+    /* ---------------------------------------------
+       Fix Leaflet size
+    --------------------------------------------- */
+
+    setTimeout(
+        function() {
+
+            map.invalidateSize();
+
+        },
+        300
+    );
+
+
+}
+
+
+
+/* =====================================================
+   MAP CLICK
+   ===================================================== */
+
+
+map.on(
+    "click",
+    function(event) {
+
+        const lat =
+            event.latlng.lat;
+
+        const lng =
+            event.latlng.lng;
+
+
+        console.log(
+            "Map clicked:"
+        );
+
+        console.log(
+            "Latitude:",
+            lat
+        );
+
+        console.log(
+            "Longitude:",
+            lng
+        );
+
+
+        setLocation(
+            lat,
+            lng,
+            17
+        );
+
+
+        reverseGeocode(
+            lat,
+            lng
+        );
+
+    }
+);
+
+
+
+/* =====================================================
+   CURRENT GPS LOCATION
+   ===================================================== */
+
+
+function useCurrentLocation() {
+
+
+    console.log(
+        "================================"
+    );
+
+    console.log(
+        "Requesting current GPS location..."
+    );
+
+
+
+    /* ---------------------------------------------
+       Check browser support
+    --------------------------------------------- */
+
+    if (
+        !navigator.geolocation
+    ) {
+
+        alert(
+            "Geolocation is not supported by this browser."
+        );
+
+        return;
+
+    }
+
+
+
+    /* ---------------------------------------------
+       Ask browser for location
+    --------------------------------------------- */
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+
+            console.log(
+                "================================"
+            );
+
+            console.log(
+                "GPS SUCCESS"
+            );
+
+
+            const lat =
+                position.coords.latitude;
+
+
+            const lng =
+                position.coords.longitude;
+
+
+            const accuracy =
+                position.coords.accuracy;
+
+
+
+            console.log(
+                "GPS Latitude:",
+                lat
+            );
+
+
+            console.log(
+                "GPS Longitude:",
+                lng
+            );
+
+
+            console.log(
+                "GPS Accuracy:",
+                accuracy,
+                "meters"
+            );
+
+
+
+            /* -------------------------------------
+               IMPORTANT:
+               GPS coordinates are directly sent
+               to Leaflet map.
+            ------------------------------------- */
+
+            setLocation(
+                lat,
+                lng,
+                17
+            );
+
+
+
+            /* -------------------------------------
+               Reverse geocode using Flask
+            ------------------------------------- */
+
+            reverseGeocode(
+                lat,
+                lng
+            );
+
+        },
+
+
+        function(error) {
+
+
+            console.error(
+                "GPS ERROR"
+            );
+
+
+            console.error(
+                "Error code:",
+                error.code
+            );
+
+
+            console.error(
+                "Error message:",
+                error.message
+            );
+
+
+
+            if (
+                error.code ===
+                error.PERMISSION_DENIED
+            ) {
+
+                alert(
+                    "Location permission denied. Please allow location access for this site."
+                );
+
+            }
+
+
+            else if (
+                error.code ===
+                error.POSITION_UNAVAILABLE
+            ) {
+
+                alert(
+                    "Current location is unavailable. Please check your device location settings."
+                );
+
+            }
+
+
+            else if (
+                error.code ===
+                error.TIMEOUT
+            ) {
+
+                alert(
+                    "Location request timed out. Please try again."
+                );
+
+            }
+
+
+            else {
+
+                alert(
+                    "Unable to get current location."
+                );
+
+            }
+
+        },
+
+
+        {
+            enableHighAccuracy: true,
+
+            timeout: 15000,
+
+            maximumAge: 0
+        }
+
+    );
+
+}
+
+
+
+/* =====================================================
+   REVERSE GEOCODING
+   Browser → Flask → Nominatim
+   ===================================================== */
+
+
+async function reverseGeocode(lat, lng) {
+
+
+    try {
+
+
+        console.log(
+            "================================"
+        );
+
+
+        console.log(
+            "Reverse geocoding:"
+        );
+
+
+        console.log(
+            "Latitude:",
+            lat
+        );
+
+
+        console.log(
+            "Longitude:",
+            lng
+        );
+
+
+
+        /* ---------------------------------------------
+           IMPORTANT:
+
+           Browser does NOT directly call Nominatim.
+
+           Browser
+              ↓
+           Flask
+              ↓
+           Nominatim
+        --------------------------------------------- */
+
+
+        const url =
+            "/reverse-geocode?lat=" +
+            encodeURIComponent(lat) +
+            "&lng=" +
+            encodeURIComponent(lng);
+
+
+
+        console.log(
+            "Flask reverse-geocode URL:",
+            url
+        );
+
+
+
+        const response =
+            await fetch(url);
+
+
+
+        console.log(
+            "Reverse geocoding HTTP status:",
+            response.status
+        );
+
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Reverse geocoding failed. HTTP status: " +
+                response.status
+            );
+
+        }
+
+
+
+        const data =
+            await response.json();
+
+
+
+        console.log(
+            "Reverse geocoding response:",
+            data
+        );
+
+
+
+        const address =
+            data.address || {};
+
+
+
+        /* ---------------------------------------------
+           PINCODE
+        --------------------------------------------- */
+
+        if (
+            address.postcode
+        ) {
+
+            document.getElementById(
+                "delivery_pincode"
+            ).value =
+                address.postcode;
+
+        }
+
+
+
+        /* ---------------------------------------------
+           STATE
+        --------------------------------------------- */
+
+        if (
+            address.state
+        ) {
+
+            document.getElementById(
+                "delivery_state"
+            ).value =
+                address.state;
+
+        }
+
+
+
+        /* ---------------------------------------------
+           DISTRICT
+        --------------------------------------------- */
+
+        const district =
+
+            address.state_district ||
+
+            address.district ||
+
+            address.county ||
+
+            "";
+
+
+
+        if (
+            district
+        ) {
+
+            document.getElementById(
+                "delivery_district"
+            ).value =
+                district;
+
+        }
+
+
+
+        /* ---------------------------------------------
+           CITY / VILLAGE
+        --------------------------------------------- */
+
+        const city =
+
+            address.city ||
+
+            address.town ||
+
+            address.village ||
+
+            address.municipality ||
+
+            "";
+
+
+
+        if (
+            city
+        ) {
+
+            document.getElementById(
+                "delivery_village_city"
+            ).value =
+                city;
+
+        }
+
+
+
+        /* ---------------------------------------------
+           STREET
+        --------------------------------------------- */
+
+        const street =
+
+            address.road ||
+
+            address.pedestrian ||
+
+            address.residential ||
+
+            address.neighbourhood ||
+
+            address.suburb ||
+
+            "";
+
+
+
+        if (
+            street
+        ) {
+
+            document.getElementById(
+                "delivery_street"
+            ).value =
+                street;
+
+        }
+
+
+
+        /* ---------------------------------------------
+           UPDATE FULL ADDRESS
+        --------------------------------------------- */
+
+        updateAddress();
+
+
+
+        console.log(
+            "Address successfully filled."
+        );
+
+
+
+    }
+
+
+    catch (error) {
+
+
+        console.error(
+            "Reverse geocoding error:",
+            error
+        );
+
+
+    }
+
+}
+
+
+
+/* =====================================================
+   UPDATE FULL ADDRESS
+   ===================================================== */
+
+
+function updateAddress() {
+
+
+    const house =
+
+        document.getElementById(
+            "delivery_house_no"
+        ).value.trim();
+
+
+
+    const street =
+
+        document.getElementById(
+            "delivery_street"
+        ).value.trim();
+
+
+
+    const city =
+
+        document.getElementById(
+            "delivery_village_city"
+        ).value.trim();
+
+
+
+    const district =
+
+        document.getElementById(
+            "delivery_district"
+        ).value.trim();
+
+
+
+    const state =
+
+        document.getElementById(
+            "delivery_state"
+        ).value.trim();
+
+
+
+    const pincode =
+
+        document.getElementById(
+            "delivery_pincode"
+        ).value.trim();
+
+
+
+    const parts = [
+
+        house,
+
+        street,
+
+        city,
+
+        district,
+
+        state,
+
+        pincode
+
+    ].filter(
+        value => value !== ""
+    );
+
+
+
+    document.getElementById(
+        "delivery_address"
+    ).value =
+        parts.join(", ");
+
+}
+
+
+
+/* =====================================================
+   INPUT EVENTS
+   ===================================================== */
+
+
+[
+    "delivery_house_no",
+    "delivery_street",
+    "delivery_village_city",
+    "delivery_pincode"
+].forEach(
+    function(id) {
+
+
+        document.getElementById(id)
+            .addEventListener(
+                "input",
+                updateAddress
+            );
+
+
+    }
+);
+
+
+
+/* =====================================================
+   PINCODE CHANGE
+   ===================================================== */
+
+
+document.getElementById(
+    "delivery_pincode"
+).addEventListener(
+    "input",
+    function() {
+
+
+        const pincode =
+            this.value.trim();
+
+
+
+        /*
+         * If pincode is incomplete,
+         * clear exact coordinates.
+         */
+
+        if (
+            pincode.length < 6
+        ) {
+
+            document.getElementById(
+                "delivery_latitude"
+            ).value = "";
+
+
+            document.getElementById(
+                "delivery_longitude"
+            ).value = "";
+
+        }
+
+
+
+        updateAddress();
+
+    }
+);
+
+
+
+/* =====================================================
+   FORM VALIDATION
+   ===================================================== */
+
+
+function validateLocation() {
+
+
+    const lat =
+
+        document.getElementById(
+            "delivery_latitude"
+        ).value;
+
+
+
+    const lng =
+
+        document.getElementById(
+            "delivery_longitude"
+        ).value;
+
+
+
+    console.log(
+        "Submitting delivery location:"
+    );
+
+
+    console.log(
+        "Latitude:",
+        lat
+    );
+
+
+    console.log(
+        "Longitude:",
+        lng
+    );
+
+
+
+    /* ---------------------------------------------
+       Location required
+    --------------------------------------------- */
+
+    if (
+        !lat ||
+        !lng
+    ) {
+
+        alert(
+            "Please select your exact delivery location using GPS or the map."
+        );
+
+        return false;
+
+    }
+
+
+
+    /* ---------------------------------------------
+       Validate numbers
+    --------------------------------------------- */
+
+    if (
+        !Number.isFinite(Number(lat)) ||
+        !Number.isFinite(Number(lng))
+    ) {
+
+        alert(
+            "Invalid delivery coordinates."
+        );
+
+        return false;
+
+    }
+
+
+
+    updateAddress();
+
+
+
+    return true;
+
+}
+
+
+
+/* =====================================================
+   PRODUCT PRICE CALCULATION
+   ===================================================== */
+
+
+const quantityInput =
+    document.getElementById(
+        "quantity"
+    );
+
+
+
+quantityInput.addEventListener(
+    "input",
+    function() {
+
+
+        const quantity =
+            Number(this.value) || 0;
+
+
+
+        const pricePerKg =
+            Number(
+                "{{ product['price_per_kg'] }}"
+            ) || 0;
+
+
+
+        const total =
+            quantity * pricePerKg;
+
+
+
+        document.getElementById(
+            "productTotal"
+        ).textContent =
+            total.toFixed(2);
+
+    }
+);
+
+
+
+/* =====================================================
+   INITIAL MAP FIX
+   ===================================================== */
+
+
+setTimeout(
+    function() {
+
+        map.invalidateSize();
+
+    },
+    500
+);
+
+
+
+/* =====================================================
+   DEBUG MAP CENTER
+   ===================================================== */
+
+
+console.log(
+    "Initial map center:",
+    map.getCenter().lat,
+    map.getCenter().lng
+);
+
+
+console.log(
+    "Leaflet map initialized successfully."
+);
+
+
+</script>
+
+
+</body>
+
+</html>
+

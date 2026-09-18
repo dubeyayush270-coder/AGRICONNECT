@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriConnect - Login</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <h1>AgriConnect</h1>
+
+            <p class="subtitle">
+                Connecting Farmers Directly to Buyers
+            </p>
+
+            <form action="/" method="POST">
+
+                <div class="input-group">
+
+                    <label for="login_id">Email or Phone number</label>
+
+                    <input
+                        type="text"
+                        id="login_id"
+                        name="login_id"
+                        placeholder="Enter your email or phone number"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="password">Password</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                    <a href="/forgot-password" class="forgotPassword">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <button type="submit">
+                    Login
+                </button>
+
+                 {% if message %}
+    <p class="error-message">{{ message }}</p>
+{% endif %}
+
+            </form>
+
+
+            <p class="register-text">
+
+                Don't have an account?
+
+                <a href="/register">Register</a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

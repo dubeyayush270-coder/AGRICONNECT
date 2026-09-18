@@ -1,0 +1,174 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ product['crop_name'] }} - AgriConnect</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7f5;
+        }
+
+        .container {
+            width: 850px;
+            max-width: 90%;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #f1f1f1;
+        }
+
+        h1 {
+            margin-top: 25px;
+            color: #2e7d32;
+        }
+
+        .details {
+            margin-top: 20px;
+            font-size: 17px;
+            line-height: 1.8;
+        }
+
+        .details strong {
+            color: #333;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin: 15px 0;
+        }
+
+        .description {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f7f7f7;
+            border-radius: 8px;
+        }
+
+        .description h2 {
+            margin-top: 0;
+        }
+
+        .buy-btn {
+            width: 100%;
+            margin-top: 30px;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #2e7d32;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .buy-btn:hover {
+            background: #256628;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Product Image -->
+    {% if product['product_image'] %}
+        <img
+            src="{{ url_for('static', filename='uploads/' + product['product_image']) }}"
+            class="product-image"
+            alt="{{ product['crop_name'] }}"
+        >
+    {% endif %}
+
+
+    <!-- Product Name -->
+    <h1>{{ product['crop_name'] }}</h1>
+
+
+    <!-- Price -->
+    <div class="price">
+        ₹{{ product['price_per_kg'] }} / kg
+    </div>
+
+
+    <!-- Product Details -->
+    <div class="details">
+
+        <p>
+            <strong>Available Quantity:</strong>
+            {{ product['quantity'] }} kg
+        </p>
+
+        <p>
+            <strong>Quality:</strong>
+            {{ product['quality'] }}
+        </p>
+
+        <p>
+            <strong>Location:</strong>
+            {{ product['district'] }}, {{ product['state'] }}
+        </p>
+
+        <p>
+            <strong>Availability:</strong>
+            {{ product['availability'] }}
+        </p>
+
+    </div>
+
+
+    <!-- Description -->
+    <div class="description">
+
+        <h2>Description</h2>
+
+        {% if product['description'] %}
+            <p>{{ product['description'] }}</p>
+        {% else %}
+            <p>No description provided by the farmer.</p>
+        {% endif %}
+
+    </div>
+
+
+    <!-- Buy Product -->
+    <button
+        class="buy-btn"
+        onclick="buyProduct()">
+        Buy Product
+    </button>
+
+</div>
+
+
+<script>
+
+function buyProduct() {
+
+    window.location.href =
+        "/buy-product/{{ product['product_id'] }}";
+
+}
+
+</script>
+
+</body>
+</html>
+```

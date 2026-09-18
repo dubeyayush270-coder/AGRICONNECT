@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriConnect - Buyer Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard buyer-dashboard">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2>AgriConnect</h2>
+
+        <p class="seller-label">
+            Buyer
+        </p>
+
+        <nav>
+
+            <a href="/buyer" class="active">
+                Home
+            </a>
+
+            <a href="/browse-products">
+                Browse Products
+            </a>
+
+            <a href="#">
+                Recommended Products
+            </a>
+
+            <a href="#">
+                Recommended Suppliers
+            </a>
+
+            <a href="#">
+                My Orders
+            </a>
+
+            <a href="#">
+                Logistics Support
+            </a>
+
+            <a href="#">
+                Market Prices
+            </a>
+
+            <a href="#">
+                Financial Summary
+            </a>
+
+            <a href="#">
+                Help and Support
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <input
+                type="text"
+                placeholder="Search crops, products, suppliers..."
+            >
+
+            <div class="topbar-right">
+
+                <div class="notification">
+
+                    🔔
+
+                    <span class="notification-count">
+                        3
+                    </span>
+
+                </div>
+
+
+                <div class="profile">
+
+                    <span>
+                        {{ user["name"] }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        
+
+        <section class="content">
+
+
+            <!-- WELCOME -->
+
+            <h1>
+                Welcome back, {{ user["name"] }}!
+            </h1>
+
+            <p class="subtitle">
+                Find the right produce. Choose the right supplier. Buy better.
+            </p>
+
+
+            <!-- STATS -->
+
+            <div class="stats">
+
+
+                <!-- TOTAL ORDERS -->
+
+                <div class="stat-card">
+
+                    <h3>
+                        0
+                    </h3>
+
+                    <p>
+                        Total Orders
+                    </p>
+
+                </div>
+
+
+                <!-- PENDING ORDERS -->
+
+                <div class="stat-card">
+
+                    <h3>
+                        0
+                    </h3>
+
+                    <p>
+                        Pending Orders
+                    </p>
+
+                </div>
+
+
+                <!-- TOTAL SPENDING -->
+
+                <div class="stat-card">
+
+                    <h3>
+                        ₹ 0
+                    </h3>
+
+                    <p>
+                        Total Spending
+                    </p>
+
+                </div>
+
+
+                <!-- ACTIVE SUPPLIERS -->
+
+                <div class="stat-card">
+
+                    <h3>
+                        0
+                    </h3>
+
+                    <p>
+                        Active Suppliers
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- MAIN FEATURE CARDS -->
+
+            <div class="features">
+
+
+                <!-- BROWSE PRODUCTS -->
+
+                <div class="feature-card">
+
+                    <h2>
+                        Browse Products
+                    </h2>
+
+                    <p>
+                        Explore fresh produce available from
+                        farmers and FPOs.
+                    </p>
+
+                    <button>
+                        Browse Products →
+                    </button>
+
+                </div>
+
+
+                <!-- RECOMMENDED PRODUCTS -->
+
+                <div class="feature-card">
+
+                    <h2>
+                        Recommended Products
+                    </h2>
+
+                    <p>
+                        Discover products that match your
+                        quantity, price and delivery requirements.
+                    </p>
+
+                    <button>
+                        View Recommendations →
+                    </button>
+
+                </div>
+
+
+                <!-- RECOMMENDED SUPPLIERS -->
+
+                <div class="feature-card">
+
+                    <h2>
+                        Recommended Suppliers
+                    </h2>
+
+                    <p>
+                        Find suitable farmers and FPOs based on
+                        price, quality, quantity and distance.
+                    </p>
+
+                    <button>
+                        Find Suppliers →
+                    </button>
+
+                </div>
+
+
+                <!-- MY ORDERS -->
+
+                <div class="feature-card">
+
+                    <h2>
+                        My Orders
+                    </h2>
+
+                    <p>
+                        View and manage your orders from
+                        confirmation to final delivery.
+                    </p>
+
+                    <button>
+                        View Orders →
+                    </button>
+
+                </div>
+
+
+                <!-- LOGISTICS -->
+
+                <div class="feature-card">
+
+                    <h2>
+                        Logistics Support
+                    </h2>
+
+                    <p>
+                        Get suitable transportation and
+                        track your produce delivery.
+                    </p>
+
+                    <button>
+                        Manage Delivery →
+                    </button>
+
+                </div>
+
+
+                <!-- MARKET PRICES -->
+
+                <div class="feature-card">
+
+                    <h2>
+                        Market Prices
+                    </h2>
+
+                    <p>
+                        Check current market prices to make
+                        better purchasing decisions.
+                    </p>
+
+                    <button>
+                        View Prices →
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOWER DASHBOARD SECTION -->
+
+            <div class="dashboard-lower">
+
+
+                <!-- RECOMMENDED PRODUCTS -->
+
+                <div class="recommended-products">
+
+                    <div class="section-header">
+
+                        <h2>
+                            Recommended Products
+                        </h2>
+
+                        <a href="#">
+                            View All →
+                        </a>
+
+                    </div>
+
+
+                    <div class="product-item">
+
+                        <div>
+                            <strong>
+                                Tomato
+                            </strong>
+
+                            <p>
+                                Farmer / FPO
+                            </p>
+                        </div>
+
+                        <strong>
+                            ₹ 28 / kg
+                        </strong>
+
+                    </div>
+
+
+                    <div class="product-item">
+
+                        <div>
+                            <strong>
+                                Onion
+                            </strong>
+
+                            <p>
+                                Farmer / FPO
+                            </p>
+                        </div>
+
+                        <strong>
+                            ₹ 22 / kg
+                        </strong>
+
+                    </div>
+
+
+                    <div class="product-item">
+
+                        <div>
+                            <strong>
+                                Potato
+                            </strong>
+
+                            <p>
+                                Farmer / FPO
+                            </p>
+                        </div>
+
+                        <strong>
+                            ₹ 18 / kg
+                        </strong>
+
+                    </div>
+
+
+                    <div class="product-item">
+
+                        <div>
+                            <strong>
+                                Wheat
+                            </strong>
+
+                            <p>
+                                Farmer / FPO
+                            </p>
+                        </div>
+
+                        <strong>
+                            ₹ 25 / kg
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RECOMMENDED SUPPLIERS -->
+
+                <div class="recommended-suppliers">
+
+                    <div class="section-header">
+
+                        <h2>
+                            Recommended Suppliers
+                        </h2>
+
+                        <a href="#">
+                            View All →
+                        </a>
+
+                    </div>
+
+
+                    <div class="supplier-item">
+
+                        <strong>
+                            Green Valley FPO
+                        </strong>
+
+                        <p>
+                            Bhopal, Madhya Pradesh
+                        </p>
+
+                        <span>
+                            Bulk Supplier
+                        </span>
+
+                    </div>
+
+
+                    <div class="supplier-item">
+
+                        <strong>
+                            Fresh Farm Producers
+                        </strong>
+
+                        <p>
+                            Indore, Madhya Pradesh
+                        </p>
+
+                        <span>
+                            Verified Supplier
+                        </span>
+
+                    </div>
+
+
+                    <div class="supplier-item">
+
+                        <strong>
+                            Kisan FPO
+                        </strong>
+
+                        <p>
+                            Ujjain, Madhya Pradesh
+                        </p>
+
+                        <span>
+                            Regular Supplier
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MARKET PRICES -->
+
+                <div class="buyer-market-prices">
+
+                    <div class="section-header">
+
+                        <h2>
+                            Market Prices
+                        </h2>
+
+                        <a href="#">
+                            View All →
+                        </a>
+
+                    </div>
+
+
+                    <div class="price-item">
+
+                        <span>
+                            Tomato
+                        </span>
+
+                        <strong>
+                            ₹ 28 / kg
+                        </strong>
+
+                        <span class="price-up">
+                            +12%
+                        </span>
+
+                    </div>
+
+
+                    <div class="price-item">
+
+                        <span>
+                            Onion
+                        </span>
+
+                        <strong>
+                            ₹ 22 / kg
+                        </strong>
+
+                        <span class="price-up">
+                            +5%
+                        </span>
+
+                    </div>
+
+
+                    <div class="price-item">
+
+                        <span>
+                            Potato
+                        </span>
+
+                        <strong>
+                            ₹ 18 / kg
+                        </strong>
+
+                        <span class="price-down">
+                            -2%
+                        </span>
+
+                    </div>
+
+
+                    <div class="price-item">
+
+                        <span>
+                            Wheat
+                        </span>
+
+                        <strong>
+                            ₹ 25 / kg
+                        </strong>
+
+                        <span class="price-up">
+                            +3%
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- RECENT ORDERS -->
+
+            <div class="recent-orders">
+
+                <div class="section-header">
+
+                    <h2>
+                        Recent Orders
+                    </h2>
+
+                    <a href="#">
+                        View All →
+                    </a>
+
+                </div>
+
+
+                <div class="orders-table">
+
+                    <div class="order-row order-heading">
+
+                        <span>
+                            Product
+                        </span>
+
+                        <span>
+                            Quantity
+                        </span>
+
+                        <span>
+                            Supplier
+                        </span>
+
+                        <span>
+                            Amount
+                        </span>
+
+                        <span>
+                            Status
+                        </span>
+
+                    </div>
+
+
+                    <div class="order-row">
+
+                        <span>
+                            Tomato
+                        </span>
+
+                        <span>
+                            500 kg
+                        </span>
+
+                        <span>
+                            Green Valley FPO
+                        </span>
+
+                        <span>
+                            ₹ 14,000
+                        </span>
+
+                        <span class="order-status">
+                            In Transit
+                        </span>
+
+                    </div>
+
+
+                    <div class="order-row">
+
+                        <span>
+                            Onion
+                        </span>
+
+                        <span>
+                            300 kg
+                        </span>
+
+                        <span>
+                            Kisan FPO
+                        </span>
+
+                        <span>
+                            ₹ 6,600
+                        </span>
+
+                        <span class="order-status">
+                            Confirmed
+                        </span>
+
+                    </div>
+
+
+                    <div class="order-row">
+
+                        <span>
+                            Wheat
+                        </span>
+
+                        <span>
+                            1000 kg
+                        </span>
+
+                        <span>
+                            Fresh Farm Producers
+                        </span>
+
+                        <span>
+                            ₹ 25,000
+                        </span>
+
+                        <span class="order-status">
+                            Delivered
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
