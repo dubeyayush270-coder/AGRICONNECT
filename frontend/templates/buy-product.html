@@ -1,550 +1,601 @@
+{% extends 'buyer-base.html' %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block title %}Buy {{ product['crop_name'] }}{% endblock %}
 
-<head>
+{% block head %}
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+>
+{% endblock %}
 
-    <meta charset="UTF-8">
+{% block content %}
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<a
+    class="buyer-back-link"
+    href="{{ url_for('browse_products') }}"
+>
+    ← Browse Products
+</a>
 
-    <title>Buy Product - AgriConnect</title>
 
+<section class="buyer-checkout-hero" aria-labelledby="buyer-checkout-title">
 
-    <!-- Leaflet CSS -->
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    >
+    <div class="buyer-checkout-hero-copy">
 
+        <div class="buyer-eyebrow">
+            SECURE ORDER WORKSPACE
+        </div>
 
-    <style>
-
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #f5f7f6;
-        }
-
-
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-        }
-
-
-        h1 {
-            color: #2e7d32;
-        }
-
-
-        h2 {
-            color: #333;
-        }
-
-
-        .product-box {
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            margin-bottom: 25px;
-        }
-
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 6px;
-        }
-
-
-        input,
-        textarea {
-
-            width: 100%;
-            box-sizing: border-box;
-
-            padding: 10px;
-
-            border: 1px solid #ccc;
-            border-radius: 6px;
-
-            font-size: 15px;
-        }
-
-
-        textarea {
-            resize: vertical;
-        }
-
-
-        button {
-
-            padding: 11px 18px;
-
-            border: none;
-            border-radius: 6px;
-
-            cursor: pointer;
-
-            font-size: 15px;
-
-            margin-right: 8px;
-        }
-
-
-        .gps-btn {
-
-            background: #1976d2;
-            color: white;
-        }
-
-
-        .gps-btn:hover {
-            background: #125ca5;
-        }
-
-
-        .buy-btn {
-
-            background: #2e7d32;
-            color: white;
-
-            width: 100%;
-
-            margin-top: 20px;
-        }
-
-
-        .buy-btn:hover {
-            background: #1b5e20;
-        }
-
-
-        #map {
-
-            height: 400px;
-            width: 100%;
-
-            margin-top: 15px;
-
-            border-radius: 10px;
-
-            border: 1px solid #ccc;
-        }
-
-
-        .location-status {
-
-            margin-top: 10px;
-
-            padding: 10px;
-
-            background: #f1f8e9;
-
-            border-radius: 6px;
-        }
-
-
-        .price-box {
-
-            margin-top: 20px;
-
-            padding: 15px;
-
-            background: #f5f5f5;
-
-            border-radius: 8px;
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-
-<div class="container">
-
-
-    <h1>Buy Product</h1>
-
-
-    <!-- ========================================= -->
-    <!-- PRODUCT INFORMATION -->
-    <!-- ========================================= -->
-
-    <div class="product-box">
-
-        <h2>
-            {{ product['crop_name'] }}
-        </h2>
-
+        <h1 id="buyer-checkout-title">
+            Buy {{ product['crop_name'] }}.<br>
+            <em>Plan the delivery.</em>
+        </h1>
 
         <p>
-            <strong>Available Quantity:</strong>
-            {{ product['quantity'] }} kg
+            Choose your quantity, confirm the delivery address,
+            select the exact map location and calculate the logistics
+            estimate before placing your order.
         </p>
-
-
-        <p>
-            <strong>Quality:</strong>
-            {{ product['quality'] }}
-        </p>
-
-
-        <p>
-            <strong>Price:</strong>
-            ₹{{ product['price_per_kg'] }} / kg
-        </p>
-
-
-        {% if product['description'] %}
-
-        <p>
-
-            <strong>Description:</strong>
-
-            {{ product['description'] }}
-
-        </p>
-
-        {% endif %}
 
     </div>
 
 
+    <div class="buyer-checkout-product-summary">
 
-    <!-- ========================================= -->
-    <!-- BUY FORM -->
-    <!-- ========================================= -->
-
-    <form
-        id="buyForm"
-        method="POST"
-        action="/place-order/{{ product['product_id'] }}"
-        onsubmit="return validateLocation();"
-    >
-
-
-        <!-- ========================================= -->
-        <!-- QUANTITY -->
-        <!-- ========================================= -->
-
-        <div class="form-group">
-
-            <label for="quantity">
-                Quantity (kg)
-            </label>
-
-            <input
-                type="number"
-                id="quantity"
-                name="quantity"
-                min="0.01"
-                max="{{ product['quantity'] }}"
-                step="0.01"
-                required
-            >
-
+        <div class="buyer-checkout-product-icon" aria-hidden="true">
+            <svg class="buyer-icon">
+                <use href="#buyer-icon-leaf"></use>
+            </svg>
         </div>
 
+        <div>
+            <span>AVAILABLE PRODUCE</span>
 
+            <strong>
+                {{ product['quantity'] }} kg
+            </strong>
 
-        <h2>Delivery Details</h2>
-
-
-
-        <!-- ========================================= -->
-        <!-- HOUSE -->
-        <!-- ========================================= -->
-
-        <div class="form-group">
-
-            <label for="delivery_house_no">
-                House / Plot No.
-            </label>
-
-            <input
-                type="text"
-                id="delivery_house_no"
-                name="delivery_house_no"
-                required
-            >
-
+            <small>
+                ₹{{ product['price_per_kg'] }} / kg
+                ·
+                {{ product['quality'] }}
+            </small>
         </div>
 
+    </div>
 
+</section>
 
-        <!-- ========================================= -->
-        <!-- STREET -->
-        <!-- ========================================= -->
 
-        <div class="form-group">
+{% if error %}
 
-            <label for="delivery_street">
-                Street / Locality
-            </label>
+<div class="buyer-checkout-error" role="alert">
 
-            <input
-                type="text"
-                id="delivery_street"
-                name="delivery_street"
-                required
-            >
+    <div class="buyer-checkout-error-icon" aria-hidden="true">
+        !
+    </div>
 
-        </div>
-
-
-
-        <!-- ========================================= -->
-        <!-- CITY -->
-        <!-- ========================================= -->
-
-        <div class="form-group">
-
-            <label for="delivery_village_city">
-                Village / City
-            </label>
-
-            <input
-                type="text"
-                id="delivery_village_city"
-                name="delivery_village_city"
-                required
-            >
-
-        </div>
-
-
-
-        <!-- ========================================= -->
-        <!-- PINCODE -->
-        <!-- ========================================= -->
-
-        <div class="form-group">
-
-            <label for="delivery_pincode">
-                Pincode
-            </label>
-
-            <input
-                type="text"
-                id="delivery_pincode"
-                name="delivery_pincode"
-                maxlength="6"
-                pattern="[0-9]{6}"
-                required
-            >
-
-        </div>
-
-
-
-        <!-- ========================================= -->
-        <!-- STATE -->
-        <!-- ========================================= -->
-
-        <div class="form-group">
-
-            <label for="delivery_state">
-                State
-            </label>
-
-            <input
-                type="text"
-                id="delivery_state"
-                name="delivery_state"
-                readonly
-                required
-            >
-
-        </div>
-
-
-
-        <!-- ========================================= -->
-        <!-- DISTRICT -->
-        <!-- ========================================= -->
-
-        <div class="form-group">
-
-            <label for="delivery_district">
-                District
-            </label>
-
-            <input
-                type="text"
-                id="delivery_district"
-                name="delivery_district"
-                readonly
-                required
-            >
-
-        </div>
-
-
-
-        <!-- ========================================= -->
-        <!-- FULL ADDRESS -->
-        <!-- ========================================= -->
-
-        <div class="form-group">
-
-            <label for="delivery_address">
-                Full Delivery Address
-            </label>
-
-            <textarea
-                id="delivery_address"
-                name="delivery_address"
-                rows="3"
-                readonly
-            ></textarea>
-
-        </div>
-
-
-
-        <!-- ========================================= -->
-        <!-- EXACT LOCATION -->
-        <!-- ========================================= -->
-
-        <h2>
-            Exact Delivery Location
-        </h2>
-
-
-        <p>
-            Click on the map or use GPS to select your exact delivery location.
-        </p>
-
-
-
-        <!-- GPS BUTTON -->
-
-        <button
-            type="button"
-            class="gps-btn"
-            onclick="useCurrentLocation()"
-        >
-            📍 Use Current Location
-        </button>
-
-
-
-        <!-- MAP -->
-
-        <div id="map"></div>
-
-
-
-        <!-- LOCATION STATUS -->
-
-        <div
-            id="locationStatus"
-            class="location-status"
-        >
-            Exact location not selected.
-        </div>
-
-
-
-        <!-- ========================================= -->
-        <!-- HIDDEN COORDINATES -->
-        <!-- ========================================= -->
-
-        <input
-            type="hidden"
-            id="delivery_latitude"
-            name="delivery_latitude"
-        >
-
-
-        <input
-            type="hidden"
-            id="delivery_longitude"
-            name="delivery_longitude"
-        >
-
-
-
-        <!-- ========================================= -->
-        <!-- ORDER SUMMARY -->
-        <!-- ========================================= -->
-
-        <div class="price-box">
-
-            <h3>
-                Order Summary
-            </h3>
-
-
-            <p>
-
-                Product price:
-
-                ₹<span id="productTotal">
-                    0.00
-                </span>
-
-            </p>
-
-
-            <p>
-
-                Logistics cost:
-
-                <span id="logisticsCost">
-                    Will be calculated after location selection
-                </span>
-
-            </p>
-
-        </div>
-
-
-
-        <!-- PLACE ORDER -->
-
-        <button
-            type="submit"
-            class="buy-btn"
-        >
-            Place Order
-        </button>
-
-
-    </form>
+    <div>
+        <strong>Unable to place the order</strong>
+        <p>{{ error }}</p>
+    </div>
 
 </div>
 
+{% endif %}
 
 
-<!-- ========================================= -->
-<!-- LEAFLET JS -->
-<!-- ========================================= -->
+<form
+    id="buyForm"
+    method="POST"
+    action="/place-order/{{ product['product_id'] }}"
+    onsubmit="return validateLocation();"
+    data-quote-url="{{ url_for('buyer_quote', product_id=product.product_id) }}"
+    class="buyer-checkout-form"
+>
 
-<script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="{{ csrf_token }}"
+    >
+
+    <input
+        type="hidden"
+        name="quote_token"
+        value=""
+    >
 
 
+    <div class="buyer-checkout-layout">
+
+
+        <div class="buyer-checkout-main">
+
+
+            <!-- PRODUCT INFORMATION -->
+
+            <section class="buyer-section-card buyer-checkout-product-card">
+
+                <div class="buyer-section-heading inline">
+
+                    <div>
+                        <div class="buyer-eyebrow">
+                            PRODUCT
+                        </div>
+
+                        <h2>
+                            {{ product['crop_name'] }}
+                        </h2>
+                    </div>
+
+
+                    <span class="buyer-checkout-quality">
+                        {{ product['quality'] }}
+                    </span>
+
+                </div>
+
+
+                <div class="buyer-checkout-product-grid">
+
+                    <div>
+                        <span>Available Quantity</span>
+                        <strong>{{ product['quantity'] }} kg</strong>
+                    </div>
+
+                    <div>
+                        <span>Price</span>
+                        <strong>₹{{ product['price_per_kg'] }} / kg</strong>
+                    </div>
+
+                    <div>
+                        <span>Quality</span>
+                        <strong>{{ product['quality'] }}</strong>
+                    </div>
+
+                </div>
+
+
+                {% if product['description'] %}
+
+                <div class="buyer-checkout-description">
+                    <span>DESCRIPTION</span>
+                    <p>{{ product['description'] }}</p>
+                </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- QUANTITY -->
+
+            <section class="buyer-section-card buyer-checkout-section">
+
+                <div class="buyer-section-heading">
+
+                    <div>
+                        <div class="buyer-eyebrow">
+                            STEP 01
+                        </div>
+
+                        <h2>
+                            Choose Quantity
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="buyer-checkout-field">
+
+                    <label for="quantity">
+                        Quantity
+                        <small>kilograms</small>
+                    </label>
+
+                    <div class="buyer-checkout-input-with-unit">
+
+                        <input
+                            type="number"
+                            id="quantity"
+                            name="quantity"
+                            value="{{ request.form.get('quantity', '') }}"
+                            min="0.01"
+                            max="{{ product['quantity'] }}"
+                            step="0.01"
+                            placeholder="Enter quantity"
+                            required
+                        >
+
+                        <span>kg</span>
+
+                    </div>
+
+                    <small class="buyer-checkout-hint">
+                        Maximum available: {{ product['quantity'] }} kg
+                    </small>
+
+                </div>
+
+            </section>
+
+
+            <!-- DELIVERY ADDRESS -->
+
+            <section class="buyer-section-card buyer-checkout-section">
+
+                <div class="buyer-section-heading">
+
+                    <div>
+                        <div class="buyer-eyebrow">
+                            STEP 02
+                        </div>
+
+                        <h2>
+                            Delivery Address
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="buyer-checkout-fields-grid">
+
+                    <div class="buyer-checkout-field">
+
+                        <label for="delivery_house_no">
+                            House / Plot No.
+                        </label>
+
+                        <input
+                            type="text"
+                            id="delivery_house_no"
+                            name="delivery_house_no"
+                            value="{{ request.form.get('delivery_house_no', '') }}"
+                            placeholder="House or plot number"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="buyer-checkout-field">
+
+                        <label for="delivery_street">
+                            Street / Locality
+                        </label>
+
+                        <input
+                            type="text"
+                            id="delivery_street"
+                            name="delivery_street"
+                            value="{{ request.form.get('delivery_street', '') }}"
+                            placeholder="Street or locality"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="buyer-checkout-field">
+
+                        <label for="delivery_village_city">
+                            Village / City
+                        </label>
+
+                        <input
+                            type="text"
+                            id="delivery_village_city"
+                            name="delivery_village_city"
+                            value="{{ request.form.get('delivery_village_city', '') }}"
+                            placeholder="Village or city"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="buyer-checkout-field">
+
+                        <label for="delivery_pincode">
+                            Pincode
+                        </label>
+
+                        <input
+                            type="text"
+                            id="delivery_pincode"
+                            name="delivery_pincode"
+                            value="{{ request.form.get('delivery_pincode', '') }}"
+                            maxlength="6"
+                            pattern="[0-9]{6}"
+                            inputmode="numeric"
+                            placeholder="6-digit pincode"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="buyer-checkout-field">
+
+                        <label for="delivery_state">
+                            State
+                        </label>
+
+                        <input
+                            type="text"
+                            id="delivery_state"
+                            name="delivery_state"
+                            value="{{ request.form.get('delivery_state', '') }}"
+                            readonly
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="buyer-checkout-field">
+
+                        <label for="delivery_district">
+                            District
+                        </label>
+
+                        <input
+                            type="text"
+                            id="delivery_district"
+                            name="delivery_district"
+                            value="{{ request.form.get('delivery_district', '') }}"
+                            readonly
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="buyer-checkout-field buyer-checkout-full-address">
+
+                    <label for="delivery_address">
+                        Full Delivery Address
+                    </label>
+
+                    <textarea
+                        id="delivery_address"
+                        name="delivery_address"
+                        rows="3"
+                        readonly
+                        placeholder="Your complete address will be assembled here"
+                    ></textarea>
+
+                </div>
+
+            </section>
+
+
+            <!-- EXACT LOCATION -->
+
+            <section class="buyer-section-card buyer-checkout-section">
+
+                <div class="buyer-section-heading inline">
+
+                    <div>
+                        <div class="buyer-eyebrow">
+                            STEP 03
+                        </div>
+
+                        <h2>
+                            Exact Delivery Location
+                        </h2>
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="buyer-gps-button"
+                        onclick="useCurrentLocation()"
+                    >
+                        <svg class="buyer-icon" aria-hidden="true">
+                            <use href="#buyer-icon-pin"></use>
+                        </svg>
+
+                        Use Current Location
+                    </button>
+
+                </div>
+
+
+                <p class="buyer-checkout-map-copy">
+                    Click on the map, drag the marker, or use your current
+                    GPS location to select the exact delivery point.
+                </p>
+
+
+                <div
+                    id="map"
+                    class="buyer-checkout-map"
+                    aria-label="Choose exact delivery location"
+                ></div>
+
+
+                <div
+                    id="locationStatus"
+                    class="location-status buyer-checkout-location-status"
+                    role="status"
+                >
+                    <svg class="buyer-icon" aria-hidden="true">
+                        <use href="#buyer-icon-pin"></use>
+                    </svg>
+
+                    <span>
+                        Exact location not selected.
+                    </span>
+                </div>
+
+
+                <input
+                    type="hidden"
+                    id="delivery_latitude"
+                    name="delivery_latitude"
+                    value="{{ request.form.get('delivery_latitude', '') }}"
+                >
+
+
+                <input
+                    type="hidden"
+                    id="delivery_longitude"
+                    name="delivery_longitude"
+                    value="{{ request.form.get('delivery_longitude', '') }}"
+                >
+
+            </section>
+
+        </div>
+
+
+        <!-- ORDER SUMMARY -->
+
+        <aside class="buyer-checkout-sidebar">
+
+            <section class="buyer-section-card buyer-checkout-summary">
+
+                <div class="buyer-section-heading">
+
+                    <div>
+                        <div class="buyer-eyebrow">
+                            STEP 04
+                        </div>
+
+                        <h2>
+                            Order Summary
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="buyer-checkout-summary-product">
+
+                    <div class="buyer-checkout-summary-product-icon">
+                        <svg class="buyer-icon" aria-hidden="true">
+                            <use href="#buyer-icon-leaf"></use>
+                        </svg>
+                    </div>
+
+                    <div>
+                        <strong>{{ product['crop_name'] }}</strong>
+
+                        <span>
+                            ₹{{ product['price_per_kg'] }} / kg
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="buyer-checkout-summary-line">
+
+                    <span>Product price</span>
+
+                    <strong>
+                        ₹<span id="productTotal">0.00</span>
+                    </strong>
+
+                </div>
+
+
+                <div class="buyer-checkout-summary-line buyer-checkout-logistics-line">
+
+                    <span>Logistics cost</span>
+
+                    <strong id="logisticsCost">
+                        Enter quantity and choose a delivery location for an estimate
+                    </strong>
+
+                </div>
+
+
+                <div class="buyer-checkout-rate-note">
+
+                    <svg class="buyer-icon" aria-hidden="true">
+                        <use href="#buyer-icon-truck"></use>
+                    </svg>
+
+                    <span>
+                        Delivery estimate: ₹{{ delivery_rate }}/km using
+                        straight-line distance. Actual road distance may differ.
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="quoteStatus"
+                    class="buyer-checkout-quote-status"
+                    role="status"
+                ></div>
+
+
+                <div class="buyer-checkout-total">
+
+                    <span>
+                        Estimated total
+                    </span>
+
+                    <strong>
+                        ₹<span id="estimatedTotal">—</span>
+                    </strong>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="refreshQuote"
+                    class="buyer-calculate-button"
+                >
+                    Calculate Delivery Estimate
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="buyer-place-order-button buy-btn"
+                    id="placeOrderButton"
+                    disabled
+                >
+                    Place Order
+
+                    <svg class="buyer-icon" aria-hidden="true">
+                        <use href="#buyer-icon-arrow"></use>
+                    </svg>
+                </button>
+
+
+                <p class="buyer-checkout-submit-note">
+                    Review the calculated estimate before placing the order.
+                    Payment collection is not performed on this page.
+                </p>
+
+            </section>
+
+        </aside>
+
+    </div>
+
+</form>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-
-
 /* =====================================================
    MAP INITIALIZATION
    ===================================================== */
@@ -645,6 +696,8 @@ function setLocation(lat, lng, zoom = 17) {
         "delivery_longitude"
     ).value =
         lng.toFixed(7);
+
+    document.getElementById("delivery_longitude").dispatchEvent(new Event("input", {bubbles: true}));
 
 
 
@@ -1617,12 +1670,11 @@ console.log(
 console.log(
     "Leaflet map initialized successfully."
 );
-
-
 </script>
 
+<script
+    src="{{ url_for('static', filename='buyer-checkout.js') }}"
+    defer
+></script>
 
-</body>
-
-</html>
-
+{% endblock %}

@@ -1,1189 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#153f30">
     <title>Logistics Dashboard - AgriConnect</title>
 
-
-    <!-- =====================================================
-         LEAFLET MAP
-         ===================================================== -->
-
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-
-        body {
-
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
-            background: #f4f7f4;
-
-            color: #222;
-
-        }
-
-
-        /* =====================================================
-           SIDEBAR
-           ===================================================== */
-
-        .sidebar {
-
-            position: fixed;
-
-            left: 0;
-            top: 0;
-
-            width: 250px;
-            height: 100vh;
-
-            background: #1b5e20;
-
-            color: white;
-
-            padding: 25px 15px;
-
-            overflow-y: auto;
-
-        }
-
-
-        .logo {
-
-            text-align: center;
-
-            font-size: 25px;
-
-            font-weight: bold;
-
-            margin-bottom: 35px;
-
-        }
-
-
-        .logo span {
-
-            display: block;
-
-            font-size: 13px;
-
-            font-weight: normal;
-
-            margin-top: 5px;
-
-            opacity: 0.85;
-
-        }
-
-
-        .nav-item {
-
-            display: block;
-
-            text-decoration: none;
-
-            color: white;
-
-            padding: 13px 15px;
-
-            border-radius: 8px;
-
-            margin-bottom: 7px;
-
-            font-size: 15px;
-
-            transition: 0.2s;
-
-        }
-
-
-        .nav-item:hover {
-
-            background: rgba(255,255,255,0.12);
-
-        }
-
-
-        .nav-item.active {
-
-            background: #2e7d32;
-
-        }
-
-
-        /* =====================================================
-           MAIN
-           ===================================================== */
-
-        .main {
-
-            margin-left: 250px;
-
-            min-height: 100vh;
-
-        }
-
-
-        /* =====================================================
-           TOPBAR
-           ===================================================== */
-
-        .topbar {
-
-            height: 70px;
-
-            background: white;
-
-            border-bottom: 1px solid #ddd;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            padding: 0 30px;
-
-        }
-
-
-        .topbar-title {
-
-            font-size: 21px;
-
-            font-weight: bold;
-
-            color: #2e7d32;
-
-        }
-
-
-        .profile {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-        }
-
-
-        .profile-icon {
-
-            width: 40px;
-            height: 40px;
-
-            border-radius: 50%;
-
-            background: #e8f5e9;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            font-size: 20px;
-
-        }
-
-
-        .profile-name {
-
-            font-weight: bold;
-
-        }
-
-
-        /* =====================================================
-           CONTENT
-           ===================================================== */
-
-        .content {
-
-            padding: 30px;
-
-        }
-
-
-        .welcome {
-
-            margin-bottom: 25px;
-
-        }
-
-
-        .welcome h1 {
-
-            font-size: 28px;
-
-            margin-bottom: 7px;
-
-            color: #1b5e20;
-
-        }
-
-
-        .welcome p {
-
-            color: #666;
-
-        }
-
-
-        /* =====================================================
-           COMMON CARD
-           ===================================================== */
-
-        .card {
-
-            background: white;
-
-            border-radius: 14px;
-
-            padding: 24px;
-
-            box-shadow:
-                0 3px 12px rgba(0,0,0,0.07);
-
-            margin-bottom: 25px;
-
-        }
-
-
-        .card-title {
-
-            font-size: 19px;
-
-            font-weight: bold;
-
-            color: #1b5e20;
-
-            margin-bottom: 8px;
-
-        }
-
-
-        .card-description {
-
-            color: #777;
-
-            font-size: 14px;
-
-            margin-bottom: 20px;
-
-        }
-
-
-        /* =====================================================
-           AVAILABILITY
-           ===================================================== */
-
-        .availability-card {
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            gap: 20px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #ffffff,
-                    #f1f8f1
-                );
-
-        }
-
-
-        .availability-info {
-
-            flex: 1;
-
-        }
-
-
-        .availability-status {
-
-            font-size: 16px;
-
-            font-weight: bold;
-
-            margin-top: 10px;
-
-        }
-
-
-        .online {
-
-            color: #2e7d32;
-
-        }
-
-
-        .offline {
-
-            color: #757575;
-
-        }
-
-
-        /* Toggle */
-
-        .switch {
-
-            position: relative;
-
-            display: inline-block;
-
-            width: 65px;
-
-            height: 34px;
-
-        }
-
-
-        .switch input {
-
-            opacity: 0;
-
-            width: 0;
-            height: 0;
-
-        }
-
-
-        .slider {
-
-            position: absolute;
-
-            cursor: pointer;
-
-            inset: 0;
-
-            background: #bbb;
-
-            border-radius: 34px;
-
-            transition: 0.3s;
-
-        }
-
-
-        .slider:before {
-
-            content: "";
-
-            position: absolute;
-
-            height: 26px;
-            width: 26px;
-
-            left: 4px;
-            top: 4px;
-
-            background: white;
-
-            border-radius: 50%;
-
-            transition: 0.3s;
-
-            box-shadow:
-                0 2px 5px rgba(0,0,0,0.2);
-
-        }
-
-
-        input:checked + .slider {
-
-            background: #2e7d32;
-
-        }
-
-
-        input:checked + .slider:before {
-
-            transform: translateX(31px);
-
-        }
-
-
-        /* =====================================================
-           GRID
-           ===================================================== */
-
-        .two-column {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, minmax(0, 1fr));
-
-            gap: 25px;
-
-        }
-
-
-        /* =====================================================
-           VEHICLE FORM
-           ===================================================== */
-
-        .form-group {
-
-            margin-bottom: 17px;
-
-        }
-
-
-        .form-group label {
-
-            display: block;
-
-            margin-bottom: 7px;
-
-            font-weight: bold;
-
-            font-size: 14px;
-
-        }
-
-
-        .form-group input,
-        .form-group select {
-
-            width: 100%;
-
-            padding: 11px 12px;
-
-            border: 1px solid #ccc;
-
-            border-radius: 7px;
-
-            font-size: 14px;
-
-            outline: none;
-
-        }
-
-
-        .form-group input:focus,
-        .form-group select:focus {
-
-            border-color: #2e7d32;
-
-        }
-
-
-        .save-btn {
-
-            width: 100%;
-
-            border: none;
-
-            padding: 12px;
-
-            border-radius: 7px;
-
-            background: #2e7d32;
-
-            color: white;
-
-            font-size: 15px;
-
-            cursor: pointer;
-
-        }
-
-
-        .save-btn:hover {
-
-            background: #256628;
-
-        }
-
-
-        #vehicleMessage {
-
-            margin-top: 12px;
-
-            font-size: 14px;
-
-            font-weight: bold;
-
-        }
-
-
-        /* =====================================================
-           LOCATION
-           ===================================================== */
-
-        .location-status-box {
-
-            padding: 15px;
-
-            background: #f5f8f5;
-
-            border-radius: 10px;
-
-            margin-bottom: 18px;
-
-        }
-
-
-        #locationStatus {
-
-            font-weight: bold;
-
-            margin-bottom: 12px;
-
-        }
-
-
-        .coordinates {
-
-            display: grid;
-
-            grid-template-columns: 1fr 1fr;
-
-            gap: 12px;
-
-            margin-bottom: 15px;
-
-        }
-
-
-        .coordinate-box {
-
-            background: white;
-
-            border: 1px solid #ddd;
-
-            border-radius: 8px;
-
-            padding: 12px;
-
-        }
-
-
-        .coordinate-box strong {
-
-            display: block;
-
-            font-size: 12px;
-
-            color: #777;
-
-            margin-bottom: 5px;
-
-        }
-
-
-        .coordinate-box span {
-
-            font-size: 14px;
-
-            font-weight: bold;
-
-        }
-
-
-        .location-button {
-
-            border: none;
-
-            padding: 11px 16px;
-
-            border-radius: 7px;
-
-            background: #2e7d32;
-
-            color: white;
-
-            cursor: pointer;
-
-            font-size: 14px;
-
-        }
-
-
-        .location-button:hover {
-
-            background: #256628;
-
-        }
-
-
-        #map {
-
-            width: 100%;
-
-            height: 350px;
-
-            border-radius: 10px;
-
-            border: 1px solid #ddd;
-
-        }
-
-
-        .location-help {
-
-            margin-top: 12px;
-
-            color: #666;
-
-            font-size: 13px;
-
-            line-height: 1.5;
-
-        }
-
-
-        /* =====================================================
-           VEHICLE SUMMARY
-           ===================================================== */
-
-        .vehicle-summary {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 12px;
-
-        }
-
-
-        .summary-item {
-
-            padding: 15px;
-
-            background: #f6f8f6;
-
-            border-radius: 9px;
-
-        }
-
-
-        .summary-label {
-
-            font-size: 12px;
-
-            color: #777;
-
-            margin-bottom: 6px;
-
-        }
-
-
-        .summary-value {
-
-            font-size: 16px;
-
-            font-weight: bold;
-
-            color: #222;
-
-            word-break: break-word;
-
-        }
-
-
-        /* =====================================================
-           EMPTY SECTIONS
-           ===================================================== */
-
-        .empty-state {
-
-            text-align: center;
-
-            padding: 35px 20px;
-
-            color: #777;
-
-        }
-
-
-        .empty-icon {
-
-            font-size: 38px;
-
-            margin-bottom: 12px;
-
-        }
-
-
-        .empty-state h3 {
-
-            color: #555;
-
-            margin-bottom: 7px;
-
-        }
-
-
-        .empty-state p {
-
-            font-size: 14px;
-
-        }
-
-
-        /* =====================================================
-           RESPONSIVE
-           ===================================================== */
-
-        @media (max-width: 950px) {
-
-            .two-column {
-
-                grid-template-columns: 1fr;
-
-            }
-
-        }
-
-
-        @media (max-width: 750px) {
-
-            .sidebar {
-
-                position: relative;
-
-                width: 100%;
-
-                height: auto;
-
-            }
-
-
-            .main {
-
-                margin-left: 0;
-
-            }
-
-
-            .topbar {
-
-                padding: 0 15px;
-
-            }
-
-
-            .content {
-
-                padding: 20px 15px;
-
-            }
-
-
-            .availability-card {
-
-                flex-direction: column;
-
-                align-items: flex-start;
-
-            }
-
-
-            .coordinates {
-
-                grid-template-columns: 1fr;
-
-            }
-
-
-            .vehicle-summary {
-
-                grid-template-columns: 1fr;
-
-            }
-
-        }
-
-    </style>
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='logistics.css') }}">
 </head>
-
-
 <body>
+<a class="skip-link" href="#dashboard-content">Skip to dashboard content</a>
 
-
-<!-- =========================================================
-     SIDEBAR
-     ========================================================= -->
+<!-- Reusable line icons keep the dashboard visually consistent with the homepage. -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+    <symbol id="icon-leaf" viewBox="0 0 24 24">
+        <path d="M20.5 3.5C13 3.7 7.7 6.7 5.3 11.1c-1.8 3.2-1.2 6.4.7 8.1 1.9 1.8 5.1 2 8.1.2 4.2-2.5 6.3-8 6.4-15.9Z"/>
+        <path d="M5.8 18.9c2.3-4.1 5.5-7.3 10-10"/>
+    </symbol>
+    <symbol id="icon-home" viewBox="0 0 24 24">
+        <path d="m3 10 9-7 9 7"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-7h6v7"/>
+    </symbol>
+    <symbol id="icon-package" viewBox="0 0 24 24">
+        <path d="m4 7 8-4 8 4-8 4-8-4Z"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/>
+    </symbol>
+    <symbol id="icon-truck" viewBox="0 0 24 24">
+        <path d="M3 6h11v11H3z"/><path d="M14 10h4l3 3v4h-7z"/><path d="M6 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM18 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+    </symbol>
+    <symbol id="icon-pin" viewBox="0 0 24 24">
+        <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>
+    </symbol>
+    <symbol id="icon-route" viewBox="0 0 24 24">
+        <circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h2.5a3.5 3.5 0 0 0 0-7H9a3 3 0 0 1 0-6h7"/>
+    </symbol>
+    <symbol id="icon-history" viewBox="0 0 24 24">
+        <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/>
+    </symbol>
+    <symbol id="icon-wallet" viewBox="0 0 24 24">
+        <path d="M4 6h14a2 2 0 0 1 2 2v10H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12"/><path d="M15 11h6v4h-6a2 2 0 0 1 0-4Z"/>
+    </symbol>
+    <symbol id="icon-help" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.5 2.5 0 1 1 3.7 2.2c-1 .5-1.5 1-1.5 2.3"/><path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/>
+    </symbol>
+    <symbol id="icon-edit" viewBox="0 0 24 24">
+        <path d="M4 20h4l11-11-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/>
+    </symbol>
+    <symbol id="icon-save" viewBox="0 0 24 24">
+        <path d="M4 4h13l3 3v13H4z"/><path d="M8 4v6h8V4"/><path d="M8 20v-6h8v6"/>
+    </symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14"/><path d="m14 7 5 5-5 5"/>
+    </symbol>
+    <symbol id="icon-location" viewBox="0 0 24 24">
+        <path d="m12 22 3-7 7-3-7-3-3-7-3 7-7 3 7 3 3 7Z"/>
+    </symbol>
+</svg>
 
 <aside class="sidebar">
+    <a class="brand" href="/logistics" aria-label="AgriConnect logistics home">
+        <span class="brand-mark" aria-hidden="true">
+            <svg class="icon"><use href="#icon-leaf"></use></svg>
+        </span>
+        <span class="brand-copy">
+            <strong>AgriConnect</strong>
+            <small>PEOPLE · PRODUCE · PROSPER</small>
+        </span>
+    </a>
 
-    <div class="logo">
+    <div class="nav-label">LOGISTICS WORKSPACE</div>
+    <nav aria-label="Logistics dashboard sections">
+        <a href="/logistics" class="nav-item active">
+            <svg class="icon" aria-hidden="true"><use href="#icon-home"></use></svg>
+            <span>Dashboard</span>
+        </a>
+        <a href="/logistics/available-requests" class="nav-item">
+            <svg class="icon" aria-hidden="true"><use href="#icon-package"></use></svg>
+            <span>Available Requests</span>
+        </a>
+        <a href="#my-deliveries" class="nav-item">
+            <svg class="icon" aria-hidden="true"><use href="#icon-truck"></use></svg>
+            <span>My Deliveries</span>
+        </a>
+        <a href="#vehicle-information" class="nav-item">
+            <svg class="icon" aria-hidden="true"><use href="#icon-truck"></use></svg>
+            <span>Vehicle Information</span>
+        </a>
+        <a href="#location-section" class="nav-item">
+            <svg class="icon" aria-hidden="true"><use href="#icon-pin"></use></svg>
+            <span>Current Location</span>
+        </a>
+        <a href="#route-optimization" class="nav-item">
+            <svg class="icon" aria-hidden="true"><use href="#icon-route"></use></svg>
+            <span>Route Optimization</span>
+        </a>
+        <a href="#delivery-history" class="nav-item">
+            <svg class="icon" aria-hidden="true"><use href="#icon-history"></use></svg>
+            <span>Delivery History</span>
+        </a>
+        <a href="#earnings" class="nav-item">
+            <svg class="icon" aria-hidden="true"><use href="#icon-wallet"></use></svg>
+            <span>Earnings</span>
+        </a>
+        <a href="#help" class="nav-item">
+            <svg class="icon" aria-hidden="true"><use href="#icon-help"></use></svg>
+            <span>Help & Support</span>
+        </a>
+    </nav>
 
-        🚚 AgriConnect
-
-        <span>Logistics Dashboard</span>
-
+    <div class="sidebar-note" aria-hidden="true">
+        <svg class="icon"><use href="#icon-route"></use></svg>
+        <p>Move produce.<br>Build trust.</p>
+        <small>Farm-to-market logistics, connected.</small>
     </div>
-
-
-    <a
-        href="/logistics"
-        class="nav-item active"
-    >
-        🏠 Dashboard
-    </a>
-
-
-    <a
-        href="#available-requests"
-        class="nav-item"
-    >
-        📦 Available Delivery Requests
-    </a>
-
-
-    <a
-        href="#my-deliveries"
-        class="nav-item"
-    >
-        🚚 My Deliveries
-    </a>
-
-
-    <a
-        href="#vehicle-information"
-        class="nav-item"
-    >
-        🚛 Vehicle Information
-    </a>
-
-
-    <a
-        href="#location-section"
-        class="nav-item"
-    >
-        📍 Current Location
-    </a>
-
-
-    <a
-        href="#route-optimization"
-        class="nav-item"
-    >
-        🗺️ Route Optimization
-    </a>
-
-
-    <a
-        href="#delivery-history"
-        class="nav-item"
-    >
-        📋 Delivery History
-    </a>
-
-
-    <a
-        href="#earnings"
-        class="nav-item"
-    >
-        💰 Earnings
-    </a>
-
-
-    <a
-        href="#help"
-        class="nav-item"
-    >
-        ❓ Help & Support
-    </a>
-
 </aside>
 
-
-
-<!-- =========================================================
-     MAIN
-     ========================================================= -->
-
-<main class="main">
-
-
-    <!-- =====================================================
-         TOPBAR
-         ===================================================== -->
-
+<main class="main" id="dashboard-content">
     <header class="topbar">
-
         <div class="topbar-title">
-            Logistics Dashboard
+            AgriConnect <span>/</span> <small>Logistics operations</small>
         </div>
-
-
         <div class="profile">
-
-            <div class="profile-icon">
-                👤
+            <div class="profile-icon" aria-hidden="true">{{ user["name"][:1] | upper }}</div>
+            <div class="profile-copy">
+                <div class="profile-name">{{ user["name"] }}</div>
+                <small>Logistics Partner</small>
             </div>
-
-            <div class="profile-name">
-                {{ user["name"] }}
-            </div>
-
         </div>
-
     </header>
 
-
-
-    <!-- =====================================================
-         CONTENT
-         ===================================================== -->
-
     <section class="content">
-
-
-        <!-- =================================================
-             WELCOME
-             ================================================= -->
-
-        <div class="welcome">
-
-            <h1>
-                Welcome, {{ user["name"] }} 👋
-            </h1>
-
-            <p>
-                Manage your delivery availability,
-                vehicle information and current location.
-            </p>
-
-        </div>
-
-
-
-        <!-- =================================================
-             ONLINE / OFFLINE
-             ================================================= -->
-
-        <div class="card availability-card">
-
-            <div class="availability-info">
-
-                <div class="card-title">
-                    Delivery Availability
+        <section class="welcome" aria-labelledby="welcome-title">
+            <div class="welcome-copy">
+                <div class="eyebrow">YOUR DELIVERY WORKSPACE</div>
+                <h1 id="welcome-title">Move produce.<br><em>Deliver better.</em></h1>
+                <p>
+                    Welcome, <strong>{{ user["name"] }}</strong>. Manage vehicle availability,
+                    live location and delivery operations from one connected dashboard.
+                </p>
+                <div class="welcome-actions">
+                    <a class="primary-link" href="/logistics/available-requests">
+                        View delivery requests
+                        <svg class="icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+                    </a>
+                    <a class="secondary-link" href="#location-section">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-pin"></use></svg>
+                        Open live location
+                    </a>
                 </div>
-
-                <div class="card-description">
-                    Turn online to receive nearby
-                    delivery requests.
-                </div>
-
-
-                <div
-                    id="availabilityStatus"
-                    class="availability-status
-                    {% if user['availability'] == 'ONLINE' %}
-                        online
-                    {% else %}
-                        offline
-                    {% endif %}"
-                >
-
-                    {% if user["availability"] == "ONLINE" %}
-
-                        🟢 ONLINE
-
-                    {% else %}
-
-                        ⚪ OFFLINE
-
-                    {% endif %}
-
-                </div>
-
             </div>
 
-
-            <label class="switch">
-
-                <input
-                    type="checkbox"
-                    id="availabilityToggle"
-
-                    {% if user["availability"] == "ONLINE" %}
-                        checked
-                    {% endif %}
-
-                    onchange="changeAvailability()"
-                >
-
-                <span class="slider"></span>
-
-            </label>
-
-        </div>
-
-
-
-        <!-- =================================================
-             VEHICLE + LOCATION
-             ================================================= -->
-
-        <div class="two-column">
-
-
-            <!-- =============================================
-                 VEHICLE INFORMATION
-                 ============================================= -->
-
-            <div
-                class="card"
-                id="vehicle-information"
-            >
-
-                <div class="card-title">
-                    🚛 Vehicle Information
+            <div class="welcome-art" aria-hidden="true">
+                <span class="welcome-sun"></span>
+                <span class="welcome-horizon"></span>
+                <span class="welcome-field field-one"></span>
+                <span class="welcome-field field-two"></span>
+                <span class="welcome-field field-three"></span>
+                <div class="welcome-route-card">
+                    <svg class="icon"><use href="#icon-route"></use></svg>
+                    <span>Farm</span><b>→</b><span>Market</span>
                 </div>
+            </div>
+        </section>
 
-                <div class="card-description">
-                    Add or update the vehicle used
-                    for deliveries.
+        <section class="card availability-card" aria-labelledby="availability-title">
+            <div class="availability-info">
+                <div class="section-heading">
+                    <span class="section-icon">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-truck"></use></svg>
+                    </span>
+                    <div>
+                        <h2 class="card-title" id="availability-title">Delivery Availability</h2>
+                        <p class="card-description">Go online when you are ready to receive nearby delivery requests.</p>
+                    </div>
                 </div>
+            </div>
 
-
-                <form
-                    id="vehicleForm"
-                    onsubmit="saveVehicleInfo(event)"
+            <div class="availability-controls">
+                <div
+                    id="availabilityStatus"
+                    class="availability-status {% if user['availability'] == 'ONLINE' %}online{% else %}offline{% endif %}"
+                    role="status"
+                    aria-live="polite"
                 >
+                    {% if user["availability"] == "ONLINE" %}ONLINE{% else %}OFFLINE{% endif %}
+                </div>
+                <label class="switch" aria-label="Toggle delivery availability">
+                    <input
+                        type="checkbox"
+                        id="availabilityToggle"
+                        disabled
+                        {% if user["availability"] == "ONLINE" %}checked{% endif %}
+                        onchange="changeAvailability()"
+                    >
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </section>
 
+        <section class="card" aria-labelledby="vehicle-status-title">
+            <div class="vehicle-card-heading">
+                <div class="section-heading">
+                    <span class="section-icon gold">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-truck"></use></svg>
+                    </span>
+                    <div>
+                        <h2 class="card-title" id="vehicle-status-title">Vehicle Status</h2>
+                        <p class="card-description">Current vehicle information saved to your logistics profile.</p>
+                    </div>
+                </div>
+                <button type="button" class="edit-vehicle-btn" aria-controls="vehicleForm" onclick="editVehicleInfo()">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-edit"></use></svg>
+                    Edit vehicle info
+                </button>
+            </div>
 
+            <div class="vehicle-summary">
+                <div class="summary-item">
+                    <div class="summary-label">Vehicle Number</div>
+                    <div class="summary-value" id="summaryVehicleNumber">
+                        {% if user["vehicle_number"] %}{{ user["vehicle_number"] }}{% else %}Not added{% endif %}
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Vehicle Type</div>
+                    <div class="summary-value" id="summaryVehicleType">
+                        {% if user["vehicle_type"] %}{{ user["vehicle_type"] }}{% else %}Not added{% endif %}
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Capacity</div>
+                    <div class="summary-value" id="summaryVehicleCapacity">
+                        {% if user["vehicle_capacity"] %}{{ user["vehicle_capacity"] }} kg{% else %}Not added{% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card" id="vehicle-information" aria-labelledby="vehicle-information-title">
+            <div class="vehicle-card-heading">
+                <div class="section-heading">
+                    <span class="section-icon">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-truck"></use></svg>
+                    </span>
+                    <div>
+                        <h2 class="card-title" id="vehicle-information-title">Vehicle Information</h2>
+                        <p class="card-description">Add or update the vehicle used for AgriConnect deliveries.</p>
+                    </div>
+                </div>
+                <button type="button" class="edit-vehicle-btn" aria-controls="vehicleForm" onclick="editVehicleInfo()">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-edit"></use></svg>
+                    Focus form
+                </button>
+            </div>
+
+            <form id="vehicleForm" onsubmit="saveVehicleInfo(event)">
+                <div class="vehicle-fields">
                     <div class="form-group">
-
-                        <label for="vehicleNumber">
-                            Vehicle Number
-                        </label>
-
+                        <label for="vehicleNumber">Vehicle Number</label>
                         <input
                             type="text"
                             id="vehicleNumber"
                             name="vehicle_number"
                             value="{{ user['vehicle_number'] or '' }}"
                             placeholder="Example: MP 04 AB 1234"
+                            autocomplete="off"
                             required
                         >
-
                     </div>
-
-
-
                     <div class="form-group">
-
-                        <label for="vehicleType">
-                            Vehicle Type
-                        </label>
-
-                        <select
-                            id="vehicleType"
-                            name="vehicle_type"
-                            required
-                        >
-
-                            <option value="">
-                                Select Vehicle Type
-                            </option>
-
-
-                            <option
-                                value="Mini Truck"
-
-                                {% if user["vehicle_type"] == "Mini Truck" %}
-                                    selected
-                                {% endif %}
-                            >
-                                Mini Truck
-                            </option>
-
-
-                            <option
-                                value="Pickup"
-
-                                {% if user["vehicle_type"] == "Pickup" %}
-                                    selected
-                                {% endif %}
-                            >
-                                Pickup
-                            </option>
-
-
-                            <option
-                                value="Tractor"
-
-                                {% if user["vehicle_type"] == "Tractor" %}
-                                    selected
-                                {% endif %}
-                            >
-                                Tractor
-                            </option>
-
-
-                            <option
-                                value="Small Truck"
-
-                                {% if user["vehicle_type"] == "Small Truck" %}
-                                    selected
-                                {% endif %}
-                            >
-                                Small Truck
-                            </option>
-
-
-                            <option
-                                value="Truck"
-
-                                {% if user["vehicle_type"] == "Truck" %}
-                                    selected
-                                {% endif %}
-                            >
-                                Truck
-                            </option>
-
+                        <label for="vehicleType">Vehicle Type</label>
+                        <select id="vehicleType" name="vehicle_type" required>
+                            <option value="">Select vehicle type</option>
+                            <option value="Mini Truck" {% if user["vehicle_type"] == "Mini Truck" %}selected{% endif %}>Mini Truck</option>
+                            <option value="Pickup" {% if user["vehicle_type"] == "Pickup" %}selected{% endif %}>Pickup</option>
+                            <option value="Tractor" {% if user["vehicle_type"] == "Tractor" %}selected{% endif %}>Tractor</option>
+                            <option value="Small Truck" {% if user["vehicle_type"] == "Small Truck" %}selected{% endif %}>Small Truck</option>
+                            <option value="Truck" {% if user["vehicle_type"] == "Truck" %}selected{% endif %}>Truck</option>
                         </select>
-
                     </div>
-
-
-
                     <div class="form-group">
-
-                        <label for="vehicleCapacity">
-                            Vehicle Capacity (kg)
-                        </label>
-
+                        <label for="vehicleCapacity">Vehicle Capacity (kg)</label>
                         <input
                             type="number"
                             id="vehicleCapacity"
@@ -1194,1416 +293,210 @@
                             placeholder="Example: 1000"
                             required
                         >
-
                     </div>
-
-
-
-                    <button
-                        type="submit"
-                        class="save-btn"
-                    >
-                        Save Vehicle Information
+                </div>
+                <div class="form-footer">
+                    <div id="vehicleMessage" role="status" aria-live="polite"></div>
+                    <button type="submit" class="save-btn">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-save"></use></svg>
+                        Save vehicle information
                     </button>
+                </div>
+            </form>
+        </section>
 
-                </form>
-
-
-                <div id="vehicleMessage"></div>
-
+        <section class="card live-location-card" id="location-section" aria-labelledby="live-location-title">
+            <div class="live-location-header">
+                <div class="section-heading">
+                    <span class="section-icon gold">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-pin"></use></svg>
+                    </span>
+                    <div>
+                        <h2 class="card-title" id="live-location-title">Live Driver Location</h2>
+                        <p class="card-description">Track the device travelling with the vehicle and keep your position fresh while online.</p>
+                    </div>
+                </div>
             </div>
 
+            <div class="live-location-layout">
+                <div class="live-location-info">
+                    <h3>Current location</h3>
+                    <div id="locationStatus" role="status" aria-live="polite">Loading saved location...</div>
 
-
-            <!-- =============================================
-                 CURRENT LOCATION
-                 ============================================= -->
-
-            <div
-                class="card"
-                id="location-section"
-            >
-
-                <div class="card-title">
-                    📍 Current Location
-                </div>
-
-                <div class="card-description">
-
-                    Your current GPS location is used
-                    to find nearby delivery requests.
-
-                </div>
-
-
-                <div class="location-status-box">
-
-                    <div id="locationStatus">
-
-                        {% if user["current_latitude"]
-                              and user["current_longitude"] %}
-
-                            📍 Location available
-
-                        {% else %}
-
-                            Location not detected
-
-                        {% endif %}
-
-                    </div>
-
-
-                    <div class="coordinates">
-
-
-                        <div class="coordinate-box">
-
-                            <strong>
-                                Latitude
-                            </strong>
-
-                            <span id="currentLatitude">
-
-                                {% if user["current_latitude"] %}
-
-                                    {{ user["current_latitude"] }}
-
-                                {% else %}
-
-                                    Not available
-
-                                {% endif %}
-
-                            </span>
-
+                    <div class="location-coordinate-grid">
+                        <div class="location-detail-box">
+                            <span class="location-detail-label">Latitude</span>
+                            <strong id="currentLatitude">Not available</strong>
                         </div>
-
-
-
-                        <div class="coordinate-box">
-
-                            <strong>
-                                Longitude
-                            </strong>
-
-                            <span id="currentLongitude">
-
-                                {% if user["current_longitude"] %}
-
-                                    {{ user["current_longitude"] }}
-
-                                {% else %}
-
-                                    Not available
-
-                                {% endif %}
-
-                            </span>
-
+                        <div class="location-detail-box">
+                            <span class="location-detail-label">Longitude</span>
+                            <strong id="currentLongitude">Not available</strong>
                         </div>
-
                     </div>
 
+                    <p id="trackingStatus" role="status" aria-live="polite">Checking tracking status...</p>
+                    <p id="locationUpdatedAt">Last update: not available</p>
+                    <p id="locationAccuracy">GPS accuracy: not available</p>
 
-                    <button
-                        type="button"
-                        class="location-button"
-                        onclick="getCurrentLocation()"
-                    >
-                        📍 Update Current Location
-                    </button>
+                    <div class="tracking-actions">
+                        <button type="button" class="location-button" id="trackingButton" onclick="toggleLiveTracking()">Start live tracking</button>
+                        <button type="button" class="location-button secondary-location-btn" id="updateLocationButton" onclick="getCurrentLocation()">Update current location</button>
+                    </div>
 
+                    <label class="follow-driver-option" for="followVehicle">
+                        <input type="checkbox" id="followVehicle" checked>
+                        <span>Keep map centred on vehicle</span>
+                    </label>
                 </div>
 
-
-                <div id="map"></div>
-
-
-                <p class="location-help">
-
-                    When you are ONLINE, your current GPS
-                    location will be updated automatically.
-                    This location will be used for nearby
-                    delivery matching and route calculations.
-
-                </p>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =================================================
-             VEHICLE SUMMARY
-             ================================================= -->
-
-        <div class="card">
-
-            <div class="card-title">
-                🚚 Vehicle Status
-            </div>
-
-            <div class="card-description">
-                Current vehicle information from your profile.
-            </div>
-
-
-            <div class="vehicle-summary">
-
-
-                <div class="summary-item">
-
-                    <div class="summary-label">
-                        Vehicle Number
+                <div class="live-map-container">
+                    <div id="map" role="region" aria-label="Driver location map"></div>
+                    <div class="map-footer">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-location"></use></svg>
+                        Drag to explore the map. Use + / − to zoom.
                     </div>
+                </div>
+            </div>
 
-                    <div class="summary-value">
+            <p class="location-help">
+                Go online to start live tracking. Keep this page open on the device travelling with the vehicle and allow location access.
+                A location older than one minute is shown as stale; going offline stops live tracking while preserving the last saved position.
+            </p>
+        </section>
 
-                        {% if user["vehicle_number"] %}
+        <header class="operations-heading">
+            <div class="eyebrow">DELIVERY OPERATIONS</div>
+            <h2>Everything needed for the next trip.</h2>
+        </header>
 
-                            {{ user["vehicle_number"] }}
+        <section class="dashboard-flash-grid" aria-label="Logistics operations">
+            <article class="card dashboard-flash-card" id="available-requests" aria-labelledby="available-requests-title">
+                <div class="flash-card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-package"></use></svg></div>
+                <h2 class="card-title" id="available-requests-title">Available Delivery Requests</h2>
+                <p class="card-description">Nearby delivery requests that can be matched to your vehicle capacity will appear here.</p>
+                <a class="flash-card-action standalone-action" href="/logistics/available-requests">
+                    Open available requests
+                    <svg class="icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+                </a>
+            </article>
 
+            <article class="card dashboard-flash-card" id="my-deliveries" aria-labelledby="my-deliveries-title">
+                <div class="flash-card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-truck"></use></svg></div>
+                <h2 class="card-title" id="my-deliveries-title">My Deliveries</h2>
+                <p class="card-description">Accepted trips and their current delivery status will stay together in this workspace.</p>
+                <details class="flash-card-details">
+                    <summary class="flash-card-action">
+                        View deliveries
+                        <svg class="icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+                    </summary>
+                    <div class="flash-card-content">
+                        {% if active_deliveries %}
+                            {% for delivery in active_deliveries %}
+                                <div class="delivery-item">{{ delivery }}</div>
+                            {% endfor %}
                         {% else %}
-
-                            Not added
-
+                            <div class="empty-state">
+                                <div class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#icon-truck"></use></svg></div>
+                                <h3>No active deliveries</h3>
+                                <p>Accepted deliveries will appear here once the order-assignment workflow is connected.</p>
+                            </div>
                         {% endif %}
-
                     </div>
+                </details>
+            </article>
 
-                </div>
-
-
-
-                <div class="summary-item">
-
-                    <div class="summary-label">
-                        Vehicle Type
+            <article class="card dashboard-flash-card" id="route-optimization" aria-labelledby="route-optimization-title">
+                <div class="flash-card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-route"></use></svg></div>
+                <h2 class="card-title" id="route-optimization-title">Route Optimization</h2>
+                <p class="card-description">Pickup and delivery routing will combine the active job with your current GPS position.</p>
+                <details class="flash-card-details">
+                    <summary class="flash-card-action">
+                        View route
+                        <svg class="icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+                    </summary>
+                    <div class="flash-card-content">
+                        <div class="empty-state">
+                            <div class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#icon-route"></use></svg></div>
+                            <h3>No active route</h3>
+                            <p>A route can be generated after a real delivery request has been accepted.</p>
+                        </div>
                     </div>
+                </details>
+            </article>
 
-                    <div class="summary-value">
-
-                        {% if user["vehicle_type"] %}
-
-                            {{ user["vehicle_type"] }}
-
+            <article class="card dashboard-flash-card" id="delivery-history" aria-labelledby="delivery-history-title">
+                <div class="flash-card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-history"></use></svg></div>
+                <h2 class="card-title" id="delivery-history-title">Delivery History</h2>
+                <p class="card-description">Completed deliveries will build a clear record of your activity over time.</p>
+                <details class="flash-card-details">
+                    <summary class="flash-card-action">
+                        View history
+                        <svg class="icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+                    </summary>
+                    <div class="flash-card-content">
+                        {% if delivery_history %}
+                            {% for delivery in delivery_history %}
+                                <div class="history-item">{{ delivery }}</div>
+                            {% endfor %}
                         {% else %}
-
-                            Not added
-
+                            <div class="empty-state">
+                                <div class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#icon-history"></use></svg></div>
+                                <h3>No delivery history</h3>
+                                <p>Your completed deliveries will appear here after the delivery lifecycle is connected.</p>
+                            </div>
                         {% endif %}
-
                     </div>
+                </details>
+            </article>
 
-                </div>
-
-
-
-                <div class="summary-item">
-
-                    <div class="summary-label">
-                        Capacity
+            <article class="card dashboard-flash-card" id="earnings" aria-labelledby="earnings-title">
+                <div class="flash-card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-wallet"></use></svg></div>
+                <h2 class="card-title" id="earnings-title">Earnings</h2>
+                <p class="card-description">Delivery earnings will be summarized here after completed jobs are recorded.</p>
+                <details class="flash-card-details">
+                    <summary class="flash-card-action">
+                        View earnings
+                        <svg class="icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+                    </summary>
+                    <div class="flash-card-content">
+                        <div class="empty-state">
+                            <div class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#icon-wallet"></use></svg></div>
+                            <h3>No earnings data</h3>
+                            <p>Earnings will appear after completed deliveries are connected to settlement data.</p>
+                        </div>
                     </div>
+                </details>
+            </article>
 
-                    <div class="summary-value">
-
-                        {% if user["vehicle_capacity"] %}
-
-                            {{ user["vehicle_capacity"] }} kg
-
-                        {% else %}
-
-                            Not added
-
-                        {% endif %}
-
+            <article class="card dashboard-flash-card" id="help" aria-labelledby="help-title">
+                <div class="flash-card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-help"></use></svg></div>
+                <h2 class="card-title" id="help-title">Help & Support</h2>
+                <p class="card-description">Guidance for vehicle setup, location permissions and future delivery issues will live here.</p>
+                <details class="flash-card-details">
+                    <summary class="flash-card-action">
+                        View support
+                        <svg class="icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+                    </summary>
+                    <div class="flash-card-content">
+                        <div class="empty-state">
+                            <div class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#icon-help"></use></svg></div>
+                            <h3>Support is coming next</h3>
+                            <p>This frontend section is ready for a support route, FAQ content or issue-reporting flow.</p>
+                        </div>
                     </div>
-
-                </div>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =================================================
-             AVAILABLE DELIVERY REQUESTS
-             ================================================= -->
-
-        <div
-            class="card"
-            id="available-requests"
-        >
-
-            <div class="card-title">
-                📦 Available Delivery Requests
-            </div>
-
-            <div class="card-description">
-
-                Nearby suitable delivery requests will
-                appear here when you are online.
-
-            </div>
-
-
-            {% if available_requests %}
-
-                {% for request in available_requests %}
-
-                    <!--
-                        Real delivery request cards
-                        will be rendered here from Flask.
-                    -->
-
-                    <div class="request-item">
-
-                        {{ request }}
-
-                    </div>
-
-                {% endfor %}
-
-            {% else %}
-
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        📦
-                    </div>
-
-                    <h3>
-                        No delivery requests
-                    </h3>
-
-                    <p>
-                        Nearby delivery requests will appear
-                        here when they are available.
-                    </p>
-
-                </div>
-
-            {% endif %}
-
-        </div>
-
-
-
-        <!-- =================================================
-             MY DELIVERIES
-             ================================================= -->
-
-        <div
-            class="card"
-            id="my-deliveries"
-        >
-
-            <div class="card-title">
-                🚚 My Deliveries
-            </div>
-
-            <div class="card-description">
-
-                Your accepted and active deliveries
-                will appear here.
-
-            </div>
-
-
-            {% if active_deliveries %}
-
-                {% for delivery in active_deliveries %}
-
-                    <div class="delivery-item">
-
-                        {{ delivery }}
-
-                    </div>
-
-                {% endfor %}
-
-            {% else %}
-
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        🚚
-                    </div>
-
-                    <h3>
-                        No active deliveries
-                    </h3>
-
-                    <p>
-                        Accepted deliveries will appear here.
-                    </p>
-
-                </div>
-
-            {% endif %}
-
-        </div>
-
-
-
-        <!-- =================================================
-             ROUTE OPTIMIZATION
-             ================================================= -->
-
-        <div
-            class="card"
-            id="route-optimization"
-        >
-
-            <div class="card-title">
-                🗺️ Route Optimization
-            </div>
-
-            <div class="card-description">
-
-                Route optimization will use your current
-                GPS location along with pickup and delivery
-                locations.
-
-            </div>
-
-
-            <div class="empty-state">
-
-                <div class="empty-icon">
-                    🗺️
-                </div>
-
-                <h3>
-                    No active route
-                </h3>
-
-                <p>
-                    A route will be generated after a delivery
-                    request is accepted.
-                </p>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =================================================
-             DELIVERY HISTORY
-             ================================================= -->
-
-        <div
-            class="card"
-            id="delivery-history"
-        >
-
-            <div class="card-title">
-                📋 Delivery History
-            </div>
-
-            <div class="card-description">
-
-                Completed deliveries will appear here.
-
-            </div>
-
-
-            {% if delivery_history %}
-
-                {% for delivery in delivery_history %}
-
-                    <div class="history-item">
-
-                        {{ delivery }}
-
-                    </div>
-
-                {% endfor %}
-
-            {% else %}
-
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        📋
-                    </div>
-
-                    <h3>
-                        No delivery history
-                    </h3>
-
-                    <p>
-                        Your completed deliveries will
-                        appear here.
-                    </p>
-
-                </div>
-
-            {% endif %}
-
-        </div>
-
-
-
-        <!-- =================================================
-             EARNINGS
-             ================================================= -->
-
-        <div
-            class="card"
-            id="earnings"
-        >
-
-            <div class="card-title">
-                💰 Earnings
-            </div>
-
-            <div class="card-description">
-
-                Your delivery earnings will be shown here
-                after completed deliveries.
-
-            </div>
-
-
-            <div class="empty-state">
-
-                <div class="empty-icon">
-                    💰
-                </div>
-
-                <h3>
-                    No earnings data
-                </h3>
-
-                <p>
-                    Earnings will appear after completed
-                    deliveries.
-                </p>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =================================================
-             HELP
-             ================================================= -->
-
-        <div
-            class="card"
-            id="help"
-        >
-
-            <div class="card-title">
-                ❓ Help & Support
-            </div>
-
-            <div class="card-description">
-
-                Need help with deliveries, location,
-                vehicle information or account issues?
-
-            </div>
-
-
-            <div class="empty-state">
-
-                <div class="empty-icon">
-                    🛠️
-                </div>
-
-                <h3>
-                    Support section
-                </h3>
-
-                <p>
-                    Support functionality will be connected
-                    here later.
-                </p>
-
-            </div>
-
-        </div>
-
-
+                </details>
+            </article>
+        </section>
     </section>
 
+    <footer class="dashboard-footer">
+        <strong>AgriConnect</strong>
+        <span>People · Produce · Prosper</span>
+    </footer>
 </main>
 
-
-
-<!-- =========================================================
-     LEAFLET JS
-     ========================================================= -->
-
-<script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
-
-
-
-<script>
-
-    /* =========================================================
-       GLOBAL VARIABLES
-       ========================================================= */
-
-    let map = null;
-
-    let locationMarker = null;
-
-    let locationWatchId = null;
-
-
-    /* =========================================================
-       EXISTING LOCATION FROM DATABASE
-       ========================================================= */
-
-    const savedLatitude =
-        {% if user["current_latitude"] %}
-            {{ user["current_latitude"] }}
-        {% else %}
-            null
-        {% endif %};
-
-
-    const savedLongitude =
-        {% if user["current_longitude"] %}
-            {{ user["current_longitude"] }}
-        {% else %}
-            null
-        {% endif %};
-
-
-
-    /* =========================================================
-       DEFAULT MAP LOCATION
-       ========================================================= */
-
-    const defaultLatitude = 22.7196;
-
-    const defaultLongitude = 75.8577;
-
-
-
-    /* =========================================================
-       INITIALIZE MAP
-       ========================================================= */
-
-    function initializeMap() {
-
-        let latitude =
-            savedLatitude !== null
-                ? savedLatitude
-                : defaultLatitude;
-
-
-        let longitude =
-            savedLongitude !== null
-                ? savedLongitude
-                : defaultLongitude;
-
-
-        map = L.map("map").setView(
-            [latitude, longitude],
-            savedLatitude !== null ? 15 : 10
-        );
-
-
-        L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                maxZoom: 19,
-
-                attribution:
-                    "&copy; OpenStreetMap contributors"
-            }
-        ).addTo(map);
-
-
-        if (
-            savedLatitude !== null &&
-            savedLongitude !== null
-        ) {
-
-            setMapMarker(
-                savedLatitude,
-                savedLongitude
-            );
-
-        }
-
-    }
-
-
-
-    /* =========================================================
-       SET MAP MARKER
-       ========================================================= */
-
-    function setMapMarker(
-        latitude,
-        longitude
-    ) {
-
-        if (locationMarker) {
-
-            locationMarker.setLatLng([
-                latitude,
-                longitude
-            ]);
-
-        }
-
-        else {
-
-            locationMarker =
-                L.marker([
-                    latitude,
-                    longitude
-                ]).addTo(map);
-
-        }
-
-
-        locationMarker.bindPopup(
-            "Your current location"
-        );
-
-
-        map.setView(
-            [latitude, longitude],
-            15
-        );
-
-    }
-
-
-
-    /* =========================================================
-       UPDATE LOCATION UI
-       ========================================================= */
-
-    function updateLocationUI(
-        latitude,
-        longitude
-    ) {
-
-        document.getElementById(
-            "currentLatitude"
-        ).textContent =
-            latitude.toFixed(7);
-
-
-        document.getElementById(
-            "currentLongitude"
-        ).textContent =
-            longitude.toFixed(7);
-
-
-        setMapMarker(
-            latitude,
-            longitude
-        );
-
-    }
-
-
-
-    /* =========================================================
-       SEND LOCATION TO FLASK
-       ========================================================= */
-
-    function sendLocationToServer(
-        latitude,
-        longitude
-    ) {
-
-        const status =
-            document.getElementById(
-                "locationStatus"
-            );
-
-
-        status.textContent =
-            "Saving current location...";
-
-
-        fetch(
-            "/logistics/update-location",
-            {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body: JSON.stringify({
-
-                    latitude: latitude,
-
-                    longitude: longitude
-
-                })
-
-            }
-        )
-
-        .then(function(response) {
-
-            return response.json();
-
-        })
-
-        .then(function(data) {
-
-            if (data.success) {
-
-                status.textContent =
-                    "📍 Current location updated ✓";
-
-                updateLocationUI(
-                    latitude,
-                    longitude
-                );
-
-            }
-
-            else {
-
-                status.textContent =
-                    data.message ||
-                    "Unable to save location.";
-
-            }
-
-        })
-
-        .catch(function(error) {
-
-            console.error(error);
-
-            status.textContent =
-                "Unable to connect to server.";
-
-        });
-
-    }
-
-
-
-    /* =========================================================
-       GET CURRENT LOCATION ON BUTTON CLICK
-       ========================================================= */
-
-    function getCurrentLocation() {
-
-        const status =
-            document.getElementById(
-                "locationStatus"
-            );
-
-
-        if (!navigator.geolocation) {
-
-            status.textContent =
-                "GPS is not supported by this browser.";
-
-            return;
-
-        }
-
-
-        status.textContent =
-            "📍 Getting your current location...";
-
-
-        navigator.geolocation.getCurrentPosition(
-
-            function(position) {
-
-                const latitude =
-                    position.coords.latitude;
-
-
-                const longitude =
-                    position.coords.longitude;
-
-
-                updateLocationUI(
-                    latitude,
-                    longitude
-                );
-
-
-                sendLocationToServer(
-                    latitude,
-                    longitude
-                );
-
-            },
-
-
-            function(error) {
-
-                console.error(error);
-
-
-                if (
-                    error.code ===
-                    error.PERMISSION_DENIED
-                ) {
-
-                    status.textContent =
-                        "Location permission denied. Please allow GPS access.";
-
-                }
-
-                else {
-
-                    status.textContent =
-                        "Unable to get current location.";
-
-                }
-
-            },
-
-
-            {
-
-                enableHighAccuracy: true,
-
-                timeout: 15000,
-
-                maximumAge: 0
-
-            }
-
-        );
-
-    }
-
-
-
-    /* =========================================================
-       START LIVE LOCATION TRACKING
-       ========================================================= */
-
-    function startLocationTracking() {
-
-        if (!navigator.geolocation) {
-
-            alert(
-                "GPS is not supported by this browser."
-            );
-
-            return;
-
-        }
-
-
-        if (locationWatchId !== null) {
-
-            return;
-
-        }
-
-
-        const status =
-            document.getElementById(
-                "locationStatus"
-            );
-
-
-        status.textContent =
-            "📍 Starting live location tracking...";
-
-
-        locationWatchId =
-            navigator.geolocation.watchPosition(
-
-                function(position) {
-
-                    const latitude =
-                        position.coords.latitude;
-
-
-                    const longitude =
-                        position.coords.longitude;
-
-
-                    updateLocationUI(
-                        latitude,
-                        longitude
-                    );
-
-
-                    sendLocationToServer(
-                        latitude,
-                        longitude
-                    );
-
-                },
-
-
-                function(error) {
-
-                    console.error(error);
-
-
-                    status.textContent =
-                        "Unable to track current location.";
-
-                },
-
-
-                {
-
-                    enableHighAccuracy: true,
-
-                    timeout: 15000,
-
-                    maximumAge: 10000
-
-                }
-
-            );
-
-    }
-
-
-
-    /* =========================================================
-       STOP LIVE LOCATION TRACKING
-       ========================================================= */
-
-    function stopLocationTracking() {
-
-        if (locationWatchId !== null) {
-
-            navigator.geolocation.clearWatch(
-                locationWatchId
-            );
-
-            locationWatchId = null;
-
-        }
-
-    }
-
-
-
-    /* =========================================================
-       ONLINE / OFFLINE
-       ========================================================= */
-
-    function changeAvailability() {
-
-        const toggle =
-            document.getElementById(
-                "availabilityToggle"
-            );
-
-
-        const statusText =
-            document.getElementById(
-                "availabilityStatus"
-            );
-
-
-        const newStatus =
-            toggle.checked
-                ? "ONLINE"
-                : "OFFLINE";
-
-
-        /*
-         ======================================================
-         ONLINE
-         ======================================================
-        */
-
-        if (newStatus === "ONLINE") {
-
-            /*
-             First get GPS location.
-             Worker should not become ONLINE
-             without a current location.
-            */
-
-            if (!navigator.geolocation) {
-
-                toggle.checked = false;
-
-                alert(
-                    "GPS is not supported by this browser."
-                );
-
-                return;
-
-            }
-
-
-            const status =
-                document.getElementById(
-                    "locationStatus"
-                );
-
-
-            status.textContent =
-                "📍 Getting location before going online...";
-
-
-            navigator.geolocation.getCurrentPosition(
-
-                function(position) {
-
-                    const latitude =
-                        position.coords.latitude;
-
-
-                    const longitude =
-                        position.coords.longitude;
-
-
-                    /*
-                     Save location first
-                    */
-
-                    sendLocationToServer(
-                        latitude,
-                        longitude
-                    );
-
-
-                    /*
-                     Change availability
-                    */
-
-                    fetch(
-                        "/logistics/toggle-availability",
-                        {
-
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-
-                                availability:
-                                    "ONLINE"
-
-                            })
-
-                        }
-                    )
-
-                    .then(function(response) {
-
-                        return response.json();
-
-                    })
-
-                    .then(function(data) {
-
-                        if (!data.success) {
-
-                            toggle.checked =
-                                false;
-
-                            alert(
-                                data.message
-                            );
-
-                            stopLocationTracking();
-
-                            return;
-
-                        }
-
-
-                        statusText.textContent =
-                            "🟢 ONLINE";
-
-
-                        statusText.className =
-                            "availability-status online";
-
-
-                        /*
-                         Start live GPS tracking
-                        */
-
-                        startLocationTracking();
-
-                    })
-
-                    .catch(function(error) {
-
-                        console.error(error);
-
-                        toggle.checked =
-                            false;
-
-                        alert(
-                            "Unable to change availability."
-                        );
-
-                    });
-
-                },
-
-
-                function(error) {
-
-                    console.error(error);
-
-                    toggle.checked =
-                        false;
-
-
-                    document.getElementById(
-                        "locationStatus"
-                    ).textContent =
-                        "Location permission is required to go ONLINE.";
-
-                    alert(
-                        "Please allow GPS location access before going ONLINE."
-                    );
-
-                },
-
-
-                {
-
-                    enableHighAccuracy: true,
-
-                    timeout: 15000,
-
-                    maximumAge: 0
-
-                }
-
-            );
-
-        }
-
-
-
-        /*
-         ======================================================
-         OFFLINE
-         ======================================================
-        */
-
-        else {
-
-            fetch(
-                "/logistics/toggle-availability",
-                {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-
-                        availability:
-                            "OFFLINE"
-
-                    })
-
-                }
-            )
-
-            .then(function(response) {
-
-                return response.json();
-
-            })
-
-            .then(function(data) {
-
-                if (!data.success) {
-
-                    toggle.checked =
-                        true;
-
-                    alert(
-                        data.message
-                    );
-
-                    return;
-
-                }
-
-
-                statusText.textContent =
-                    "⚪ OFFLINE";
-
-
-                statusText.className =
-                    "availability-status offline";
-
-
-                /*
-                 Stop live location tracking
-                */
-
-                stopLocationTracking();
-
-            })
-
-            .catch(function(error) {
-
-                console.error(error);
-
-                toggle.checked =
-                    true;
-
-                alert(
-                    "Unable to change availability."
-                );
-
-            });
-
-        }
-
-    }
-
-
-
-    /* =========================================================
-       SAVE VEHICLE INFORMATION
-       ========================================================= */
-
-    function saveVehicleInfo(event) {
-
-        event.preventDefault();
-
-
-        const form =
-            document.getElementById(
-                "vehicleForm"
-            );
-
-
-        const formData =
-            new FormData(form);
-
-
-        const message =
-            document.getElementById(
-                "vehicleMessage"
-            );
-
-
-        message.textContent =
-            "Saving...";
-
-
-        message.style.color =
-            "#555";
-
-
-        fetch(
-            "/logistics/update-profile",
-            {
-
-                method: "POST",
-
-                body: formData
-
-            }
-        )
-
-        .then(function(response) {
-
-            return response.json();
-
-        })
-
-        .then(function(data) {
-
-            message.textContent =
-                data.message;
-
-
-            if (data.success) {
-
-                message.style.color =
-                    "#2e7d32";
-
-            }
-
-            else {
-
-                message.style.color =
-                    "#d32f2f";
-
-            }
-
-        })
-
-        .catch(function(error) {
-
-            console.error(error);
-
-            message.textContent =
-                "Unable to save vehicle information.";
-
-            message.style.color =
-                "#d32f2f";
-
-        });
-
-    }
-
-
-
-    /* =========================================================
-       PAGE LOAD
-       ========================================================= */
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        function() {
-
-            initializeMap();
-
-
-            /*
-             If worker was already ONLINE,
-             resume location tracking.
-            */
-
-            {% if user["availability"] == "ONLINE" %}
-
-                startLocationTracking();
-
-            {% endif %}
-
-        }
-    );
-
-</script>
-
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script id="logisticsInitialState" type="application/json">{{ location_state | tojson }}</script>
+<script src="{{ url_for('static', filename='logistics.js') }}" defer></script>
 </body>
-
 </html>

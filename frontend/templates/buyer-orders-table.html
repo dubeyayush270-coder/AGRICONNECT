@@ -1,0 +1,114 @@
+<div class="buyer-orders-list">
+
+    {% for order in orders %}
+
+    <article class="buyer-order-card">
+
+        <div class="buyer-order-card-main">
+
+            <div class="buyer-order-card-icon" aria-hidden="true">
+                <svg class="buyer-icon">
+                    <use href="#buyer-icon-box"></use>
+                </svg>
+            </div>
+
+            <div class="buyer-order-card-copy">
+
+                <div class="buyer-order-card-topline">
+
+                    <div>
+                        <span class="buyer-order-number">
+                            ORDER #{{ order.order_id }}
+                        </span>
+
+                        <h3>
+                            {{ order.crop_name or 'Product' }}
+                        </h3>
+                    </div>
+
+                    <span
+                        class="buyer-order-status
+                        buyer-status-{{ order.status|lower|replace('_', '-') }}"
+                    >
+                        {{ order.status|replace('_', ' ')|title }}
+                    </span>
+
+                </div>
+
+
+                <div class="buyer-order-meta-grid">
+
+                    <div>
+                        <span>Quantity</span>
+                        <strong>{{ order.quantity }} kg</strong>
+                    </div>
+
+                    <div>
+                        <span>Supplier</span>
+                        <strong>{{ order.farmer_name or 'Supplier unavailable' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Estimated amount</span>
+                        <strong>₹{{ '%.2f'|format(order.total_amount) }}</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <a
+            class="buyer-order-open"
+            href="{{ url_for('buyer_order', order_id=order.order_id) }}"
+        >
+            View Order
+
+            <svg class="buyer-icon" aria-hidden="true">
+                <use href="#buyer-icon-arrow"></use>
+            </svg>
+        </a>
+
+    </article>
+
+    {% else %}
+
+    <div class="buyer-orders-empty">
+
+        <div class="buyer-orders-empty-icon" aria-hidden="true">
+            <svg class="buyer-icon">
+                <use href="#buyer-icon-box"></use>
+            </svg>
+        </div>
+
+        <div>
+            <div class="buyer-eyebrow">NO ORDERS YET</div>
+
+            <h3>
+                Your order history will appear here.
+            </h3>
+
+            <p>
+                Browse available produce and place your first order
+                to start tracking purchases and delivery progress.
+            </p>
+
+            <a
+                class="buyer-primary-link"
+                href="{{ url_for('browse_products') }}"
+            >
+                Browse Products
+
+                <svg class="buyer-icon" aria-hidden="true">
+                    <use href="#buyer-icon-arrow"></use>
+                </svg>
+            </a>
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>

@@ -1,0 +1,101 @@
+{% extends 'buyer-base.html' %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+
+<section class="buyer-orders-hero" aria-labelledby="buyer-orders-title">
+    <div>
+        <div class="buyer-eyebrow">ORDER WORKSPACE</div>
+
+        <h1 id="buyer-orders-title">
+            Your orders.<br>
+            <em>One clear view.</em>
+        </h1>
+
+        <p id="deliveries">
+            Review order status, supplier details, estimated totals and
+            delivery progress. Open any order to see its logistics assignment
+            and available driver location updates.
+        </p>
+    </div>
+
+    <div class="buyer-orders-hero-summary" aria-hidden="true">
+        <div class="buyer-orders-summary-icon">
+            <svg class="buyer-icon">
+                <use href="#buyer-icon-box"></use>
+            </svg>
+        </div>
+
+        <div>
+            <span>THIS PAGE</span>
+            <strong>{{ orders|length }}</strong>
+            <small>order{% if orders|length != 1 %}s{% endif %}</small>
+        </div>
+    </div>
+</section>
+
+
+<section class="buyer-section-card buyer-orders-panel">
+
+    <div class="buyer-section-heading inline">
+        <div>
+            <div class="buyer-eyebrow">ORDER HISTORY</div>
+            <h2>My Orders</h2>
+        </div>
+
+        <a href="{{ url_for('browse_products') }}">
+            Browse more produce →
+        </a>
+    </div>
+
+    {% include 'buyer-orders-table.html' %}
+
+</section>
+
+
+<nav class="buyer-order-pagination" aria-label="Order pages">
+
+    <div>
+        {% if page > 1 %}
+        <a
+            class="buyer-pagination-button"
+            href="{{ url_for('buyer_orders', page=page - 1) }}"
+        >
+            ← Previous
+        </a>
+        {% else %}
+        <span
+            class="buyer-pagination-button disabled"
+            aria-disabled="true"
+        >
+            ← Previous
+        </span>
+        {% endif %}
+    </div>
+
+    <span class="buyer-pagination-current">
+        Page {{ page }}
+    </span>
+
+    <div>
+        {% if has_next %}
+        <a
+            class="buyer-pagination-button"
+            href="{{ url_for('buyer_orders', page=page + 1) }}"
+        >
+            Next →
+        </a>
+        {% else %}
+        <span
+            class="buyer-pagination-button disabled"
+            aria-disabled="true"
+        >
+            Next →
+        </span>
+        {% endif %}
+    </div>
+
+</nav>
+
+{% endblock %}

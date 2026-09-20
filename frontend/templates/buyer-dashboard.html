@@ -1,712 +1,290 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'buyer-base.html' %}
+{% block title %}Buyer Dashboard{% endblock %}
+{% block content %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<section class="buyer-hero" aria-labelledby="buyer-hero-title">
+    <div class="buyer-hero-copy">
+        <div class="buyer-eyebrow">
+            <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-spark"></use></svg>
+            YOUR MARKETPLACE
+        </div>
 
-    <title>AgriConnect - Buyer Dashboard</title>
+        <h1 id="buyer-hero-title">
+            Source better.<br><em>Buy smarter.</em>
+        </h1>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
-</head>
-
-<body>
-
-<div class="dashboard buyer-dashboard">
-
-    <!-- SIDEBAR -->
-
-    <aside class="sidebar">
-
-        <h2>AgriConnect</h2>
-
-        <p class="seller-label">
-            Buyer
+        <p>
+            Welcome, <strong>{{ user.name }}</strong>.
+            Discover fresh produce, compare suppliers, manage orders
+            and follow deliveries from one connected marketplace.
         </p>
 
-        <nav>
-
-            <a href="/buyer" class="active">
-                Home
-            </a>
-
-            <a href="/browse-products">
+        <div class="buyer-hero-actions">
+            <a class="buyer-primary-link" href="{{ url_for('browse_products') }}">
                 Browse Products
+                <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-arrow"></use></svg>
             </a>
 
-            <a href="#">
-                Recommended Products
+            <a class="buyer-secondary-link" href="{{ url_for('buyer_orders') }}">
+                <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-box"></use></svg>
+                View My Orders
             </a>
+        </div>
+    </div>
 
-            <a href="#">
-                Recommended Suppliers
-            </a>
+    <div class="buyer-hero-art" aria-hidden="true">
+        <div class="buyer-hero-sun"></div>
+        <div class="buyer-hero-field buyer-field-one"></div>
+        <div class="buyer-hero-field buyer-field-two"></div>
+        <div class="buyer-hero-field buyer-field-three"></div>
 
-            <a href="#">
-                My Orders
-            </a>
+        <div class="buyer-hero-route-badge">
+            <svg class="buyer-icon"><use href="#buyer-icon-market"></use></svg>
+            <strong>Farm</strong><span>→</span><strong>Buyer</strong>
+        </div>
+    </div>
+</section>
 
-            <a href="#">
-                Logistics Support
-            </a>
+<section class="buyer-stats-grid" aria-label="Buyer overview">
+    <article class="buyer-stat-card">
+        <div class="buyer-stat-icon">
+            <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-box"></use></svg>
+        </div>
+        <div>
+            <span>Total Orders</span>
+            <strong>{{ stats.total_orders }}</strong>
+            <small>Orders placed through AgriConnect</small>
+        </div>
+    </article>
 
-            <a href="#">
-                Market Prices
-            </a>
+    <article class="buyer-stat-card">
+        <div class="buyer-stat-icon gold">
+            <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-truck"></use></svg>
+        </div>
+        <div>
+            <span>Pending Orders</span>
+            <strong>{{ stats.pending_orders }}</strong>
+            <small>Orders still in progress</small>
+        </div>
+    </article>
 
-            <a href="#">
-                Financial Summary
-            </a>
+    <article class="buyer-stat-card">
+        <div class="buyer-stat-icon">
+            <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-wallet"></use></svg>
+        </div>
+        <div>
+            <span>Delivered Order Value</span>
+            <strong>₹{{ '%.2f'|format(stats.spending) }}</strong>
+            <small>Value of completed produce orders</small>
+        </div>
+    </article>
 
-            <a href="#">
-                Help and Support
-            </a>
+    <article class="buyer-stat-card">
+        <div class="buyer-stat-icon gold">
+            <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-users"></use></svg>
+        </div>
+        <div>
+            <span>Active Suppliers</span>
+            <strong>{{ stats.active_suppliers }}</strong>
+            <small>Suppliers with produce available</small>
+        </div>
+    </article>
+</section>
 
-        </nav>
+<section class="buyer-section-card buyer-shortcuts">
+    <div class="buyer-section-heading">
+        <div>
+            <div class="buyer-eyebrow">MARKETPLACE SHORTCUTS</div>
+            <h2>Everything you need to buy with confidence.</h2>
+        </div>
+    </div>
 
-    </aside>
-
-
-    <!-- MAIN CONTENT -->
-
-    <main class="main-content">
-
-
-        <!-- TOP BAR -->
-
-        <header class="topbar">
-
-            <input
-                type="text"
-                placeholder="Search crops, products, suppliers..."
-            >
-
-            <div class="topbar-right">
-
-                <div class="notification">
-
-                    🔔
-
-                    <span class="notification-count">
-                        3
-                    </span>
-
-                </div>
-
-
-                <div class="profile">
-
-                    <span>
-                        {{ user["name"] }}
-                    </span>
-
-                </div>
-
+    <div class="buyer-shortcut-grid">
+        <article class="buyer-shortcut-card">
+            <div class="buyer-shortcut-icon">
+                <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-market"></use></svg>
             </div>
-
-        </header>
-
-
-        
-
-        <section class="content">
-
-
-            <!-- WELCOME -->
-
-            <h1>
-                Welcome back, {{ user["name"] }}!
-            </h1>
-
-            <p class="subtitle">
-                Find the right produce. Choose the right supplier. Buy better.
-            </p>
-
-
-            <!-- STATS -->
-
-            <div class="stats">
-
-
-                <!-- TOTAL ORDERS -->
-
-                <div class="stat-card">
-
-                    <h3>
-                        0
-                    </h3>
-
-                    <p>
-                        Total Orders
-                    </p>
-
-                </div>
-
-
-                <!-- PENDING ORDERS -->
-
-                <div class="stat-card">
-
-                    <h3>
-                        0
-                    </h3>
-
-                    <p>
-                        Pending Orders
-                    </p>
-
-                </div>
-
-
-                <!-- TOTAL SPENDING -->
-
-                <div class="stat-card">
-
-                    <h3>
-                        ₹ 0
-                    </h3>
-
-                    <p>
-                        Total Spending
-                    </p>
-
-                </div>
-
-
-                <!-- ACTIVE SUPPLIERS -->
-
-                <div class="stat-card">
-
-                    <h3>
-                        0
-                    </h3>
-
-                    <p>
-                        Active Suppliers
-                    </p>
-
-                </div>
-
+            <div>
+                <h3>Browse Products</h3>
+                <p>Explore fresh produce listed by farmers and compare available options.</p>
+                <a href="{{ url_for('browse_products') }}">Explore marketplace
+                    <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-arrow"></use></svg>
+                </a>
             </div>
+        </article>
 
-
-            <!-- MAIN FEATURE CARDS -->
-
-            <div class="features">
-
-
-                <!-- BROWSE PRODUCTS -->
-
-                <div class="feature-card">
-
-                    <h2>
-                        Browse Products
-                    </h2>
-
-                    <p>
-                        Explore fresh produce available from
-                        farmers and FPOs.
-                    </p>
-
-                    <button>
-                        Browse Products →
-                    </button>
-
-                </div>
-
-
-                <!-- RECOMMENDED PRODUCTS -->
-
-                <div class="feature-card">
-
-                    <h2>
-                        Recommended Products
-                    </h2>
-
-                    <p>
-                        Discover products that match your
-                        quantity, price and delivery requirements.
-                    </p>
-
-                    <button>
-                        View Recommendations →
-                    </button>
-
-                </div>
-
-
-                <!-- RECOMMENDED SUPPLIERS -->
-
-                <div class="feature-card">
-
-                    <h2>
-                        Recommended Suppliers
-                    </h2>
-
-                    <p>
-                        Find suitable farmers and FPOs based on
-                        price, quality, quantity and distance.
-                    </p>
-
-                    <button>
-                        Find Suppliers →
-                    </button>
-
-                </div>
-
-
-                <!-- MY ORDERS -->
-
-                <div class="feature-card">
-
-                    <h2>
-                        My Orders
-                    </h2>
-
-                    <p>
-                        View and manage your orders from
-                        confirmation to final delivery.
-                    </p>
-
-                    <button>
-                        View Orders →
-                    </button>
-
-                </div>
-
-
-                <!-- LOGISTICS -->
-
-                <div class="feature-card">
-
-                    <h2>
-                        Logistics Support
-                    </h2>
-
-                    <p>
-                        Get suitable transportation and
-                        track your produce delivery.
-                    </p>
-
-                    <button>
-                        Manage Delivery →
-                    </button>
-
-                </div>
-
-
-                <!-- MARKET PRICES -->
-
-                <div class="feature-card">
-
-                    <h2>
-                        Market Prices
-                    </h2>
-
-                    <p>
-                        Check current market prices to make
-                        better purchasing decisions.
-                    </p>
-
-                    <button>
-                        View Prices →
-                    </button>
-
-                </div>
-
+        <article class="buyer-shortcut-card">
+            <div class="buyer-shortcut-icon gold">
+                <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-box"></use></svg>
             </div>
-
-
-            <!-- LOWER DASHBOARD SECTION -->
-
-            <div class="dashboard-lower">
-
-
-                <!-- RECOMMENDED PRODUCTS -->
-
-                <div class="recommended-products">
-
-                    <div class="section-header">
-
-                        <h2>
-                            Recommended Products
-                        </h2>
-
-                        <a href="#">
-                            View All →
-                        </a>
-
-                    </div>
-
-
-                    <div class="product-item">
-
-                        <div>
-                            <strong>
-                                Tomato
-                            </strong>
-
-                            <p>
-                                Farmer / FPO
-                            </p>
-                        </div>
-
-                        <strong>
-                            ₹ 28 / kg
-                        </strong>
-
-                    </div>
-
-
-                    <div class="product-item">
-
-                        <div>
-                            <strong>
-                                Onion
-                            </strong>
-
-                            <p>
-                                Farmer / FPO
-                            </p>
-                        </div>
-
-                        <strong>
-                            ₹ 22 / kg
-                        </strong>
-
-                    </div>
-
-
-                    <div class="product-item">
-
-                        <div>
-                            <strong>
-                                Potato
-                            </strong>
-
-                            <p>
-                                Farmer / FPO
-                            </p>
-                        </div>
-
-                        <strong>
-                            ₹ 18 / kg
-                        </strong>
-
-                    </div>
-
-
-                    <div class="product-item">
-
-                        <div>
-                            <strong>
-                                Wheat
-                            </strong>
-
-                            <p>
-                                Farmer / FPO
-                            </p>
-                        </div>
-
-                        <strong>
-                            ₹ 25 / kg
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <!-- RECOMMENDED SUPPLIERS -->
-
-                <div class="recommended-suppliers">
-
-                    <div class="section-header">
-
-                        <h2>
-                            Recommended Suppliers
-                        </h2>
-
-                        <a href="#">
-                            View All →
-                        </a>
-
-                    </div>
-
-
-                    <div class="supplier-item">
-
-                        <strong>
-                            Green Valley FPO
-                        </strong>
-
-                        <p>
-                            Bhopal, Madhya Pradesh
-                        </p>
-
-                        <span>
-                            Bulk Supplier
-                        </span>
-
-                    </div>
-
-
-                    <div class="supplier-item">
-
-                        <strong>
-                            Fresh Farm Producers
-                        </strong>
-
-                        <p>
-                            Indore, Madhya Pradesh
-                        </p>
-
-                        <span>
-                            Verified Supplier
-                        </span>
-
-                    </div>
-
-
-                    <div class="supplier-item">
-
-                        <strong>
-                            Kisan FPO
-                        </strong>
-
-                        <p>
-                            Ujjain, Madhya Pradesh
-                        </p>
-
-                        <span>
-                            Regular Supplier
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <!-- MARKET PRICES -->
-
-                <div class="buyer-market-prices">
-
-                    <div class="section-header">
-
-                        <h2>
-                            Market Prices
-                        </h2>
-
-                        <a href="#">
-                            View All →
-                        </a>
-
-                    </div>
-
-
-                    <div class="price-item">
-
-                        <span>
-                            Tomato
-                        </span>
-
-                        <strong>
-                            ₹ 28 / kg
-                        </strong>
-
-                        <span class="price-up">
-                            +12%
-                        </span>
-
-                    </div>
-
-
-                    <div class="price-item">
-
-                        <span>
-                            Onion
-                        </span>
-
-                        <strong>
-                            ₹ 22 / kg
-                        </strong>
-
-                        <span class="price-up">
-                            +5%
-                        </span>
-
-                    </div>
-
-
-                    <div class="price-item">
-
-                        <span>
-                            Potato
-                        </span>
-
-                        <strong>
-                            ₹ 18 / kg
-                        </strong>
-
-                        <span class="price-down">
-                            -2%
-                        </span>
-
-                    </div>
-
-
-                    <div class="price-item">
-
-                        <span>
-                            Wheat
-                        </span>
-
-                        <strong>
-                            ₹ 25 / kg
-                        </strong>
-
-                        <span class="price-up">
-                            +3%
-                        </span>
-
-                    </div>
-
-                </div>
-
-
+            <div>
+                <h3>My Orders</h3>
+                <p>Review order status, supplier details and delivery progress.</p>
+                <a href="{{ url_for('buyer_orders') }}">View orders
+                    <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-arrow"></use></svg>
+                </a>
             </div>
+        </article>
 
-
-            <!-- RECENT ORDERS -->
-
-            <div class="recent-orders">
-
-                <div class="section-header">
-
-                    <h2>
-                        Recent Orders
-                    </h2>
-
-                    <a href="#">
-                        View All →
-                    </a>
-
-                </div>
-
-
-                <div class="orders-table">
-
-                    <div class="order-row order-heading">
-
-                        <span>
-                            Product
-                        </span>
-
-                        <span>
-                            Quantity
-                        </span>
-
-                        <span>
-                            Supplier
-                        </span>
-
-                        <span>
-                            Amount
-                        </span>
-
-                        <span>
-                            Status
-                        </span>
-
-                    </div>
-
-
-                    <div class="order-row">
-
-                        <span>
-                            Tomato
-                        </span>
-
-                        <span>
-                            500 kg
-                        </span>
-
-                        <span>
-                            Green Valley FPO
-                        </span>
-
-                        <span>
-                            ₹ 14,000
-                        </span>
-
-                        <span class="order-status">
-                            In Transit
-                        </span>
-
-                    </div>
-
-
-                    <div class="order-row">
-
-                        <span>
-                            Onion
-                        </span>
-
-                        <span>
-                            300 kg
-                        </span>
-
-                        <span>
-                            Kisan FPO
-                        </span>
-
-                        <span>
-                            ₹ 6,600
-                        </span>
-
-                        <span class="order-status">
-                            Confirmed
-                        </span>
-
-                    </div>
-
-
-                    <div class="order-row">
-
-                        <span>
-                            Wheat
-                        </span>
-
-                        <span>
-                            1000 kg
-                        </span>
-
-                        <span>
-                            Fresh Farm Producers
-                        </span>
-
-                        <span>
-                            ₹ 25,000
-                        </span>
-
-                        <span class="order-status">
-                            Delivered
-                        </span>
-
-                    </div>
-
-                </div>
-
+        <article class="buyer-shortcut-card">
+            <div class="buyer-shortcut-icon">
+                <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-truck"></use></svg>
             </div>
+            <div>
+                <h3>Logistics Support</h3>
+                <p>See assigned driver information and available delivery location updates.</p>
+                <a href="{{ url_for('buyer_orders') }}#deliveries">Manage delivery
+                    <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-arrow"></use></svg>
+                </a>
+            </div>
+        </article>
+    </div>
+</section>
 
+<div class="buyer-dashboard-grid">
+    <section class="buyer-section-card" id="recommended-products">
+        <div class="buyer-section-heading inline">
+            <div>
+                <div class="buyer-eyebrow">FOR YOU</div>
+                <h2>Recommended Products</h2>
+            </div>
+            <a href="{{ url_for('browse_products') }}">View all →</a>
+        </div>
 
-        </section>
+        <div class="buyer-list">
+            {% for product in products %}
+            <a class="buyer-list-row" href="{{ url_for('view_product', product_id=product.product_id) }}">
+                <div>
+                    <strong>{{ product.crop_name }}</strong>
+                    <span>{{ product.supplier_name }}</span>
+                </div>
+                <span class="buyer-price-pill">₹{{ product.price_per_kg }}/kg</span>
+            </a>
+            {% else %}
+            <div class="buyer-empty-mini">No products currently available.</div>
+            {% endfor %}
+        </div>
+    </section>
 
-    </main>
+    <section class="buyer-section-card" id="recommended-suppliers">
+        <div class="buyer-section-heading">
+            <div>
+                <div class="buyer-eyebrow">TRUSTED SOURCES</div>
+                <h2>Recommended Suppliers</h2>
+            </div>
+        </div>
 
+        <div class="buyer-list">
+            {% for supplier in suppliers %}
+            <a class="buyer-list-row" href="{{ url_for('browse_products', supplier=supplier.id) }}">
+                <div>
+                    <strong>{{ supplier.name }}</strong>
+                    <span>{{ supplier.district }}, {{ supplier.state }}</span>
+                </div>
+                <span class="buyer-count-pill">{{ supplier.listing_count }} listings</span>
+            </a>
+            {% else %}
+            <div class="buyer-empty-mini">No suppliers with available produce yet.</div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="buyer-section-card" id="market-prices">
+        <div class="buyer-section-heading">
+            <div>
+                <div class="buyer-eyebrow">LISTING INSIGHT</div>
+                <h2>Market Prices</h2>
+            </div>
+        </div>
+
+        <p class="buyer-section-description">
+            Current seller asking-price ranges per kilogram.
+            These are listing prices, not official mandi rates.
+        </p>
+
+        <div class="buyer-list">
+            {% for price in prices %}
+            <a class="buyer-list-row" href="{{ url_for('browse_products', q=price.crop_name) }}">
+                <strong>{{ price.crop_name }}</strong>
+                <span class="buyer-price-range">₹{{ price.low_price }}–₹{{ price.high_price }}</span>
+            </a>
+            {% else %}
+            <div class="buyer-empty-mini">No listing prices available.</div>
+            {% endfor %}
+        </div>
+    </section>
 </div>
 
-</body>
+<section class="buyer-section-card buyer-recent-orders">
+    <div class="buyer-section-heading inline">
+        <div>
+            <div class="buyer-eyebrow">LATEST ACTIVITY</div>
+            <h2>Recent Orders</h2>
+        </div>
+        <a href="{{ url_for('buyer_orders') }}">View all →</a>
+    </div>
 
-</html>
+    {% include 'buyer-orders-table.html' %}
+</section>
+
+<div class="buyer-bottom-grid">
+    <section class="buyer-section-card buyer-financial-card" id="financial-summary">
+        <div class="buyer-section-heading">
+            <div>
+                <div class="buyer-eyebrow">ORDER VALUE</div>
+                <h2>Financial Summary</h2>
+            </div>
+        </div>
+
+        <div class="buyer-financial-row">
+            <span>Produce value</span>
+            <strong>₹{{ '%.2f'|format(stats.product_value) }}</strong>
+        </div>
+
+        <div class="buyer-financial-row">
+            <span>Estimated delivery charges</span>
+            <strong>₹{{ '%.2f'|format(stats.delivery_value) }}</strong>
+        </div>
+
+        <div class="buyer-financial-total">
+            <span>Total estimated order value</span>
+            <strong>₹{{ '%.2f'|format(stats.order_value) }}</strong>
+        </div>
+
+        <p>
+            Excludes cancelled orders. These are estimated order amounts;
+            payment collection is not connected.
+        </p>
+    </section>
+
+    <section class="buyer-section-card buyer-help" id="help">
+        <div class="buyer-section-heading">
+            <div>
+                <div class="buyer-eyebrow">SUPPORT</div>
+                <h2>Help & Support</h2>
+            </div>
+        </div>
+
+        <details>
+            <summary>How do I place an order?</summary>
+            <p>Browse products, open a product and choose Buy. Enter your quantity, delivery address and map location. Review the estimate before placing your order.</p>
+        </details>
+
+        <details>
+            <summary>How are delivery charges estimated?</summary>
+            <p>Delivery is estimated at ₹{{ delivery_rate }} per kilometre of straight-line distance from pickup to delivery. Actual road distance may differ.</p>
+        </details>
+
+        <details>
+            <summary>Why is my order waiting for logistics?</summary>
+            <p>A suitable driver must accept your delivery request. Open My Orders and refresh the order details to check for an assignment.</p>
+        </details>
+
+        <details>
+            <summary>Where can I see my driver?</summary>
+            <p>Open your order after a driver is assigned. Driver contact details and available location updates appear there. An older GPS location is labelled as the last known location.</p>
+        </details>
+    </section>
+</div>
+
+{% endblock %}

@@ -1,103 +1,591 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Demand Forecast</title>
+    <title>Demand Forecast | AgriConnect</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f8f4;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           TOP BAR
+        ========================== */
+
+        .topbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .brand h2 {
+            color: #166534;
+            font-size: 22px;
+        }
+
+        .brand p {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        /* =========================
+           PAGE
+        ========================== */
+
+        .container {
+            width: 88%;
+            max-width: 1250px;
+            margin: 35px auto 60px;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            line-height: 1.6;
+            max-width: 720px;
+        }
+
+        /* =========================
+           LOCATION CARD
+        ========================== */
+
+        .location-card {
+            background: white;
+            border-radius: 16px;
+            padding: 22px 26px;
+            margin-bottom: 28px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e8ece8;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #15803d;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+            margin-bottom: 15px;
+        }
+
+        .location-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .location-item {
+            background: #f8faf8;
+            border: 1px solid #e5e7eb;
+            padding: 15px 18px;
+            border-radius: 12px;
+        }
+
+        .location-item span {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .location-item strong {
+            font-size: 15px;
+            color: #1f2937;
+        }
+
+        /* =========================
+           HIGHEST DEMAND
+        ========================== */
+
+        .highlight-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #166534, #22c55e);
+            border-radius: 18px;
+            padding: 30px;
+            color: white;
+            margin-bottom: 35px;
+            box-shadow: 0 10px 30px rgba(22, 101, 52, 0.18);
+        }
+
+        .highlight-card::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            right: -70px;
+            top: -80px;
+        }
+
+        .highlight-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+            opacity: .9;
+            margin-bottom: 12px;
+        }
+
+        .highlight-crop {
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .highlight-demand {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.16);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .highlight-demand strong {
+            font-size: 18px;
+        }
+
+        /* =========================
+           FORECAST
+        ========================== */
+
+        .forecast-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .forecast-heading h2 {
+            font-size: 24px;
+        }
+
+        .forecast-heading p {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .forecast-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .forecast-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .forecast-card-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid #edf0ed;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .crop-name {
+            font-size: 21px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .total-demand {
+            text-align: right;
+        }
+
+        .total-demand span {
+            display: block;
+            color: #6b7280;
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .total-demand strong {
+            color: #15803d;
+            font-size: 18px;
+        }
+
+        /* =========================
+           TABLE
+        ========================== */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 22px;
+            background: #f8faf8;
+            color: #4b5563;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+
+        td {
+            padding: 14px 22px;
+            border-top: 1px solid #f0f2f0;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #fbfdfb;
+        }
+
+        .demand-value {
+            font-weight: 600;
+            color: #166534;
+        }
+
+        /* =========================
+           EMPTY STATE
+        ========================== */
+
+        .empty-state {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 45px 25px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        /* =========================
+           FOOT NOTE
+        ========================== */
+
+        .forecast-note {
+            margin-top: 30px;
+            background: #ecfdf3;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 900px) {
+
+            .location-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .forecast-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 92%;
+                margin-top: 25px;
+            }
+
+            .page-header h1 {
+                font-size: 27px;
+            }
+
+            .highlight-crop {
+                font-size: 31px;
+            }
+
+            .forecast-card-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .total-demand {
+                text-align: left;
+            }
+
+            th,
+            td {
+                padding: 12px 15px;
+            }
+        }
+    </style>
 
 </head>
 
 <body>
 
-    <h1>AI Demand Forecast</h1>
+    <!-- =========================
+         TOP BAR
+    ========================== -->
 
-    <h3>Your Location</h3>
+    <header class="topbar">
 
-    <p>
-        State: {{ state }}
-    </p>
+        <div class="brand">
 
-    <p>
-        District: {{ district }}
-    </p>
+            <div class="brand-icon">
+                🌱
+            </div>
 
-    <p>
-        Market: {{ market }}
-    </p>
+            <div>
+                <h2>AgriConnect</h2>
+                <p>Smart Agricultural Marketplace</p>
+            </div>
 
+        </div>
 
-    <hr>
-
-
-    {% if highest_demand_crop %}
-
-        <h2>
-            Highest Expected Demand
-        </h2>
-
-        <h1>
-            {{ highest_demand_crop.crop }}
-        </h1>
-
-        <p>
-            Expected 7-Day Demand:
-            {{ highest_demand_crop.total_demand }}
-            kg
-        </p>
-
-    {% endif %}
+    </header>
 
 
-    <hr>
+    <main class="container">
+
+        <!-- PAGE HEADER -->
+
+        <section class="page-header">
+
+            <h1>AI Demand Forecast</h1>
+
+            <p>
+                Understand expected crop demand in your market for the
+                upcoming seven days and make better selling decisions.
+            </p>
+
+        </section>
 
 
-    <h2>7-Day Demand Forecast</h2>
+        <!-- LOCATION -->
+
+        <section class="location-card">
+
+            <div class="section-label">
+                Forecast Location
+            </div>
+
+            <div class="location-grid">
+
+                <div class="location-item">
+                    <span>State</span>
+                    <strong>{{ state }}</strong>
+                </div>
+
+                <div class="location-item">
+                    <span>District</span>
+                    <strong>{{ district }}</strong>
+                </div>
+
+                <div class="location-item">
+                    <span>Market</span>
+                    <strong>{{ market }}</strong>
+                </div>
+
+            </div>
+
+        </section>
 
 
-    {% for result in forecast_results %}
+        <!-- HIGHEST EXPECTED DEMAND -->
 
-        <h3>
-            {{ result.crop }}
-        </h3>
+        {% if highest_demand_crop %}
 
-        <p>
-            Total Expected Demand:
-            {{ result.total_demand }}
-            kg
-        </p>
+        <section class="highlight-card">
+
+            <div class="highlight-title">
+                Highest Expected Demand
+            </div>
+
+            <div class="highlight-crop">
+                {{ highest_demand_crop.crop }}
+            </div>
+
+            <div class="highlight-demand">
+
+                Expected 7-Day Demand
+
+                <strong>
+                    {{ highest_demand_crop.total_demand }} kg
+                </strong>
+
+            </div>
+
+        </section>
+
+        {% endif %}
 
 
-        <table border="1">
+        <!-- FORECAST SECTION -->
 
-            <tr>
-                <th>Date</th>
-                <th>Expected Demand</th>
-            </tr>
+        <section>
+
+            <div class="forecast-heading">
+
+                <div>
+                    <h2>7-Day Demand Forecast</h2>
+
+                    <p>
+                        Daily predicted demand for crops in your selected market.
+                    </p>
+                </div>
+
+            </div>
 
 
-            {% for day in result.daily_forecast %}
+            {% if forecast_results %}
 
-                <tr>
+            <div class="forecast-grid">
 
-                    <td>
-                        {{ day.date }}
-                    </td>
+                {% for result in forecast_results %}
 
-                    <td>
-                        {{ day.predicted_demand }}
-                        kg
-                    </td>
+                <article class="forecast-card">
 
-                </tr>
+                    <div class="forecast-card-header">
 
-            {% endfor %}
+                        <div class="crop-name">
+                            {{ result.crop }}
+                        </div>
 
-        </table>
+                        <div class="total-demand">
 
-        <br>
+                            <span>
+                                TOTAL EXPECTED DEMAND
+                            </span>
 
-    {% endfor %}
+                            <strong>
+                                {{ result.total_demand }} kg
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Expected Demand</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {% for day in result.daily_forecast %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ day.date }}
+                                    </td>
+
+                                    <td class="demand-value">
+                                        {{ day.predicted_demand }} kg
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </article>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-state">
+                No demand forecast data is currently available for this market.
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <div class="forecast-note">
+
+            <strong>Forecast Insight:</strong>
+
+            These values represent predicted market demand for the upcoming
+            seven days and can help farmers understand which crops may have
+            stronger demand in their selected market.
+
+        </div>
+
+    </main>
 
 </body>
 

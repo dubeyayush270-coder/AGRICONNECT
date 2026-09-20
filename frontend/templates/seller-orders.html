@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriConnect - Order Requests</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        /* =========================================
+           SELLER ORDERS PAGE
+        ========================================== */
+
+        .seller-orders-page {
+            padding-bottom: 50px;
+        }
+
+        .seller-orders-heading {
+            margin-bottom: 26px;
+        }
+
+        .seller-orders-heading h1 {
+            margin: 0 0 7px;
+            color: #173f2d;
+            font-size: 30px;
+        }
+
+        .seller-orders-heading p {
+            margin: 0;
+            max-width: 760px;
+            color: #718078;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+
+        /* =========================================
+           SUMMARY CARDS
+        ========================================== */
+
+        .seller-orders-page .orders-stats {
+            margin-bottom: 28px;
+        }
+
+        .seller-orders-page .order-stat-card {
+            border: 1px solid #e4ebe6;
+            box-shadow: 0 3px 12px rgba(38, 70, 48, 0.05);
+        }
+
+        .seller-orders-page .order-stat-number {
+            color: #174b34;
+        }
+
+
+        /* =========================================
+           TABLE
+        ========================================== */
+
+        .seller-orders-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .seller-orders-table {
+            min-width: 1100px;
+        }
+
+        .seller-order-product {
+            font-weight: 700;
+            color: #1f5f3b;
+        }
+
+        .seller-order-quantity {
+            white-space: nowrap;
+        }
+
+        .seller-order-date {
+            color: #66756d;
+            white-space: nowrap;
+        }
+
+        .order-subtext {
+            display: block;
+            margin-top: 4px;
+            color: #8a9690;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+
+        /* =========================================
+           LOGISTICS
+        ========================================== */
+
+        .logistics-name {
+            display: block;
+            font-weight: 600;
+            color: #274f3b;
+        }
+
+        .logistics-pending {
+            display: inline-block;
+            color: #916515;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        /* =========================================
+           STATUS
+        ========================================== */
+
+        .order-pickup {
+            background: #ede9fe;
+            color: #5b21b6;
+        }
+
+        .order-transit {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .order-status-unknown {
+            background: #eeeeee;
+            color: #555555;
+        }
+
+
+        /* =========================================
+           VIEW BUTTON
+        ========================================== */
+
+        .order-details-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            min-width: 92px;
+
+            padding: 8px 13px;
+
+            border: 1px solid #cddbd2;
+            border-radius: 7px;
+
+            background: #ffffff;
+
+            color: #17633c;
+
+            text-decoration: none;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            transition: 0.2s;
+        }
+
+        .order-details-button:hover {
+            background: #edf7ef;
+            border-color: #8fbaa0;
+            color: #0f5132;
+        }
+
+
+        /* =========================================
+           EMPTY STATE
+        ========================================== */
+
+        .seller-order-empty {
+            padding: 58px 25px;
+            text-align: center;
+        }
+
+        .seller-order-empty-icon {
+            width: 66px;
+            height: 66px;
+
+            margin: 0 auto 16px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 50%;
+
+            background: #edf7ef;
+
+            font-size: 29px;
+        }
+
+        .seller-order-empty h3 {
+            margin-bottom: 8px;
+            color: #173f2d;
+            font-size: 21px;
+        }
+
+        .seller-order-empty p {
+            max-width: 500px;
+            margin: auto;
+
+            color: #718078;
+
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+
+        /* =========================================
+           HOW IT WORKS
+        ========================================== */
+
+        .seller-order-guide {
+            margin-top: 25px;
+        }
+
+        .seller-order-guide .delivery-item {
+            border: 1px solid #e7ece8;
+            background: #f8fbf9;
+        }
+
+        .seller-order-guide .delivery-item h4 {
+            color: #1d573c;
+            font-weight: 700;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 700px) {
+
+            .seller-orders-heading h1 {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="dashboard">
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <h2>
+            AgriConnect
+        </h2>
+
+        <p class="seller-label">
+            Farmer / Seller
+        </p>
+
+
+        <nav>
+
+            <a href="/seller">
+                Home
+            </a>
+
+            <a href="/what-to-grow">
+                What to Grow?
+            </a>
+
+            <a href="/demand-forecast">
+                Demand Forecast
+            </a>
+
+            <a href="/my-products">
+                My Products
+            </a>
+
+            <a
+                href="/seller/orders"
+                class="active"
+            >
+                Order Requests
+            </a>
+
+            <a href="#">
+                Logistics Support
+            </a>
+
+            <a href="/financial-summary">
+                Financial Summary
+            </a>
+
+            <a href="/government-schemes">
+                Government Schemes
+            </a>
+
+            <a href="/help-support">
+                Help and Support
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =====================================
+             TOP BAR
+        ====================================== -->
+
+        <header class="topbar">
+
+            <input
+                type="text"
+                placeholder="Search orders, buyers or products..."
+            >
+
+
+            <div class="topbar-right">
+
+
+                <div class="notification">
+
+                    🔔
+
+                </div>
+
+
+                <div class="profile">
+
+                    👤
+
+                    <span>
+                        {{ user["name"] }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================
+             PAGE
+        ====================================== -->
+
+        <section class="content seller-orders-page">
+
+
+            <!-- PAGE TITLE -->
+
+            <div class="seller-orders-heading">
+
+                <h1>
+                    Order Requests
+                </h1>
+
+                <p>
+                    View purchases made for your products, buyer
+                    information and the logistics progress of every
+                    order from pickup to final delivery.
+                </p>
+
+            </div>
+
+
+
+            <!-- =====================================
+                 CALCULATE SUMMARY
+            ====================================== -->
+
+            {% set stats = namespace(
+                pending=0,
+                active=0,
+                delivered=0
+            ) %}
+
+
+            {% for order in orders %}
+
+
+                {% if order.status == 'PENDING_LOGISTICS' %}
+
+                    {% set stats.pending = stats.pending + 1 %}
+
+
+                {% elif order.status in
+                    ['LOGISTICS_ASSIGNED', 'PICKED_UP', 'IN_TRANSIT']
+                %}
+
+                    {% set stats.active = stats.active + 1 %}
+
+
+                {% elif order.status == 'DELIVERED' %}
+
+                    {% set stats.delivered = stats.delivered + 1 %}
+
+
+                {% endif %}
+
+
+            {% endfor %}
+
+
+
+            <!-- =====================================
+                 SUMMARY CARDS
+            ====================================== -->
+
+            <div class="orders-stats">
+
+
+                <!-- TOTAL -->
+
+                <div class="order-stat-card">
+
+                    <h3>
+                        Total Orders
+                    </h3>
+
+                    <div class="order-stat-number">
+
+                        {{ orders | length }}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- WAITING -->
+
+                <div class="order-stat-card">
+
+                    <h3>
+                        Waiting for Logistics
+                    </h3>
+
+                    <div class="order-stat-number">
+
+                        {{ stats.pending }}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ACTIVE -->
+
+                <div class="order-stat-card">
+
+                    <h3>
+                        Active Deliveries
+                    </h3>
+
+                    <div class="order-stat-number">
+
+                        {{ stats.active }}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DELIVERED -->
+
+                <div class="order-stat-card">
+
+                    <h3>
+                        Delivered
+                    </h3>
+
+                    <div class="order-stat-number">
+
+                        {{ stats.delivered }}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 ORDER LIST
+            ====================================== -->
+
+            <section class="orders-section">
+
+
+                <h2>
+                    Buyer Orders
+                </h2>
+
+
+
+                {% if orders %}
+
+
+                <div class="seller-orders-table-wrapper">
+
+
+                    <table class="orders-table seller-orders-table">
+
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Order
+                                </th>
+
+                                <th>
+                                    Product
+                                </th>
+
+                                <th>
+                                    Buyer
+                                </th>
+
+                                <th>
+                                    Quantity
+                                </th>
+
+                                <th>
+                                    Product Amount
+                                </th>
+
+                                <th>
+                                    Logistics
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+
+                        <tbody>
+
+
+                            {% for order in orders %}
+
+
+                            <tr>
+
+
+                                <!-- =========================
+                                     ORDER ID
+                                ========================== -->
+
+                                <td class="order-id">
+
+                                    #{{ order.order_id }}
+
+                                </td>
+
+
+
+                                <!-- =========================
+                                     PRODUCT
+                                ========================== -->
+
+                                <td>
+
+                                    <span class="seller-order-product">
+
+                                        {{ order.crop_name }}
+
+                                    </span>
+
+
+                                    <span class="order-subtext">
+
+                                        Product #{{ order.product_id }}
+
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- =========================
+                                     BUYER
+                                ========================== -->
+
+                                <td>
+
+
+                                    <span class="order-buyer">
+
+                                        {{ order.buyer_name }}
+
+                                    </span>
+
+
+                                    {% if order.buyer_phone %}
+
+                                    <span class="order-subtext">
+
+                                        📞 {{ order.buyer_phone }}
+
+                                    </span>
+
+                                    {% endif %}
+
+
+                                    {% if order.buyer_email %}
+
+                                    <span class="order-subtext">
+
+                                        {{ order.buyer_email }}
+
+                                    </span>
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- =========================
+                                     QUANTITY
+                                ========================== -->
+
+                                <td class="seller-order-quantity">
+
+                                    {{ order.quantity }} kg
+
+                                </td>
+
+
+
+                                <!-- =========================
+                                     PRODUCT AMOUNT
+                                ========================== -->
+
+                                <td class="order-amount">
+
+                                    ₹{{ "%.2f"|format(order.product_total) }}
+
+                                </td>
+
+
+
+                                <!-- =========================
+                                     LOGISTICS
+                                ========================== -->
+
+                                <td>
+
+
+                                    {% if order.assigned_logistics_id %}
+
+
+                                        <span class="logistics-name">
+
+                                            {{ order.logistics_name or "Assigned Driver" }}
+
+                                        </span>
+
+
+                                        {% if order.vehicle_number %}
+
+                                        <span class="order-subtext">
+
+                                            🚚 {{ order.vehicle_number }}
+
+                                        </span>
+
+                                        {% endif %}
+
+
+                                        {% if order.vehicle_type %}
+
+                                        <span class="order-subtext">
+
+                                            {{ order.vehicle_type }}
+
+                                        </span>
+
+                                        {% endif %}
+
+
+                                        {% if order.logistics_phone %}
+
+                                        <span class="order-subtext">
+
+                                            📞 {{ order.logistics_phone }}
+
+                                        </span>
+
+                                        {% endif %}
+
+
+                                    {% else %}
+
+
+                                        <span class="logistics-pending">
+
+                                            Finding driver...
+
+                                        </span>
+
+
+                                        <span class="order-subtext">
+
+                                            AgriConnect is matching
+                                            this order with logistics.
+
+                                        </span>
+
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- =========================
+                                     STATUS
+                                ========================== -->
+
+                                <td>
+
+
+                                    {% if order.status == 'PENDING_LOGISTICS' %}
+
+
+                                        <span class="order-status order-pending">
+
+                                            Waiting for Logistics
+
+                                        </span>
+
+
+
+                                    {% elif order.status == 'LOGISTICS_ASSIGNED' %}
+
+
+                                        <span class="order-status order-confirmed">
+
+                                            Logistics Assigned
+
+                                        </span>
+
+
+
+                                    {% elif order.status == 'PICKED_UP' %}
+
+
+                                        <span class="order-status order-pickup">
+
+                                            Picked Up
+
+                                        </span>
+
+
+
+                                    {% elif order.status == 'IN_TRANSIT' %}
+
+
+                                        <span class="order-status order-transit">
+
+                                            In Transit
+
+                                        </span>
+
+
+
+                                    {% elif order.status == 'DELIVERED' %}
+
+
+                                        <span class="order-status order-delivered">
+
+                                            Delivered
+
+                                        </span>
+
+
+
+                                    {% elif order.status == 'CANCELLED' %}
+
+
+                                        <span class="order-status order-cancelled">
+
+                                            Cancelled
+
+                                        </span>
+
+
+
+                                    {% else %}
+
+
+                                        <span class="order-status order-status-unknown">
+
+                                            {{ order.status }}
+
+                                        </span>
+
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- =========================
+                                     DATE
+                                ========================== -->
+
+                                <td class="seller-order-date">
+
+
+                                    {% if order.created_at %}
+
+                                        {{ order.created_at.strftime('%d %b %Y') }}
+
+                                        <span class="order-subtext">
+
+                                            {{ order.created_at.strftime('%I:%M %p') }}
+
+                                        </span>
+
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- =========================
+                                     ACTION
+                                ========================== -->
+
+                                <td>
+
+                                    <a
+                                        href="/seller/orders/{{ order.order_id }}"
+                                        class="order-details-button"
+                                    >
+
+                                        View Details →
+
+                                    </a>
+
+                                </td>
+
+
+                            </tr>
+
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+
+                {% else %}
+
+
+
+                <!-- =================================
+                     EMPTY STATE
+                ================================== -->
+
+                <div class="seller-order-empty">
+
+
+                    <div class="seller-order-empty-icon">
+
+                        📦
+
+                    </div>
+
+
+                    <h3>
+
+                        No orders yet
+
+                    </h3>
+
+
+                    <p>
+
+                        When buyers purchase products you have
+                        listed on AgriConnect, the orders will
+                        automatically appear here.
+
+                    </p>
+
+
+                </div>
+
+
+                {% endif %}
+
+
+            </section>
+
+
+
+            <!-- =====================================
+                 ORDER WORKFLOW
+            ====================================== -->
+
+            <section class="delivery-info seller-order-guide">
+
+
+                <h2>
+                    How your orders work
+                </h2>
+
+
+                <div class="delivery-grid">
+
+
+
+                    <!-- STEP 1 -->
+
+                    <div class="delivery-item">
+
+                        <h4>
+                            1. Buyer places an order
+                        </h4>
+
+                        <p>
+
+                            The buyer purchases one of your listed
+                            products and the required quantity is
+                            reserved from your inventory.
+
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- STEP 2 -->
+
+                    <div class="delivery-item">
+
+                        <h4>
+                            2. Logistics is assigned
+                        </h4>
+
+                        <p>
+
+                            AgriConnect finds an eligible logistics
+                            provider based on load capacity and route
+                            compatibility.
+
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- STEP 3 -->
+
+                    <div class="delivery-item">
+
+                        <h4>
+                            3. Order is delivered
+                        </h4>
+
+                        <p>
+
+                            Follow the order through pickup,
+                            transportation and final delivery to
+                            the buyer.
+
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+</body>
+
+</html>

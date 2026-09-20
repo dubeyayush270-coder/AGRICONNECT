@@ -1,0 +1,527 @@
+{% extends 'buyer-base.html' %}
+
+{% block title %}Order #{{ order.order_id }}{% endblock %}
+
+{% block head %}
+    {% if tracking_allowed %}
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<a
+    class="buyer-back-link"
+    href="{{ url_for('buyer_orders') }}"
+>
+    ← My Orders
+</a>
+
+
+{% if request.args.get('placed') %}
+
+<div class="buyer-order-success" role="status">
+
+    <div class="buyer-order-success-icon" aria-hidden="true">
+        <svg class="buyer-icon">
+            <use href="#buyer-icon-box"></use>
+        </svg>
+    </div>
+
+    <div>
+        <strong>Order saved successfully.</strong>
+
+        <p>
+            Your stock is reserved and delivery requests have been created
+            for suitable vehicles. No payment has been collected.
+        </p>
+    </div>
+
+</div>
+
+{% endif %}
+
+
+<section class="buyer-order-hero">
+
+    <div>
+
+        <div class="buyer-eyebrow">
+            ORDER DETAILS
+        </div>
+
+        <h1>
+            Order #{{ order.order_id }}
+        </h1>
+
+        <p>
+            {{ order.crop_name or 'Product' }}
+            · {{ order.quantity }} kg
+            · {{ order.farmer_name or 'Supplier' }}
+        </p>
+
+    </div>
+
+
+    <span
+        class="buyer-order-status buyer-order-status-large
+        buyer-status-{{ order.status|lower|replace('_', '-') }}"
+    >
+        {{ order.status|replace('_', ' ')|title }}
+    </span>
+
+</section>
+
+
+{% set current_status = order.status %}
+
+<section class="buyer-section-card buyer-order-progress">
+
+    <div class="buyer-section-heading">
+        <div>
+            <div class="buyer-eyebrow">
+                DELIVERY JOURNEY
+            </div>
+
+            <h2>
+                Order Progress
+            </h2>
+        </div>
+    </div>
+
+
+    <div class="buyer-progress-track">
+
+        <div
+            class="buyer-progress-step
+            {% if current_status in ['PENDING_LOGISTICS','LOGISTICS_ASSIGNED','PICKED_UP','IN_TRANSIT','DELIVERED'] %}done{% endif %}"
+        >
+            <span>1</span>
+
+            <div>
+                <strong>Order Placed</strong>
+                <small>Produce reserved</small>
+            </div>
+        </div>
+
+
+        <div
+            class="buyer-progress-step
+            {% if current_status in ['LOGISTICS_ASSIGNED','PICKED_UP','IN_TRANSIT','DELIVERED'] %}done{% endif %}
+            {% if current_status == 'PENDING_LOGISTICS' %}active{% endif %}"
+        >
+            <span>2</span>
+
+            <div>
+                <strong>Driver Assignment</strong>
+                <small>
+                    {% if current_status == 'PENDING_LOGISTICS' %}
+                        Waiting for logistics
+                    {% else %}
+                        Logistics assigned
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+
+
+        <div
+            class="buyer-progress-step
+            {% if current_status in ['PICKED_UP','IN_TRANSIT','DELIVERED'] %}done{% endif %}
+            {% if current_status == 'LOGISTICS_ASSIGNED' %}active{% endif %}"
+        >
+            <span>3</span>
+
+            <div>
+                <strong>Pickup</strong>
+                <small>Driver collects produce</small>
+            </div>
+        </div>
+
+
+        <div
+            class="buyer-progress-step
+            {% if current_status in ['IN_TRANSIT','DELIVERED'] %}done{% endif %}
+            {% if current_status == 'PICKED_UP' %}active{% endif %}"
+        >
+            <span>4</span>
+
+            <div>
+                <strong>In Transit</strong>
+                <small>Produce on the way</small>
+            </div>
+        </div>
+
+
+        <div
+            class="buyer-progress-step
+            {% if current_status == 'DELIVERED' %}done active{% endif %}
+            {% if current_status == 'IN_TRANSIT' %}active{% endif %}"
+        >
+            <span>5</span>
+
+            <div>
+                <strong>Delivered</strong>
+                <small>Order completed</small>
+            </div>
+        </div>
+
+    </div>
+
+
+    {% if current_status == 'CANCELLED' %}
+
+    <div class="buyer-order-cancelled">
+        This order has been cancelled.
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+<div class="buyer-order-layout">
+
+    <section class="buyer-section-card buyer-order-product-card">
+
+        <div class="buyer-section-heading">
+            <div>
+                <div class="buyer-eyebrow">
+                    PURCHASE
+                </div>
+
+                <h2>
+                    {{ order.crop_name or 'Product' }}
+                </h2>
+            </div>
+        </div>
+
+
+        <div class="buyer-order-line">
+            <span>Supplier</span>
+            <strong>{{ order.farmer_name or 'Supplier' }}</strong>
+        </div>
+
+
+        <div class="buyer-order-line">
+            <span>Quantity</span>
+            <strong>{{ order.quantity }} kg</strong>
+        </div>
+
+
+        <div class="buyer-order-line">
+            <span>Unit price</span>
+            <strong>₹{{ order.product_price }}/kg</strong>
+        </div>
+
+
+        <div class="buyer-order-line">
+            <span>Produce value</span>
+            <strong>₹{{ '%.2f'|format(order.product_total) }}</strong>
+        </div>
+
+
+        <div class="buyer-order-line">
+            <span>Estimated delivery</span>
+            <strong>₹{{ '%.2f'|format(order.estimated_logistics_cost) }}</strong>
+        </div>
+
+
+        <div class="buyer-order-line">
+            <span>Distance estimate</span>
+            <strong>{{ order.distance_km }} km</strong>
+        </div>
+
+
+        <div class="buyer-order-total">
+            <span>Estimated total</span>
+
+            <strong>
+                ₹{{ '%.2f'|format(order.total_amount) }}
+            </strong>
+        </div>
+
+
+        <p class="buyer-order-note">
+            Delivery cost is an estimate based on straight-line distance.
+            Actual road distance may differ. This page does not confirm payment.
+        </p>
+
+    </section>
+
+
+    <section class="buyer-section-card buyer-order-address-card">
+
+        <div class="buyer-section-heading">
+            <div>
+                <div class="buyer-eyebrow">
+                    ROUTE
+                </div>
+
+                <h2>
+                    Delivery Details
+                </h2>
+            </div>
+        </div>
+
+
+        <div class="buyer-order-route">
+
+            <div class="buyer-order-route-point">
+
+                <span
+                    class="buyer-route-dot pickup"
+                    aria-hidden="true"
+                ></span>
+
+                <div>
+                    <small>PICKUP</small>
+
+                    <strong>
+                        Supplier location
+                    </strong>
+
+                    <p>
+                        {{ order.pickup_address }}
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div
+                class="buyer-order-route-line"
+                aria-hidden="true"
+            ></div>
+
+
+            <div class="buyer-order-route-point">
+
+                <span
+                    class="buyer-route-dot delivery"
+                    aria-hidden="true"
+                ></span>
+
+                <div>
+                    <small>DELIVER TO</small>
+
+                    <strong>
+                        Your delivery address
+                    </strong>
+
+                    <p>
+                        {{ order.delivery_address }}
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="buyer-section-card buyer-driver-card">
+
+        <div class="buyer-section-heading">
+            <div>
+                <div class="buyer-eyebrow">
+                    LOGISTICS
+                </div>
+
+                <h2>
+                    Your Driver
+                </h2>
+            </div>
+        </div>
+
+
+        {% if order.driver_name %}
+
+        <div class="buyer-driver-profile">
+
+            <div
+                class="buyer-driver-avatar"
+                aria-hidden="true"
+            >
+                {{ order.driver_name[:1] | upper }}
+            </div>
+
+            <div>
+                <strong>
+                    {{ order.driver_name }}
+                </strong>
+
+                <span>
+                    {{ order.vehicle_number }}
+                    ·
+                    {{ order.vehicle_type }}
+                </span>
+            </div>
+
+        </div>
+
+
+        {% if order.driver_phone %}
+
+        <a
+            class="buyer-driver-phone"
+            href="tel:{{ order.driver_phone }}"
+        >
+            Phone: {{ order.driver_phone }}
+        </a>
+
+        {% endif %}
+
+
+        <p class="buyer-driver-copy">
+            Your assigned logistics partner will share location updates
+            when location sharing is active.
+        </p>
+
+
+        {% elif order.status == 'PENDING_LOGISTICS' %}
+
+        <div class="buyer-driver-waiting">
+
+            <div class="buyer-driver-waiting-icon">
+                <svg
+                    class="buyer-icon"
+                    aria-hidden="true"
+                >
+                    <use href="#buyer-icon-truck"></use>
+                </svg>
+            </div>
+
+            <div>
+                <strong>
+                    Waiting for a suitable driver
+                </strong>
+
+                <p>
+                    Eligible logistics partners can review your delivery request.
+                    This page will update after one accepts it.
+                </p>
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="buyer-driver-waiting">
+
+            <div class="buyer-driver-waiting-icon">
+                <svg
+                    class="buyer-icon"
+                    aria-hidden="true"
+                >
+                    <use href="#buyer-icon-truck"></use>
+                </svg>
+            </div>
+
+            <div>
+                <strong>
+                    No driver assigned
+                </strong>
+
+                <p>
+                    Driver details are not currently available for this order.
+                </p>
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <a
+            class="buyer-refresh-order"
+            href="{{ url_for('buyer_order', order_id=order.order_id) }}"
+        >
+            Refresh order status
+
+            <svg
+                class="buyer-icon"
+                aria-hidden="true"
+            >
+                <use href="#buyer-icon-arrow"></use>
+            </svg>
+        </a>
+
+    </section>
+
+</div>
+
+
+{% if tracking_allowed %}
+
+<section
+    class="buyer-section-card buyer-tracking-panel"
+    id="buyer-tracking"
+    data-location-url="{{ url_for('buyer_order_location', order_id=order.order_id) }}"
+>
+
+    <div class="buyer-section-heading inline">
+
+        <div>
+
+            <div class="buyer-eyebrow">
+                LIVE LOGISTICS
+            </div>
+
+            <h2>
+                Driver Location
+            </h2>
+
+        </div>
+
+
+        <p
+            id="buyer-location-status"
+            class="buyer-location-status"
+            role="status"
+        >
+            Loading driver location…
+        </p>
+
+    </div>
+
+
+    <div
+        id="buyer-location-map"
+        aria-label="Driver location map"
+    ></div>
+
+
+    <p class="buyer-tracking-note">
+        Updates while this page is open.
+        The driver must have location sharing enabled.
+    </p>
+
+</section>
+
+{% endif %}
+
+{% endblock %}
+
+
+{% block scripts %}
+
+{% if tracking_allowed %}
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+<script
+    src="{{ url_for('static', filename='buyer-tracking.js') }}"
+    defer
+></script>
+
+{% endif %}
+
+{% endblock %}

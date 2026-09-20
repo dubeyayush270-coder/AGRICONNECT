@@ -1,285 +1,202 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'buyer-base.html' %}
 
-    <title>Browse Products</title>
+{% block title %}Browse Products{% endblock %}
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+{% block content %}
 
-        body {
-            background: #f3f3f3;
-            color: #222;
-        }
-
-        .topbar {
-            height: 70px;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 35px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo {
-            font-size: 27px;
-            font-weight: bold;
-            color: #2874f0;
-        }
-
-        .page-title {
-            font-size: 17px;
-            font-weight: bold;
-            color: #444;
-        }
-
-        .main-content {
-            width: 92%;
-            margin: 30px auto;
-        }
-
-        .heading {
-            background: white;
-            padding: 22px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        .heading h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .heading p {
-            color: #777;
-        }
-
-        .product-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .product-card {
-            background: white;
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            padding: 22px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            transition: 0.2s;
-        }
-
-        .product-card:hover {
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-        }
-
-        .product-image {
-            width: 170px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 6px;
-            background: #eeeeee;
-            flex-shrink: 0;
-        }
-
-        .product-details {
-            flex: 1;
-        }
-
-        .product-name {
-            font-size: 23px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .product-info {
-            font-size: 16px;
-            margin: 9px 0;
-        }
-
-        .product-info strong {
-            color: #555;
-        }
-
-        .price {
-            font-size: 24px;
-            font-weight: bold;
-            color: #16803c;
-            margin: 14px 0;
-        }
-
-        .quality {
-            display: inline-block;
-            background: #fff3cd;
-            color: #856404;
-            padding: 6px 12px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .view-section {
-            width: 170px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .view-btn {
-            display: inline-block;
-            width: 100%;
-            padding: 12px 15px;
-            background: #2874f0;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .view-btn:hover {
-            background: #125bd1;
-        }
-
-        .no-products {
-            background: white;
-            padding: 35px;
-            text-align: center;
-            border-radius: 6px;
-            color: #777;
-        }
-
-        @media (max-width: 750px) {
-            .product-card {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .product-image {
-                width: 100%;
-                height: 200px;
-            }
-
-            .view-section {
-                width: 100%;
-            }
-
-            .topbar {
-                padding: 0 15px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- Top Bar -->
-    <div class="topbar">
-        <div class="logo">search soon</div>
-
-        <div class="page-title">
-            Browse Products
-        </div>
+<section class="buyer-market-hero" aria-labelledby="browse-products-title">
+    <div class="buyer-market-hero-copy">
+        <div class="buyer-eyebrow">FRESH PRODUCE MARKETPLACE</div>
+        <h1 id="browse-products-title">
+            Browse fresh produce.<br>
+            <em>Find the right supplier.</em>
+        </h1>
+        <p>
+            Explore produce listed across AgriConnect, compare asking prices,
+            check available quantities and open a listing when you are ready
+            to review the purchase details.
+        </p>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
+    <div class="buyer-market-hero-panel" aria-hidden="true">
+        <div class="buyer-market-hero-icon">
+            <svg class="buyer-icon"><use href="#buyer-icon-market"></use></svg>
+        </div>
+        <div>
+            <span>AVAILABLE NOW</span>
+            <strong>{{ products|length }}</strong>
+            <small>listing{% if products|length != 1 %}s{% endif %} on this page</small>
+        </div>
+    </div>
+</section>
 
-        <div class="heading">
-            <h1>Browse Products</h1>
-            <p>Explore products available from different sellers</p>
+<section class="buyer-product-toolbar" aria-label="Product search and filters">
+    <form method="get" action="{{ url_for('browse_products') }}" class="buyer-product-search">
+        <div class="buyer-product-search-field">
+            <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-search"></use></svg>
+            <input
+                type="search"
+                name="q"
+                value="{{ q }}"
+                placeholder="Search crops, suppliers or districts"
+                aria-label="Search products"
+                maxlength="100"
+            >
         </div>
 
-        {% if products %}
-
-        <div class="product-list">
-
-            {% for product in products %}
-
-            <div class="product-card">
-
-                <!-- Product Image -->
-                {% if product['product_image'] %}
-
-                    <img
-                        src="{{ url_for('static', filename='uploads/' + product['product_image']) }}"
-                        alt="{{ product['crop_name'] }}"
-                        class="product-image"
-                    >
-
-                {% else %}
-
-                    <div class="product-image"></div>
-
-                {% endif %}
-
-                <!-- Product Details -->
-                <div class="product-details">
-
-                    <div class="product-name">
-                        {{ product['crop_name'] }}
-                    </div>
-
-                    <div class="product-info">
-                        <strong>Location:</strong>
-                        {{ product['district'] }}, {{ product['state'] }}
-                    </div>
-
-                    <div class="price">
-                        ₹{{ product['price_per_kg'] }} per kg
-                    </div>
-
-                    <div class="product-info">
-                        <strong>Quality:</strong>
-
-                        <span class="quality">
-                            {{ product['quality'] }}
-                        </span>
-                    </div>
-
-                    <div class="product-info">
-                        <strong>Quantity:</strong>
-                        {{ product['quantity'] }} kg
-                    </div>
-
-                </div>
-
-                <!-- View Product Button -->
-                <div class="view-section">
-
-                    <a
-                        href="{{ url_for('view_product', product_id=product['product_id']) }}"
-                        class="view-btn"
-                    >
-                        View Product
-                    </a>
-
-                </div>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-        {% else %}
-
-        <div class="no-products">
-            <h2>No products available</h2>
-            <p>Abhi koi product stock mein nahi hai.</p>
-        </div>
-
+        {% if supplier_id %}
+        <input type="hidden" name="supplier" value="{{ supplier_id }}">
         {% endif %}
 
+        <button class="buyer-product-search-button" type="submit">Search</button>
+
+        {% if q or supplier_id %}
+        <a class="buyer-clear-filter" href="{{ url_for('browse_products') }}">Clear filters</a>
+        {% endif %}
+    </form>
+
+    <div class="buyer-product-toolbar-copy">
+        {% if q %}
+            Showing results for <strong>“{{ q }}”</strong>
+        {% elif supplier_id %}
+            Showing products from the selected supplier
+        {% else %}
+            Showing available produce
+        {% endif %}
+    </div>
+</section>
+
+{% if products %}
+
+<section class="buyer-product-grid" aria-label="Available products">
+    {% for product in products %}
+    <article class="buyer-product-card">
+        <a
+            class="buyer-product-image-wrap"
+            href="{{ url_for('view_product', product_id=product['product_id']) }}"
+            aria-label="View {{ product['crop_name'] }}"
+        >
+            {% if product['product_image'] %}
+            <img
+                src="{{ url_for('static', filename='uploads/' + product['product_image']) }}"
+                alt="{{ product['crop_name'] }}"
+                class="buyer-product-image"
+                loading="lazy"
+            >
+            {% else %}
+            <div class="buyer-product-image buyer-product-image-placeholder">
+                <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-leaf"></use></svg>
+            </div>
+            {% endif %}
+
+            <span class="buyer-product-quality">{{ product['quality'] }}</span>
+        </a>
+
+        <div class="buyer-product-card-body">
+            <div class="buyer-product-card-heading">
+                <div>
+                    <div class="buyer-eyebrow">AVAILABLE PRODUCE</div>
+                    <h2>{{ product['crop_name'] }}</h2>
+                </div>
+
+                <div class="buyer-product-price">
+                    <strong>₹{{ product['price_per_kg'] }}</strong>
+                    <span>per kg</span>
+                </div>
+            </div>
+
+            <div class="buyer-product-supplier">
+                <div class="buyer-product-supplier-icon" aria-hidden="true">
+                    <svg class="buyer-icon"><use href="#buyer-icon-users"></use></svg>
+                </div>
+                <div>
+                    <span>SUPPLIER</span>
+                    <strong>{{ product.supplier_name }}</strong>
+                    <small>{{ product['district'] }}, {{ product['state'] }}</small>
+                </div>
+            </div>
+
+            <div class="buyer-product-details">
+                <div>
+                    <span>Available Quantity</span>
+                    <strong>{{ product['quantity'] }} kg</strong>
+                </div>
+                <div>
+                    <span>Quality</span>
+                    <strong>{{ product['quality'] }}</strong>
+                </div>
+            </div>
+
+            <a
+                href="{{ url_for('view_product', product_id=product['product_id']) }}"
+                class="buyer-product-view-button"
+            >
+                View Product
+                <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-arrow"></use></svg>
+            </a>
+        </div>
+    </article>
+    {% endfor %}
+</section>
+
+<nav class="buyer-product-pagination" aria-label="Product pages">
+    <div>
+        {% if page > 1 %}
+        <a
+            class="buyer-pagination-button"
+            href="{{ url_for('browse_products', page=page-1, q=q, supplier=supplier_id) }}"
+        >← Previous</a>
+        {% else %}
+        <span class="buyer-pagination-button disabled" aria-disabled="true">← Previous</span>
+        {% endif %}
     </div>
 
-</body>
-</html>
+    <span class="buyer-pagination-current">Page {{ page }}</span>
+
+    <div>
+        {% if has_next %}
+        <a
+            class="buyer-pagination-button"
+            href="{{ url_for('browse_products', page=page+1, q=q, supplier=supplier_id) }}"
+        >Next →</a>
+        {% else %}
+        <span class="buyer-pagination-button disabled" aria-disabled="true">Next →</span>
+        {% endif %}
+    </div>
+</nav>
+
+{% else %}
+
+<section class="buyer-products-empty" aria-labelledby="no-products-title">
+    <div class="buyer-products-empty-icon" aria-hidden="true">
+        <svg class="buyer-icon"><use href="#buyer-icon-market"></use></svg>
+    </div>
+
+    <div>
+        <div class="buyer-eyebrow">NO MATCHING LISTINGS</div>
+        <h2 id="no-products-title">No products available.</h2>
+
+        <p>
+            {% if q or supplier_id %}
+                We couldn't find produce matching the current filters.
+                Try a different crop, supplier or district.
+            {% else %}
+                There are no active produce listings right now.
+                Check again when suppliers add new stock.
+            {% endif %}
+        </p>
+
+        {% if q or supplier_id %}
+        <a class="buyer-primary-link" href="{{ url_for('browse_products') }}">
+            View All Products
+            <svg class="buyer-icon" aria-hidden="true"><use href="#buyer-icon-arrow"></use></svg>
+        </a>
+        {% else %}
+        <a class="buyer-secondary-link" href="{{ url_for('buyer') }}">Back to Dashboard</a>
+        {% endif %}
+    </div>
+</section>
+
+{% endif %}
+
+{% endblock %}

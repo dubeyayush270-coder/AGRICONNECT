@@ -1,0 +1,49 @@
+{% extends 'buyer-base.html' %}
+
+{% block title %}Unable to Complete Request{% endblock %}
+
+{% block content %}
+
+<section class="buyer-error-page" role="alert">
+
+    <div class="buyer-error-card">
+
+        <div class="buyer-error-icon" aria-hidden="true">
+            <svg class="buyer-icon">
+                <use href="#buyer-icon-help"></use>
+            </svg>
+        </div>
+
+
+        <div class="buyer-eyebrow">
+            SOMETHING NEEDS ATTENTION
+        </div>
+
+
+        <h1>
+            Unable to complete<br>
+            <em>this request.</em>
+        </h1>
+
+
+        <p>
+            {{ message }}
+        </p>
+
+
+        <a
+            class="buyer-primary-link"
+            href="{{ back_url }}"
+        >
+            Return to your dashboard
+
+            <svg class="buyer-icon" aria-hidden="true">
+                <use href="#buyer-icon-arrow"></use>
+            </svg>
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}

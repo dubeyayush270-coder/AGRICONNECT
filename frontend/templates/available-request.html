@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#153f30">
+    <title>Available Requests - AgriConnect</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='logistics.css') }}">
+</head>
+
+<body>
+    <a class="skip-link" href="#available-request-content">Skip to available requests</a>
+
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+        <symbol id="icon-leaf" viewBox="0 0 24 24">
+            <path
+                d="M20.5 3.5C13 3.7 7.7 6.7 5.3 11.1c-1.8 3.2-1.2 6.4.7 8.1 1.9 1.8 5.1 2 8.1.2 4.2-2.5 6.3-8 6.4-15.9Z" />
+            <path d="M5.8 18.9c2.3-4.1 5.5-7.3 10-10" />
+        </symbol>
+        <symbol id="icon-home" viewBox="0 0 24 24">
+            <path d="m3 10 9-7 9 7" />
+            <path d="M5 9.5V21h14V9.5" />
+            <path d="M9 21v-7h6v7" />
+        </symbol>
+        <symbol id="icon-package" viewBox="0 0 24 24">
+            <path d="m4 7 8-4 8 4-8 4-8-4Z" />
+            <path d="M4 7v10l8 4 8-4V7" />
+            <path d="M12 11v10" />
+        </symbol>
+        <symbol id="icon-truck" viewBox="0 0 24 24">
+            <path d="M3 6h11v11H3z" />
+            <path d="M14 10h4l3 3v4h-7z" />
+            <path d="M6 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM18 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+        </symbol>
+        <symbol id="icon-pin" viewBox="0 0 24 24">
+            <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
+            <circle cx="12" cy="10" r="2.5" />
+        </symbol>
+        <symbol id="icon-route" viewBox="0 0 24 24">
+            <circle cx="6" cy="18" r="2" />
+            <circle cx="18" cy="6" r="2" />
+            <path d="M8 18h2.5a3.5 3.5 0 0 0 0-7H9a3 3 0 0 1 0-6h7" />
+        </symbol>
+        <symbol id="icon-history" viewBox="0 0 24 24">
+            <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+            <path d="M3 3v5h5" />
+            <path d="M12 7v5l3 2" />
+        </symbol>
+        <symbol id="icon-wallet" viewBox="0 0 24 24">
+            <path d="M4 6h14a2 2 0 0 1 2 2v10H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12" />
+            <path d="M15 11h6v4h-6a2 2 0 0 1 0-4Z" />
+        </symbol>
+        <symbol id="icon-help" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M9.8 9a2.5 2.5 0 1 1 3.7 2.2c-1 .5-1.5 1-1.5 2.3" />
+            <path d="M12 17h.01" />
+        </symbol>
+        <symbol id="icon-arrow" viewBox="0 0 24 24">
+            <path d="M5 12h14" />
+            <path d="m14 7 5 5-5 5" />
+        </symbol>
+        <symbol id="icon-filter" viewBox="0 0 24 24">
+            <path d="M4 6h16M7 12h10M10 18h4" />
+        </symbol>
+    </svg>
+
+    <aside class="sidebar">
+        <a class="brand" href="/logistics" aria-label="AgriConnect logistics home">
+            <span class="brand-mark" aria-hidden="true">
+                <svg class="icon">
+                    <use href="#icon-leaf"></use>
+                </svg>
+            </span>
+            <span class="brand-copy">
+                <strong>AgriConnect</strong>
+                <small>PEOPLE · PRODUCE · PROSPER</small>
+            </span>
+        </a>
+
+        <div class="nav-label">LOGISTICS WORKSPACE</div>
+        <nav aria-label="Logistics navigation">
+            <a href="/logistics" class="nav-item">
+                <svg class="icon" aria-hidden="true">
+                    <use href="#icon-home"></use>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="/logistics/available-requests" class="nav-item active" aria-current="page">
+                <svg class="icon" aria-hidden="true">
+                    <use href="#icon-package"></use>
+                </svg>
+                <span>Available Requests</span>
+            </a>
+            <a href="/logistics#my-deliveries" class="nav-item">
+                <svg class="icon" aria-hidden="true">
+                    <use href="#icon-truck"></use>
+                </svg>
+                <span>My Deliveries</span>
+            </a>
+            <a href="/logistics#vehicle-information" class="nav-item">
+                <svg class="icon" aria-hidden="true">
+                    <use href="#icon-truck"></use>
+                </svg>
+                <span>Vehicle Information</span>
+            </a>
+            <a href="/logistics#location-section" class="nav-item">
+                <svg class="icon" aria-hidden="true">
+                    <use href="#icon-pin"></use>
+                </svg>
+                <span>Current Location</span>
+            </a>
+            <a href="/logistics#route-optimization" class="nav-item">
+                <svg class="icon" aria-hidden="true">
+                    <use href="#icon-route"></use>
+                </svg>
+                <span>Route Optimization</span>
+            </a>
+            <a href="/logistics#delivery-history" class="nav-item">
+                <svg class="icon" aria-hidden="true">
+                    <use href="#icon-history"></use>
+                </svg>
+                <span>Delivery History</span>
+            </a>
+            <a href="/logistics#earnings" class="nav-item">
+                <svg class="icon" aria-hidden="true">
+                    <use href="#icon-wallet"></use>
+                </svg>
+                <span>Earnings</span>
+            </a>
+            <a href="/logistics#help" class="nav-item">
+                <svg class="icon" aria-hidden="true">
+                    <use href="#icon-help"></use>
+                </svg>
+                <span>Help & Support</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-note" aria-hidden="true">
+            <svg class="icon">
+                <use href="#icon-route"></use>
+            </svg>
+            <p>Move produce.<br>Build trust.</p>
+            <small>Farm-to-market logistics, connected.</small>
+        </div>
+    </aside>
+
+    <main class="main" id="available-request-content">
+        <header class="topbar">
+            <div class="topbar-title">
+                AgriConnect <span>/</span> <small>Available requests</small>
+            </div>
+            <div class="profile">
+                <div class="profile-icon" aria-hidden="true">{{ user["name"][:1] | upper }}</div>
+                <div class="profile-copy">
+                    <div class="profile-name">{{ user["name"] }}</div>
+                    <small>Logistics Partner</small>
+                </div>
+            </div>
+        </header>
+
+        <section class="content request-page">
+            <section class="request-hero" aria-labelledby="request-page-title">
+                <div>
+                    <div class="eyebrow">DELIVERY OPPORTUNITIES</div>
+                    <h1 id="request-page-title">Available delivery<br><em>requests.</em></h1>
+                    <p>
+                        Review delivery opportunities matched to your vehicle
+                        capacity and current availability.
+                    </p>
+                </div>
+                <a class="secondary-link" href="/logistics">
+                    Back to dashboard
+                    <svg class="icon" aria-hidden="true">
+                        <use href="#icon-arrow"></use>
+                    </svg>
+                </a>
+            </section>
+
+            <section class="request-status-strip" aria-label="Availability status">
+                <div class="request-status-copy">
+                    <span class="request-status-dot {% if user['availability'] == 'ONLINE' %}is-online{% endif %}"
+                        aria-hidden="true"></span>
+                    <div>
+                        <strong>{% if user["availability"] == "ONLINE" %}You are online{% else %}You are offline{% endif
+                            %}</strong>
+                        <p>
+                            {% if user["availability"] == "ONLINE" %}
+                            Your vehicle is available for delivery matching.
+                            {% else %}
+                            Go online from the dashboard when you are ready to receive delivery requests.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <a class="request-status-link" href="/logistics#availability-title">Manage availability</a>
+            </section>
+
+            <div class="request-toolbar" aria-label="Request controls">
+                <div>
+                    <div class="eyebrow">REQUEST BOARD</div>
+                    <h2>Jobs ready for review</h2>
+                </div>
+                <div class="request-filter-placeholder" aria-label="Request filters coming next">
+                    <svg class="icon" aria-hidden="true">
+                        <use href="#icon-filter"></use>
+                    </svg>
+                    <span>Filters will activate with live requests</span>
+                </div>
+            </div>
+
+            {% if request.args.get("message") %}
+
+            <div class="request-message" role="status">
+                {{ request.args.get("message") }}
+            </div>
+
+            {% endif %}
+
+
+            {% if available_requests %}
+
+            <section class="request-grid" aria-label="Available delivery requests">
+
+                {% for delivery_request in available_requests %}
+
+                <article class="delivery-request-card">
+
+                    <!-- =====================================================
+                     REQUEST HEADER
+                     ===================================================== -->
+
+                    <div class="request-card-topline">
+
+                        <span class="request-badge">
+                            Available
+                        </span>
+
+                        <span class="request-id">
+                            Order #{{ delivery_request["order_id"] }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- =====================================================
+                     PRODUCT + LOAD
+                     ===================================================== -->
+
+                    <div class="request-product-heading">
+
+                        <div>
+
+                            <div class="eyebrow">
+                                DELIVERY REQUEST
+                            </div>
+
+                            <h3>
+                                {{ delivery_request["crop_name"] }}
+                            </h3>
+
+                        </div>
+
+
+                        <span class="request-load-badge">
+                            {{ delivery_request["quantity"] }} kg
+                        </span>
+
+                    </div>
+
+
+                    <!-- =====================================================
+                     ROUTE
+                     ===================================================== -->
+
+                    <div class="request-route">
+
+
+                        <!-- PICKUP -->
+
+                        <div class="request-route-point">
+
+                            <span class="route-dot route-dot-pickup" aria-hidden="true"></span>
+
+
+                            <div>
+
+                                <small>
+                                    PICKUP
+                                </small>
+
+                                <strong>
+
+                                    {% if delivery_request["pickup_village_city"] %}
+
+                                    {{ delivery_request["pickup_village_city"] }}
+
+                                    {% endif %}
+
+
+                                    {% if delivery_request["pickup_district"] %}
+
+                                    {% if delivery_request["pickup_village_city"] %}
+                                    ,
+                                    {% endif %}
+
+                                    {{ delivery_request["pickup_district"] }}
+
+                                    {% endif %}
+
+                                </strong>
+
+
+                                {% if delivery_request["pickup_address"] %}
+
+                                <p>
+                                    {{ delivery_request["pickup_address"] }}
+                                </p>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="request-route-line" aria-hidden="true"></div>
+
+
+                        <!-- DELIVERY -->
+
+                        <div class="request-route-point">
+
+                            <span class="route-dot route-dot-delivery" aria-hidden="true"></span>
+
+
+                            <div>
+
+                                <small>
+                                    DELIVERY
+                                </small>
+
+                                <strong>
+
+                                    {{ delivery_request["delivery_village_city"] }},
+                                    {{ delivery_request["delivery_district"] }}
+
+                                </strong>
+
+
+                                {% if delivery_request["delivery_address"] %}
+
+                                <p>
+                                    {{ delivery_request["delivery_address"] }}
+                                </p>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================================
+                     REQUEST DETAILS
+                     ===================================================== -->
+
+                    <div class="request-facts">
+
+                        <div>
+
+                            <span>
+                                Load
+                            </span>
+
+                            <strong>
+                                {{ delivery_request["quantity"] }} kg
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Your Capacity
+                            </span>
+
+                            <strong>
+                                {{ delivery_request["vehicle_capacity"] }} kg
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Distance
+                            </span>
+
+                            <strong>
+
+                                {% if delivery_request["distance_km"] %}
+
+                                {{ delivery_request["distance_km"] }} km
+
+                                {% else %}
+
+                                —
+
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Estimated Pay
+                            </span>
+
+                            <strong>
+
+                                {% if delivery_request["estimated_logistics_cost"] %}
+
+                                ₹{{ delivery_request["estimated_logistics_cost"] }}
+
+                                {% else %}
+
+                                —
+
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================================
+                     VEHICLE INFORMATION
+                     ===================================================== -->
+
+                    <div class="request-vehicle-meta">
+
+                        <span>
+
+                            Vehicle:
+                            {{ delivery_request["vehicle_type"] }}
+
+                        </span>
+
+
+                        <span>
+
+                            {{ delivery_request["vehicle_number"] }}
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- =====================================================
+                     ACTION BUTTONS
+                     ===================================================== -->
+
+                    <div class="request-actions">
+
+
+                        <!-- REJECT -->
+
+                        <form method="POST" action="{{ url_for(
+                            'reject_logistics_request',
+                            order_id=delivery_request['order_id']
+                        ) }}">
+
+                            <button type="submit" class="reject-request-button" onclick="
+                                return confirm(
+                                    'Are you sure you want to reject this delivery request?'
+                                );
+                            ">
+
+                                Reject Request
+
+                            </button>
+
+                        </form>
+
+
+                        <!-- ACCEPT -->
+
+                        <form method="POST" action="{{ url_for(
+                            'accept_logistics_request',
+                            order_id=delivery_request['order_id']
+                        ) }}">
+
+                            <button type="submit" class="accept-request-button">
+
+                                Accept Request
+
+                                <svg class="icon" aria-hidden="true">
+
+                                    <use href="#icon-arrow"></use>
+
+                                </svg>
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+
+                {% endfor %}
+
+            </section>
+
+
+            {% else %}
+
+
+            <!-- =====================================================
+         EMPTY STATE
+         ===================================================== -->
+
+            <section class="request-empty-state" aria-labelledby="no-requests-title">
+
+                <div class="request-empty-icon" aria-hidden="true">
+
+                    <svg class="icon">
+                        <use href="#icon-package"></use>
+                    </svg>
+
+                </div>
+
+
+                <div>
+
+                    <div class="eyebrow">
+                        NOTHING WAITING RIGHT NOW
+                    </div>
+
+
+                    <h2 id="no-requests-title">
+                        No available delivery requests.
+                    </h2>
+
+
+                    <p>
+
+                        {% if user["availability"] == "ONLINE" %}
+
+                        You are online. New orders that match
+                        your vehicle capacity will appear here
+                        when they become available.
+
+                        {% else %}
+
+                        Your vehicle is currently offline.
+                        Go online from the logistics dashboard
+                        to become eligible for new delivery requests.
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <a class="primary-link" href="/logistics">
+
+                        Return to logistics dashboard
+
+                        <svg class="icon" aria-hidden="true">
+
+                            <use href="#icon-arrow"></use>
+
+                        </svg>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            {% endif %}
+
+            <section class="request-explainer-grid" aria-label="How available requests work">
+
+                <article>
+
+                    <span>
+                        01
+                    </span>
+
+                    <h3>
+                        Request appears
+                    </h3>
+
+                    <p>
+                        An order becomes available when its load
+                        matches your vehicle capacity and you are
+                        eligible to receive it.
+                    </p>
+
+                </article>
+
+
+                <article>
+
+                    <span>
+                        02
+                    </span>
+
+                    <h3>
+                        Review the trip
+                    </h3>
+
+                    <p>
+                        Check the cargo load, pickup location,
+                        destination, distance and expected
+                        logistics amount.
+                    </p>
+
+                </article>
+
+
+                <article>
+
+                    <span>
+                        03
+                    </span>
+
+                    <h3>
+                        Accept or reject
+                    </h3>
+
+                    <p>
+                        Accepting assigns the delivery to you.
+                        Rejecting removes it only from your
+                        request board while other eligible
+                        drivers can still respond.
+                    </p>
+
+                </article>
+
+            </section>
+        </section>
+
+        <footer class="dashboard-footer">
+            <strong>AgriConnect</strong>
+            <span>People · Produce · Prosper</span>
+        </footer>
+    </main>
+</body>
+
+</html>
