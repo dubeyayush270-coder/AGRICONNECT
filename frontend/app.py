@@ -24,18 +24,21 @@ app.config["ANNASETU_ENDPOINTS"] = {
     "schemes": "government_schemes",
 }
 
-app.secret_key = "my-secret-key"
-
-SENDER_EMAIL = "smart.dustbin.service@gmail.com"
-
-SENDER_PASSWORD = "mizn jpba ubfs luid"
-
-DATABASE_CONFIG = dict(
-    host="localhost",
-    user="root",
-    password="123456",
-    database="agriconnect"
+app.secret_key = os.getenv(
+    "SECRET_KEY",
+    "agrikconnect-local-development-key"
 )
+
+SENDER_EMAIL = os.getenv("SENDER_EMAIL")
+SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
+
+DATABASE_CONFIG = {
+    "host": os.getenv("MYSQLHOST", "localhost"),
+    "port": int(os.getenv("MYSQLPORT", "3306")),
+    "user": os.getenv("MYSQLUSER", "root"),
+    "password": os.getenv("MYSQLPASSWORD", ""),
+    "database": os.getenv("MYSQLDATABASE", "agriconnect"),
+}
 
 db = mysql.connector.connect(**DATABASE_CONFIG)
 
