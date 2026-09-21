@@ -152,7 +152,7 @@ def main():
                 expect(get(anon, path).status_code == 302, 'Anonymous page access allowed')
                 expect(get(buyer_client, path).status_code == 403, 'Buyer page access allowed')
             for action in ('accept','reject'):
-                expect(post(anon, '/logistics/available-requests/0/'+action).headers['Location'] == '/', 'Anonymous action allowed')
+                expect(post(anon, '/logistics/available-requests/0/'+action).headers['Location'] == '/login', 'Anonymous action allowed')
                 expect(get(clients[0], '/logistics/available-requests/0/'+action).status_code == 405, 'GET mutated order')
         check('Login/role protection and POST-only Accept/Reject', access)
 

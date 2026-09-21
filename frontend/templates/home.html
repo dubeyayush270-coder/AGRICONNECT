@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" class="annasetu-home">
+{% set routes = config.get('ANNASETU_ENDPOINTS', {}) %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>AnnaSetu | Smarter Agriculture</title>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/annasetu-home.css') }}">
+</head>
+<body>
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+    <nav class="navbar" aria-label="Main navigation">
+        <div class="nav-inner">
+            <a href="{{ url_for(routes.get('home', 'home')) }}" class="logo">
+                <div class="logo-mark" aria-hidden="true"></div>
+                <div>
+                    <div class="logo-name">
+                        AnnaSetu
+                    </div>
+                    <div class="logo-tagline">
+                        People · Produce · Prosper
+                    </div>
+                </div>
+            </a>
+            {% if routes.get('language') %}
+            <div class="language-selector" aria-label="Language">
+                <a href="{{ url_for(routes['language'], language='en') }}" lang="en">English</a>
+                <span aria-hidden="true">|</span>
+                <a href="{{ url_for(routes['language'], language='hi') }}" lang="hi">हिंदी</a>
+            </div>
+            {% endif %}
+            <div class="nav-links">
+                <a href="{{ url_for(routes.get('home', 'home')) }}" class="active" aria-current="page">
+                    Home
+                </a>
+                <a href="#challenge">
+                    About
+                </a>
+                <a href="#solution">
+                    Features
+                </a>
+                {% if routes.get('schemes') %}
+                <a href="{{ url_for(routes['schemes']) }}">Schemes</a>
+                {% endif %}
+                <a href="#how">
+                    How It Works
+                </a>
+                <a href="#contact">
+                    Contact
+                </a>
+            </div>
+            <div class="nav-buttons">
+                <a href="{{ url_for(routes.get('login', 'login')) }}" class="nav-login">
+                    Login
+                </a>
+                <a href="{{ url_for(routes.get('register', 'register')) }}" class="nav-register">
+                    Register
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+    <main>
+    <section class="hero">
+        <!-- RIGHT SIDE FARM IMAGE -->
+        <div class="hero-image">
+            <img
+                src="{{ url_for('static', filename='images/logistics-fields.png') }}"
+                alt="Agricultural farm"
+            >
+        </div>
+        <!-- LEFT CONTENT -->
+        <div class="hero-inner">
+            <div class="hero-left">
+                <div class="hero-badge">
+                    A SMARTER AGRI ECOSYSTEM
+                </div>
+                <h1 class="hero-title">
+                    From Farm
+                    <br>
+                    to
+                    <span class="green">
+                        Market.
+                    </span>
+                </h1>
+                <h2 class="hero-subtitle">
+                    Connect. Predict. Deliver.
+                </h2>
+                <p class="hero-description">
+                    AnnaSetu helps farmers get real-time
+                    market insights, connect directly with buyers
+                    and move produce efficiently — for a stronger,
+                    fairer and more sustainable agricultural
+                    ecosystem.
+                </p>
+                <div class="hero-actions">
+                    <a href="{{ url_for(routes.get('register', 'register')) }}" class="primary-btn">
+                        Get Started
+                        <span>→</span>
+                    </a>
+                    <a href="#solution" class="outline-btn">
+                        Explore AnnaSetu
+                    </a>
+                </div>
+                <div class="hero-audience">
+                    <div class="audience-item">
+                        <div class="audience-icon"></div>
+                        <span>
+                            For<br>
+                            Farmers
+                        </span>
+                    </div>
+                    <div class="audience-item">
+                        <div class="audience-icon"></div>
+                        <span>
+                            For<br>
+                            Buyers
+                        </span>
+                    </div>
+                    <div class="audience-item">
+                        <div class="audience-icon"></div>
+                        <span>
+                            For<br>
+                            Logistics Partners
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- =====================================================
+         CHALLENGE
+    ====================================================== -->
+    <section class="challenge" id="challenge">
+        <div class="container">
+            <div class="challenge-grid">
+                <div>
+                    <div class="section-label">
+                        THE CHALLENGE
+                    </div>
+                    <h2 class="challenge-title">
+                        Good Produce Deserves
+                        <br>
+                        Better Opportunities.
+                    </h2>
+                    <p class="challenge-text">
+                        Farmers often face unpredictable prices,
+                        limited market access, high transportation
+                        costs and information gaps, often leading
+                        to lower income and unnecessary food waste.
+                    </p>
+                </div>
+                <div class="problem-grid">
+                    <div class="problem-card">
+                        <div class="problem-icon"></div>
+                        <h3>
+                            Price<br>
+                            Uncertainty
+                        </h3>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-icon"></div>
+                        <h3>
+                            Limited<br>
+                            Market Access
+                        </h3>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-icon"></div>
+                        <h3>
+                            High<br>
+                            Logistics Cost
+                        </h3>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-icon"></div>
+                        <h3>
+                            Lack of<br>
+                            Real-time Information
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- =====================================================
+         SOLUTION
+    ====================================================== -->
+    <section class="solution" id="solution">
+        <!-- LEFT LEAVES -->
+        <svg
+            aria-hidden="true" focusable="false"
+            class="solution-leaves-left"
+            viewBox="0 0 285 330"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                class="solution-leaf-stem"
+                d="M28 330
+                   C40 278 70 235 112 190
+                   C148 151 174 102 196 30"
+            />
+            <path
+                class="solution-leaf-shape"
+                d="M70 260
+                   C39 247 22 219 24 187
+                   C57 189 82 207 91 233
+                   C95 246 87 257 70 260 Z"
+            />
+            <path
+                class="solution-leaf-vein"
+                d="M29 191
+                   C48 210 68 230 87 247"
+            />
+            <path
+                class="solution-leaf-shape"
+                d="M91 215
+                   C90 178 111 148 143 134
+                   C154 167 140 196 113 213
+                   C104 218 97 218 91 215 Z"
+            />
+            <path
+                class="solution-leaf-vein"
+                d="M140 140
+                   C124 161 109 187 95 210"
+            />
+        </svg>
+        <!-- RIGHT LEAVES -->
+        <svg
+            aria-hidden="true" focusable="false"
+            class="solution-leaves-right"
+            viewBox="0 0 280 300"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                class="solution-leaf-stem"
+                d="M275 18
+                   C225 45 198 82 170 124
+                   C144 163 111 194 70 228"
+            />
+            <path
+                class="solution-leaf-shape"
+                d="M222 65
+                   C225 34 245 12 273 8
+                   C280 37 264 60 238 69
+                   C231 71 226 70 222 65 Z"
+            />
+            <path
+                class="solution-leaf-vein"
+                d="M270 14
+                   C253 31 237 48 224 64"
+            />
+            <path
+                class="solution-leaf-shape"
+                d="M188 105
+                   C186 75 203 51 230 42
+                   C239 69 225 94 200 106
+                   C194 109 190 108 188 105 Z"
+            />
+            <path
+                class="solution-leaf-vein"
+                d="M227 48
+                   C212 67 199 86 189 103"
+            />
+        </svg>
+        <div class="container">
+            <div class="solution-grid">
+                <div>
+                    <div class="section-label">
+                        OUR SOLUTION
+                    </div>
+                    <h2 class="solution-title">
+                        One Platform.
+                        <br>
+                        Greater
+                        <br>
+                        Possibilities.
+                    </h2>
+                    <p class="solution-description">
+                        AnnaSetu brings farmers, buyers and
+                        logistics together with the power of
+                        AI and real-time data.
+                    </p>
+                </div>
+                <div class="solution-features">
+                    <div class="solution-feature">
+                        <div class="solution-icon"></div>
+                        <h3>
+                            Market Insights
+                        </h3>
+                        <p>
+                            AI-driven demand
+                            and price trends.
+                        </p>
+                    </div>
+                    <div class="solution-feature">
+                        <div class="solution-icon"></div>
+                        <h3>
+                            Direct Connections
+                        </h3>
+                        <p>
+                            Farmers to buyers
+                            without middlemen.
+                        </p>
+                    </div>
+                    <div class="solution-feature">
+                        <div class="solution-icon"></div>
+                        <h3>
+                            Efficient Logistics
+                        </h3>
+                        <p>
+                            Smooth and reliable
+                            produce delivery.
+                        </p>
+                    </div>
+                    <div class="solution-feature">
+                        <div class="solution-icon"></div>
+                        <h3>
+                            Trusted & Transparent
+                        </h3>
+                        <p>
+                            Secure transactions
+                            and fair trade.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- =====================================================
+         HOW IT WORKS
+    ====================================================== -->
+    <section class="how" id="how">
+        <!-- LEFT LEAVES -->
+        <svg
+            aria-hidden="true" focusable="false"
+            class="how-leaves-left"
+            viewBox="0 0 240 290"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                class="how-vein"
+                d="M18 290
+                   C35 240 70 190 110 145
+                   C139 112 158 75 180 20"
+            />
+            <path
+                class="how-leaf"
+                d="M57 241
+                   C29 232 14 208 17 181
+                   C46 184 67 201 75 225
+                   C78 235 69 243 57 241 Z"
+            />
+            <path
+                class="how-vein"
+                d="M20 185
+                   C38 202 55 221 72 237"
+            />
+            <path
+                class="how-leaf"
+                d="M92 177
+                   C90 148 107 123 132 114
+                   C139 140 128 163 108 175
+                   C101 179 96 180 92 177 Z"
+            />
+        </svg>
+        <!-- RIGHT LEAVES -->
+        <svg
+            aria-hidden="true" focusable="false"
+            class="how-leaves-right"
+            viewBox="0 0 255 290"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                class="how-vein"
+                d="M250 15
+                   C210 42 183 75 155 111
+                   C128 147 96 181 55 217"
+            />
+            <path
+                class="how-leaf"
+                d="M206 57
+                   C208 32 226 13 250 8
+                   C256 32 243 53 222 62
+                   C215 65 209 64 206 57 Z"
+            />
+            <path
+                class="how-vein"
+                d="M247 13
+                   C231 28 218 43 207 58"
+            />
+            <path
+                class="how-leaf"
+                d="M169 101
+                   C168 76 183 55 206 47
+                   C213 70 202 91 181 101
+                   C175 104 171 104 169 101 Z"
+            />
+        </svg>
+        <div class="container">
+            <div class="section-label">
+                HOW IT WORKS
+            </div>
+            <h2 class="how-title">
+                A Simple 4-Step Journey
+            </h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">
+                        01
+                    </div>
+                    <div class="step-illustration">
+                        <div class="illustration-circle"></div>
+                    </div>
+                    <h3>
+                        List Your Produce
+                    </h3>
+                    <p>
+                        Add crop details,
+                        quantity and expected price.
+                    </p>
+                </div>
+                <div class="step">
+                    <div class="step-number">
+                        02
+                    </div>
+                    <div class="step-illustration">
+                        <div class="illustration-circle"></div>
+                    </div>
+                    <h3>
+                        Get AI Insights
+                    </h3>
+                    <p>
+                        Discover demand, price
+                        trends and opportunities.
+                    </p>
+                </div>
+                <div class="step">
+                    <div class="step-number">
+                        03
+                    </div>
+                    <div class="step-illustration">
+                        <div class="illustration-circle"></div>
+                    </div>
+                    <h3>
+                        Connect With Buyers
+                    </h3>
+                    <p>
+                        Negotiate directly
+                        and finalize deals.
+                    </p>
+                </div>
+                <div class="step">
+                    <div class="step-number">
+                        04
+                    </div>
+                    <div class="step-illustration">
+                        <div class="illustration-circle"></div>
+                    </div>
+                    <h3>
+                        Plan & Deliver
+                    </h3>
+                    <p>
+                        Choose logistics and
+                        complete the sale securely.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- =====================================================
+         CTA
+    ====================================================== -->
+    <section class="cta" id="contact">
+        <div class="cta-inner">
+            <div class="cta-content">
+                <div class="cta-label">
+                    A BETTER AGRICULTURAL FUTURE
+                </div>
+                <h2 class="cta-title">
+                    Let's Build a
+                    <br>
+                    Stronger Agricultural Future.
+                </h2>
+                <p class="cta-description">
+                    Join AnnaSetu and be a part of a more
+                    connected, prosperous and sustainable
+                    agricultural ecosystem.
+                </p>
+                <a href="{{ url_for(routes.get('register', 'register')) }}" class="cta-button">
+                    Get Started
+                    <span>→</span>
+                </a>
+            </div>
+            <div class="cta-benefits">
+                <div class="cta-benefit">
+                    <div class="benefit-icon"></div>
+                    <strong>
+                        Better<br>Markets
+                    </strong>
+                </div>
+                <div class="cta-benefit">
+                    <div class="benefit-icon"></div>
+                    <strong>
+                        Higher<br>Incomes
+                    </strong>
+                </div>
+                <div class="cta-benefit">
+                    <div class="benefit-icon"></div>
+                    <strong>
+                        Reduced<br>Food Waste
+                    </strong>
+                </div>
+                <div class="cta-benefit">
+                    <div class="benefit-icon"></div>
+                    <strong>
+                        A Stronger<br>India
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+    </main>
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-logo">
+                AnnaSetu
+            </div>
+            <div>
+                People · Produce · Prosper
+            </div>
+            <div class="footer-links">
+                {% if routes.get('privacy') %}
+                <a href="{{ url_for(routes['privacy']) }}">Privacy</a>
+                {% else %}
+                <span>Privacy</span>
+                {% endif %}
+                {% if routes.get('terms') %}
+                <a href="{{ url_for(routes['terms']) }}">Terms</a>
+                {% else %}
+                <span>Terms</span>
+                {% endif %}
+                <a href="#contact">
+                    Contact
+                </a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

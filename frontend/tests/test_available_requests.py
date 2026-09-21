@@ -25,7 +25,7 @@ class AvailableRequestTests(unittest.TestCase):
     def test_anonymous_order_actions_do_not_connect(self):
         client = module.app.test_client()
         for action in ('accept', 'reject'):
-            self.assertEqual(client.post(f'/logistics/available-requests/1/{action}').location, '/')
+            self.assertEqual(client.post(f'/logistics/available-requests/1/{action}').location, '/login')
             self.assertEqual(client.get(f'/logistics/available-requests/1/{action}').status_code, 405)
         self.connect.assert_not_called()
 
