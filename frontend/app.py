@@ -388,123 +388,58 @@ AgriConnect Team
         )
 
         try:
-
             print("Sending OTP through Resend API...")
 
-response = requests.post(
-    "https://api.resend.com/emails",
-    headers={
-        "Authorization": f"Bearer {os.environ['RESEND_API_KEY']}",
-        "Content-Type": "application/json",
-    },
-    json={
-        "from": "AgriConnect <onboarding@resend.dev>",
-        "to": [registration_data["email"]],
-        "subject": "AgriConnect - Email Verification OTP",
-        "html": f"""
-            <h2>AgriConnect Email Verification</h2>
+            response = requests.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {os.environ['RESEND_API_KEY']}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "from": "AgriConnect <onboarding@resend.dev>",
+                    "to": [registration_data["email"]],
+                    "subject": "AgriConnect - Email Verification OTP",
+                    "html": f"""
+                        <h2>AgriConnect Email Verification</h2>
+                        <p>Hello {registration_data["name"]},</p>
+                        <p>Your AgriConnect verification OTP is:</p>
+                        <h1>{otp}</h1>
+                        <p>Please do not share this OTP with anyone.</p>
+                        <p>Thank you,<br>AgriConnect Team</p>
+                    """,
+                },
+                timeout=30,
+            )
 
-            <p>Hello {registration_data["name"]},</p>
+            print(
+                "Resend response:",
+                response.status_code,
+                response.text
+            )
 
-            <p>Your AgriConnect verification OTP is:</p>
+            response.raise_for_status()
 
-            <h1>{otp}</h1>
-
-            <p>Please do not share this OTP with anyone.</p>
-
-            <p>Thank you,<br>AgriConnect Team</p>
-        """,
-    },
-    timeout=30,
-)
-
-print(
-    "Resend response:",
-    response.status_code,
-    response.text
-)
-
-response.raise_for_status()
-
-print("OTP sent successfully")
+            print("OTP sent successfully")
 
             return render_template(
                 "verify-otp.html",
                 message="OTP sent successfully. Please check your email."
             )
 
-        except smtplib.SMTPAuthenticationError as e:
-
-            print(
-                "\nGmail Authentication Error:"
-            )
-
-            print(e)
-
-            state = registration_data["state"]
-
-            district = registration_data["district"]
-
-            return render_template(
-                "register.html",
-
-                states=sorted(
-                    LOCATIONS.keys()
-                ),
-
-                districts=sorted(
-                    LOCATIONS.get(
-                        state,
-                        {}
-                    ).keys()
-                ),
-
-                markets=LOCATIONS.get(
-                    state,
-                    {}
-                ).get(
-                    district,
-                    []
-                ),
-
-                selected_state=state,
-
-                selected_district=district,
-
-                message=(
-                    "Gmail login failed. "
-                    "Please check your Gmail App Password."
-                )
-            )
-
         except Exception as e:
-
-            print(
-                "\nEmail Error:"
-            )
-
-            print(
-                repr(e)
-            )
+            print("\nEmail Error:")
+            print(repr(e))
 
             state = registration_data["state"]
-
             district = registration_data["district"]
 
             return render_template(
                 "register.html",
-
-                states=sorted(
-                    LOCATIONS.keys()
-                ),
-
+                states=sorted(LOCATIONS.keys()),
                 districts=sorted(
-                    LOCATIONS.get(
-                        state,
-                        {}
-                    ).keys()
+                    LOCATIONS.get(state, {}).keys()
                 ),
-
                 markets=LOCATIONS.get(
                     state,
                     {}
@@ -512,15 +447,9 @@ print("OTP sent successfully")
                     district,
                     []
                 ),
-
                 selected_state=state,
-
                 selected_district=district,
-
-                message=(
-                    "Unable to send OTP. "
-                    "Check terminal for error."
-                )
+                message="Unable to send OTP. Please try again."
             )
 
     return redirect("/register")
