@@ -31,6 +31,7 @@ app.secret_key = os.getenv(
 
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
 DATABASE_CONFIG = {
     "host": os.getenv("MYSQLHOST", "localhost"),
@@ -388,34 +389,44 @@ AgriConnect Team
 
         try:
 
-            print(
-                "Connecting to Gmail..."
-            )
+            print("Sending OTP through Resend API...")
 
-            with smtplib.SMTP_SSL(
-                "smtp.gmail.com",
-                465,
-                timeout=30
-            ) as smtp:
+response = requests.post(
+    "https://api.resend.com/emails",
+    headers={
+        "Authorization": f"Bearer {os.environ['RESEND_API_KEY']}",
+        "Content-Type": "application/json",
+    },
+    json={
+        "from": "AgriConnect <onboarding@resend.dev>",
+        "to": [registration_data["email"]],
+        "subject": "AgriConnect - Email Verification OTP",
+        "html": f"""
+            <h2>AgriConnect Email Verification</h2>
 
-                print(
-                    "Connected to Gmail"
-                )
+            <p>Hello {registration_data["name"]},</p>
 
-                smtp.login(
-                    SENDER_EMAIL,
-                    SENDER_PASSWORD
-                )
+            <p>Your AgriConnect verification OTP is:</p>
 
-                print(
-                    "Gmail login successful"
-                )
+            <h1>{otp}</h1>
 
-                smtp.send_message(msg)
+            <p>Please do not share this OTP with anyone.</p>
 
-                print(
-                    "OTP sent successfully"
-                )
+            <p>Thank you,<br>AgriConnect Team</p>
+        """,
+    },
+    timeout=30,
+)
+
+print(
+    "Resend response:",
+    response.status_code,
+    response.text
+)
+
+response.raise_for_status()
+
+print("OTP sent successfully")
 
             return render_template(
                 "verify-otp.html",
