@@ -11,6 +11,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 import mysql.connector
+import flask  # Load Flask/Jinja before patch.dict restores the module registry.
 
 
 ROOT = Path(__file__).resolve().parents[1]

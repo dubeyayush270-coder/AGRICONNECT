@@ -405,23 +405,60 @@
                 </details>
             </article>
 
-            <article class="card dashboard-flash-card" id="route-optimization" aria-labelledby="route-optimization-title">
-                <div class="flash-card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-route"></use></svg></div>
-                <h2 class="card-title" id="route-optimization-title">Route Optimization</h2>
-                <p class="card-description">Pickup and delivery routing will combine the active job with your current GPS position.</p>
-                <details class="flash-card-details">
-                    <summary class="flash-card-action">
-                        View route
-                        <svg class="icon" aria-hidden="true"><use href="#icon-arrow"></use></svg>
-                    </summary>
-                    <div class="flash-card-content">
-                        <div class="empty-state">
-                            <div class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#icon-route"></use></svg></div>
-                            <h3>No active route</h3>
-                            <p>A route can be generated after a real delivery request has been accepted.</p>
+            <article class="card route-workspace" id="route-optimization" aria-labelledby="route-optimization-title"
+                     data-route-url="{{ url_for('logistics_route') }}"
+                     data-directions-url="{{ url_for('logistics_route_directions') }}"
+                     data-status-url="{{ url_for('update_delivery_status', order_id=0) }}">
+                <div class="route-heading">
+                    <div>
+                        <div class="eyebrow">YOUR NEXT TRIP</div>
+                        <h2 id="route-optimization-title">Route Optimization</h2>
+                        <p>Follow the roads from your vehicle to each pickup and delivery.</p>
+                    </div>
+                    <button class="route-secondary" id="refreshRoute" type="button">Refresh route</button>
+                </div>
+                <p id="routeMessage" class="route-message" role="status" aria-live="polite">Loading your assigned route…</p>
+                <div id="routeEmpty" class="route-empty" hidden>
+                    <svg class="icon" aria-hidden="true"><use href="#icon-route"></use></svg>
+                    <h3>No active route</h3>
+                    <p>Accept a delivery request to see your pickup and delivery directions here.</p>
+                    <a href="{{ url_for('logistics_available_requests') }}">View delivery requests →</a>
+                </div>
+                <div id="routeContent" hidden>
+                    <div class="route-metrics" aria-label="Route summary">
+                        <div><span>Road distance</span><strong id="routeDistance">—</strong></div>
+                        <div><span>Driving estimate</span><strong id="routeDuration">—</strong></div>
+                        <div><span>Remaining stops</span><strong id="routeStopCount">—</strong></div>
+                        <div><span>Vehicle load</span><strong id="routeLoad">—</strong></div>
+                    </div>
+                    <div class="route-controls">
+                        <label for="routeScope">Directions for
+                            <select id="routeScope"><option value="next">Next stop</option><option value="all">All remaining stops</option></select>
+                        </label>
+                        <div class="route-control-buttons">
+                            <button id="routeUpdateLocation" class="route-secondary" type="button">Update GPS</button>
+                            <button id="fitRoute" class="route-secondary" type="button">Fit route</button>
                         </div>
                     </div>
-                </details>
+                    <div class="route-layout">
+                        <div class="route-map-column">
+                            <div id="routeMap" role="region" aria-label="Driving route map"></div>
+                            <div id="routeAlternatives" class="route-alternatives" aria-label="Driving route options"></div>
+                            <p class="route-map-note">Blue: selected road route · Green: pickup · Gold: delivery.<br>
+                                Driving estimates exclude live traffic and truck restrictions. Last metres to a saved pin may be off-road.</p>
+                        </div>
+                        <div class="route-itinerary">
+                            <div class="route-itinerary-heading"><h3>Stop sequence</h3><span id="routeProgress"></span></div>
+                            <ol id="routeStops" class="route-stops"></ol>
+                            <button id="completeRouteStop" class="route-primary" type="button" disabled>Loading next stop…</button>
+                            <details class="route-directions" open>
+                                <summary>Turn-by-turn directions</summary>
+                                <div id="routeInstructions"><p>Road directions will appear here.</p></div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                <noscript><p>Enable JavaScript to view the driving route and turn directions.</p></noscript>
             </article>
 
             <article class="card dashboard-flash-card" id="delivery-history" aria-labelledby="delivery-history-title">
@@ -498,5 +535,6 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script id="logisticsInitialState" type="application/json">{{ location_state | tojson }}</script>
 <script src="{{ url_for('static', filename='logistics.js') }}" defer></script>
+<script src="{{ url_for('static', filename='route-navigation.js') }}" defer></script>
 </body>
 </html>

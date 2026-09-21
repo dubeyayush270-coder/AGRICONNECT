@@ -106,6 +106,9 @@
         byId("trackingButton").textContent = online ? "Stop Live Tracking" : "Start Live Tracking";
         if (data.location) showMarker(data.location.latitude, data.location.longitude, accuracy);
         showFreshness();
+        if (typeof window.dispatchEvent === "function" && typeof CustomEvent === "function") {
+            window.dispatchEvent(new CustomEvent("logistics:location", {detail: data}));
+        }
     }
 
     function requireGPS() {

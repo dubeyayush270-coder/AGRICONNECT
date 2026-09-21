@@ -20,6 +20,7 @@ import unittest
 from unittest.mock import patch
 
 import mysql.connector
+import flask  # Keep request contexts stable across the import-time dependency stubs.
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -195,6 +196,57 @@ class MultiOrderTests(unittest.TestCase):
                          {self.logistics: 'ACCEPTED', self.other_logistics: 'EXPIRED'})
         before = self.state_snapshot(a)
         self.accept(a, success=False)
+        self.assertEqual(before, self.state_snapshot(a))
+
+    def test_navigation_follows_saved_route_through_delivery_lifecycle(self):
+        from test_road_directions import road_payload, response
+        a = self.new_order()
+        self.accept(a)
+        dashboard = self.client.get('/logistics')
+        self.assertEqual(dashboard.status_code, 200)
+        self.assertIn(b'id="routeMap"', dashboard.data)
+        snapshot = self.client.get('/logistics/route').json
+        route = snapshot['route']
+        self.assertEqual([s['stop_type'] for s in route['stops']], ['PICKUP', 'DELIVERY'])
+        self.assertEqual(route['current_load_kg'], 0)
+        query = f"/logistics/route/directions?route_id={route['route_id']}&route_version={route['route_version']}"
+        router = self.app.extensions['road_directions']
+        router.cache.clear()
+        router.next_request_at = 0
+        before = self.state_snapshot(a)
+        with patch.object(router, 'http_get', return_value=response(road_payload(2))) as provider:
+            directions = self.client.get(query + '&scope=all')
+            self.assertEqual(directions.status_code, 200, directions.json)
+            self.assertEqual(directions.json['stop_ids'], [s['stop_id'] for s in route['stops']])
+            provider.assert_called_once()
+        self.assertEqual(before, self.state_snapshot(a))
+        updated = self.client.post(f'/logistics/deliveries/{a}/status',
+            json={'status': 'PICKED_UP'}, headers={'X-CSRF-Token': snapshot['csrf_token']})
+        self.assertEqual(updated.status_code, 200, updated.json)
+        self.assertEqual(self.client.get(query).json['code'], 'ROUTE_CHANGED')
+        route = self.client.get('/logistics/route').json['route']
+        self.assertEqual(route['current_load_kg'], 60)
+        self.assertEqual(route['completed_stops'], 1)
+        self.assertEqual([s['stop_type'] for s in route['stops']], ['DELIVERY'])
+        self.assertEqual(route['stops'][0]['next_status'], 'IN_TRANSIT')
+        self.status(a, 'IN_TRANSIT')
+        self.assertEqual(self.client.get('/logistics/route').json['route']['stops'][0]['next_status'], 'DELIVERED')
+        self.status(a, 'DELIVERED')
+        self.assertIsNone(self.client.get('/logistics/route').json['route'])
+
+    def test_navigation_rejects_other_driver_and_stale_gps_without_provider_call(self):
+        a = self.new_order()
+        self.accept(a)
+        route = self.route(a)
+        query = f"/logistics/route/directions?route_id={route['route_id']}&route_version={route['route_version']}"
+        before = self.state_snapshot(a)
+        with patch.object(self.app.extensions['road_directions'], 'http_get') as provider:
+            self.assertIsNone(self.client_for(self.other_driver).get('/logistics/route').json['route'])
+            self.assertEqual(self.client_for(self.other_driver).get(query).status_code, 404)
+            self.assertEqual(self.client_for(self.buyer).get(query).status_code, 403)
+            self.sql('UPDATE logistics_profiles SET location_updated_at=CURRENT_TIMESTAMP - INTERVAL 2 MINUTE WHERE logistics_id=%s', (self.logistics,))
+            self.assertEqual(self.client.get(query).json['code'], 'LOCATION_STALE')
+            provider.assert_not_called()
         self.assertEqual(before, self.state_snapshot(a))
 
     def test_shared_route_small_extension_and_full_lifecycle(self):

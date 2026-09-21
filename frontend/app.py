@@ -2708,6 +2708,7 @@ def search_location():
 
 from buyer_routes import register_buyer_routes
 from delivery_routes import register_delivery_routes, delivery_list, delivery_csrf_token
+from route_navigation import register_route_navigation
 
 
 def delivery_label(row):
@@ -2717,6 +2718,7 @@ def delivery_label(row):
 
 register_buyer_routes(app, logistics_cursor, logistics_location_state)
 register_delivery_routes(app, logistics_api, get_logistics_profile, get_logistics_route)
+register_route_navigation(app, logistics_cursor, get_logistics_profile, get_logistics_route, logistics_location_state)
 
 
 if __name__ == "__main__":
