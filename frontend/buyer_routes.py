@@ -61,7 +61,7 @@ def register_buyer_routes(app, transaction, location_state):
         @wraps(view)
         def wrapped(*args, **kwargs):
             if not session.get("user_id"):
-                return redirect("/")
+                return redirect(url_for("login"))
             try:
                 with transaction() as cursor:
                     # The same user lock serializes a buyer's checkout writes.
@@ -71,7 +71,7 @@ def register_buyer_routes(app, transaction, location_state):
                     user = cursor.fetchone()
                     if not user:
                         session.clear()
-                        return redirect("/")
+                        return redirect(url_for("login"))
                     if str(user["role"]).lower() != "buyer":
                         abort(403)
                     result = view(cursor, user, *args, **kwargs)

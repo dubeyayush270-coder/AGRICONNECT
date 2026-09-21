@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, make_response
+from flask import Flask, render_template, request, session, redirect, make_response, url_for
 from contextlib import contextmanager
 from functools import wraps
 import math
@@ -18,6 +18,11 @@ from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
+
+app.config["ANNASETU_ENDPOINTS"] = {
+    "forgot_password": "forgot_password",
+    "schemes": "government_schemes",
+}
 
 app.secret_key = "my-secret-key"
 
@@ -50,6 +55,14 @@ os.makedirs(
 
 @app.route("/", methods=["GET", "POST"])
 def home():
+    # Keep submissions from the previous login page working.
+    if request.method == "POST":
+        return login()
+    return render_template("home.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
 
     if request.method == "POST":
 
@@ -100,18 +113,18 @@ def home():
             else:
 
                 return render_template(
-                    "index.html",
+                    "login.html",
                     message="Unknown user role"
                 )
 
         else:
 
             return render_template(
-                "index.html",
+                "login.html",
                 message="Wrong email or password"
             )
 
-    return render_template("index.html")
+    return render_template("login.html")
 
 
 @app.route("/forgot-password")
@@ -624,7 +637,7 @@ def verify_otp():
                 None
             )
 
-            return redirect("/")
+            return redirect(url_for("login"))
 
         else:
 
@@ -646,7 +659,7 @@ def seller():
 
     if not user_id:
 
-        return redirect("/")
+        return redirect(url_for("login"))
 
     cursor = db.cursor(
         dictionary=True
@@ -669,7 +682,7 @@ def seller():
 
         session.clear()
 
-        return redirect("/")
+        return redirect(url_for("login"))
 
     return render_template(
         "seller-dashboard.html",
@@ -682,10 +695,10 @@ def seller_orders():
     user_id = session.get("user_id")
 
     if not user_id:
-        return redirect("/")
+        return redirect(url_for("login"))
 
     if session.get("role") != "farmer":
-        return redirect("/")
+        return redirect(url_for("login"))
 
     cursor = db.cursor(dictionary=True)
 
@@ -716,7 +729,7 @@ def seller_orders():
 
         if not user:
             session.clear()
-            return redirect("/")
+            return redirect(url_for("login"))
 
 
         # ==========================================
@@ -798,10 +811,10 @@ def seller_order_details(order_id):
     user_id = session.get("user_id")
 
     if not user_id:
-        return redirect("/")
+        return redirect(url_for("login"))
 
     if session.get("role") != "farmer":
-        return redirect("/")
+        return redirect(url_for("login"))
 
     cursor = db.cursor(dictionary=True)
 
@@ -870,7 +883,7 @@ def my_products():
 
     if not user_id:
 
-        return redirect("/")
+        return redirect(url_for("login"))
 
     cursor = db.cursor(
         dictionary=True
@@ -908,7 +921,7 @@ def add_product():
     user_id = session.get("user_id")
 
     if not user_id:
-        return redirect("/")
+        return redirect(url_for("login"))
 
 
     # =====================================================
@@ -1237,7 +1250,7 @@ def add_product():
 
             cursor.close()
 
-            return redirect("/")
+            return redirect(url_for("login"))
 
 
         # =================================================
@@ -1492,7 +1505,7 @@ def delete_product():
     user_id = session.get("user_id")
 
     if not user_id:
-        return redirect("/")
+        return redirect(url_for("login"))
 
     cursor = db.cursor(
         dictionary=True
@@ -1527,7 +1540,7 @@ def delete_selected_product():
     user_id = session.get("user_id")
 
     if not user_id:
-        return redirect("/")
+        return redirect(url_for("login"))
 
     product_id = request.form[
         "product_id"
@@ -1594,7 +1607,7 @@ def demand_forecast():
 
     if not user_id:
 
-        return redirect("/")
+        return redirect(url_for("login"))
 
     cursor = db.cursor(
         dictionary=True
@@ -1620,7 +1633,7 @@ def demand_forecast():
 
         session.clear()
 
-        return redirect("/")
+        return redirect(url_for("login"))
 
     state = user["state"]
 
@@ -1818,7 +1831,7 @@ def government_schemes():
 
     # Login nahi hai
     if not user_id:
-        return redirect("/")
+        return redirect(url_for("login"))
 
     cursor = db.cursor(dictionary=True)
 
@@ -1839,7 +1852,7 @@ def government_schemes():
     # User database me nahi mila
     if not user:
         session.clear()
-        return redirect("/")
+        return redirect(url_for("login"))
 
     # User information scheme.html ko bhejo
     return render_template(
@@ -1943,7 +1956,7 @@ def logistics_location_state(profile):
 def logistics_dashboard():
     user_id = session.get("user_id")
     if not user_id:
-        return redirect("/")
+        return redirect(url_for("login"))
     try:
         with logistics_cursor() as cursor:
             cursor.execute("""
@@ -1953,7 +1966,7 @@ def logistics_dashboard():
             user = cursor.fetchone()
             if not user:
                 session.clear()
-                return redirect("/")
+                return redirect(url_for("login"))
             if user["role"] != "Logistics":
                 return "Access denied", 403
             profile = get_logistics_profile(cursor, user_id)
@@ -2146,7 +2159,7 @@ def logistics_available_requests():
     user_id = session.get("user_id")
 
     if not user_id:
-        return redirect("/")
+        return redirect(url_for("login"))
 
     try:
 
@@ -2177,7 +2190,7 @@ def logistics_available_requests():
 
             if not user:
                 session.clear()
-                return redirect("/")
+                return redirect(url_for("login"))
 
             if user["role"] != "Logistics":
                 return "Access denied", 403
@@ -2357,7 +2370,7 @@ def accept_logistics_request(order_id):
     user_id = session.get("user_id")
 
     if not user_id:
-        return redirect("/")
+        return redirect(url_for("login"))
 
     try:
         with logistics_cursor() as cursor:
@@ -2366,7 +2379,7 @@ def accept_logistics_request(order_id):
             user = cursor.fetchone()
             if not user:
                 session.clear()
-                return redirect("/")
+                return redirect(url_for("login"))
             if user["role"] != "Logistics":
                 return "Access denied", 403
 
@@ -2455,7 +2468,7 @@ def reject_logistics_request(order_id):
     user_id = session.get("user_id")
 
     if not user_id:
-        return redirect("/")
+        return redirect(url_for("login"))
 
 
     try:

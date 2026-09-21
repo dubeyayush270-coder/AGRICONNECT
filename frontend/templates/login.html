@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" class="annasetu-login">
+{% set routes = config.get('ANNASETU_ENDPOINTS', {}) %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnnaSetu - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/annasetu-login.css') }}">
+</head>
+<body>
+    <header class="top-header">
+        <a href="{{ url_for(routes.get('home', 'home')) }}" class="logo" aria-label="AnnaSetu home">
+            <div class="logo-mark" aria-hidden="true"></div>
+            <div>
+                <div class="logo-name">AnnaSetu</div>
+                <div class="logo-tagline">People · Produce · Prosper</div>
+            </div>
+        </a>
+        <a href="{{ url_for(routes.get('home', 'home')) }}" class="back-home">← Back to Home</a>
+    </header>
+
+    <main class="login-page">
+        <div class="leaf leaf-1" aria-hidden="true"></div>
+        <div class="leaf leaf-2" aria-hidden="true"></div>
+        <div class="leaf leaf-3" aria-hidden="true"></div>
+        <div class="leaf leaf-4" aria-hidden="true"></div>
+        <div class="leaf leaf-5" aria-hidden="true"></div>
+        <div class="leaf leaf-6" aria-hidden="true"></div>
+        <div class="leaf leaf-7" aria-hidden="true"></div>
+        <div class="leaf leaf-8" aria-hidden="true"></div>
+        <div class="leaf leaf-9" aria-hidden="true"></div>
+        <div class="leaf leaf-10" aria-hidden="true"></div>
+
+        <section class="login-card" aria-labelledby="login-heading">
+            <h1 id="login-heading">Welcome Back.</h1>
+            <p class="subtitle">Login to your AnnaSetu account and continue your journey.</p>
+
+            <form action="{{ url_for(routes.get('login_submit', routes.get('login', 'login')), _method='POST') }}" method="post">
+                {# Reuse the project's CSRF protection, when present. #}
+                {% if form is defined and form.csrf_token is defined %}
+                    {{ form.csrf_token }}
+                {% elif csrf_token is defined and csrf_token is callable %}
+                    <input type="hidden" name="{{ config.get('WTF_CSRF_FIELD_NAME', 'csrf_token') }}" value="{{ csrf_token() }}">
+                {% endif %}
+
+                <div class="input-group">
+                    <label for="login_id">Email address</label>
+                    <input type="email" id="login_id" name="login_id"
+                           placeholder="Enter your email address"
+                           value="{{ request.form.get('login_id', '') }}"
+                           autocomplete="username" autocapitalize="none" spellcheck="false" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password"
+                           placeholder="Enter your password"
+                           autocomplete="current-password" required>
+                    {% if routes.get('forgot_password') %}
+                        <a href="{{ url_for(routes['forgot_password']) }}" class="forgotPassword">Forgot Password?</a>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="login-button">Sign In →</button>
+
+                {% if message %}
+                    <p class="error-message" role="alert">{{ message }}</p>
+                {% endif %}
+            </form>
+
+            <p class="register-text">
+                Don't have an account?
+                <a href="{{ url_for(routes.get('register', 'register')) }}">Register</a>
+            </p>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,555 @@
+:where(.annasetu-login) * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html:where(.annasetu-login),
+:where(.annasetu-login) body {
+    width: 100%;
+    min-height: 100%;
+}
+
+:where(.annasetu-login) body {
+    font-family: "DM Sans", sans-serif;
+    color: #17382c;
+    overflow-x: hidden;
+    background: #28734f;
+}
+
+:where(.annasetu-login) a {
+    text-decoration: none;
+}
+
+:where(.annasetu-login) .top-header {
+    height: 88px;
+    width: 100%;
+    background: #fffefa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    border-bottom: 1px solid #e7e9e1;
+    position: relative;
+    z-index: 20;
+}
+
+:where(.annasetu-login) .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+:where(.annasetu-login) .logo-mark {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: #e3f1df;
+    position: relative;
+    overflow: hidden;
+}
+
+:where(.annasetu-login) .logo-mark::before {
+    content: "";
+    position: absolute;
+    width: 21px;
+    height: 37px;
+    background: #148346;
+    border-radius: 100% 0 100% 0;
+    transform: rotate(-27deg);
+    left: 16px;
+    top: 7px;
+}
+
+:where(.annasetu-login) .logo-mark::after {
+    content: "";
+    position: absolute;
+    width: 3px;
+    height: 28px;
+    background: #0b6035;
+    transform: rotate(27deg);
+    left: 26px;
+    top: 18px;
+    border-radius: 5px;
+}
+
+:where(.annasetu-login) .logo-name {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -1.4px;
+    line-height: 1;
+    color: #153d2e;
+}
+
+:where(.annasetu-login) .logo-tagline {
+    margin-top: 5px;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #7b8881;
+    text-transform: uppercase;
+}
+
+:where(.annasetu-login) .back-home {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 22px;
+    border-radius: 13px;
+    border: 1px solid #9bcdb0;
+    background: #fff;
+    color: #087d3d;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+:where(.annasetu-login) .back-home:hover {
+    background: #f0f8f1;
+    transform: translateY(-1px);
+}
+
+:where(.annasetu-login) .login-page {
+    min-height: calc(100vh - 88px);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 55px 20px 70px;
+    background: linear-gradient( 110deg, #b9dcae 0%, #99cc96 20%, #70ad7d 40%, #4b9069 58%, #28734f 78%, #0e4c35 100% );
+}
+
+:where(.annasetu-login) .login-page::before {
+    content: "";
+    position: absolute;
+    width: 650px;
+    height: 650px;
+    left: -230px;
+    top: -220px;
+    border-radius: 50%;
+    background: radial-gradient( circle, rgba(238, 250, 228, 0.42) 0%, rgba(238, 250, 228, 0.16) 45%, transparent 72% );
+    pointer-events: none;
+    z-index: 0;
+}
+
+:where(.annasetu-login) .login-page::after {
+    content: "";
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    right: -300px;
+    bottom: -320px;
+    border-radius: 50%;
+    background: radial-gradient( circle, rgba(8, 82, 53, 0.28) 0%, rgba(8, 82, 53, 0.10) 48%, transparent 72% );
+    pointer-events: none;
+    z-index: 0;
+}
+
+:where(.annasetu-login) .leaf {
+    position: absolute;
+    width: 62px;
+    height: 112px;
+    border-radius: 100% 0 100% 0;
+    background: linear-gradient( 145deg, rgba(213, 238, 193, 0.34), rgba(120, 183, 116, 0.12) );
+    opacity: 0.75;
+    pointer-events: none;
+    z-index: 1;
+    transform-origin: bottom center;
+}
+
+:where(.annasetu-login) .leaf::before {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 88%;
+    left: 50%;
+    top: 7%;
+    border-radius: 50%;
+    background: rgba(220, 239, 205, 0.35);
+    transform: rotate(-18deg);
+}
+
+:where(.annasetu-login) .leaf-1 {
+    top: 65px;
+    right: 125px;
+    width: 76px;
+    height: 132px;
+    transform: rotate(34deg);
+    opacity: 0.42;
+}
+
+:where(.annasetu-login) .leaf-2 {
+    top: 155px;
+    right: 30px;
+    width: 58px;
+    height: 102px;
+    transform: rotate(67deg);
+    opacity: 0.34;
+}
+
+:where(.annasetu-login) .leaf-3 {
+    top: 285px;
+    right: 145px;
+    width: 65px;
+    height: 113px;
+    transform: rotate(13deg);
+    opacity: 0.28;
+}
+
+:where(.annasetu-login) .leaf-4 {
+    top: 420px;
+    right: 55px;
+    width: 50px;
+    height: 88px;
+    transform: rotate(70deg);
+    opacity: 0.26;
+}
+
+:where(.annasetu-login) .leaf-5 {
+    bottom: 45px;
+    right: 210px;
+    width: 58px;
+    height: 100px;
+    transform: rotate(45deg);
+    opacity: 0.22;
+}
+
+:where(.annasetu-login) .leaf-6 {
+    top: 230px;
+    left: 30px;
+    width: 65px;
+    height: 115px;
+    transform: rotate(-50deg);
+    opacity: 0.38;
+}
+
+:where(.annasetu-login) .leaf-7 {
+    top: 390px;
+    left: 100px;
+    width: 50px;
+    height: 88px;
+    transform: rotate(-20deg);
+    opacity: 0.30;
+}
+
+:where(.annasetu-login) .leaf-8 {
+    bottom: 20px;
+    left: 10px;
+    width: 78px;
+    height: 135px;
+    transform: rotate(-63deg);
+    opacity: 0.40;
+}
+
+:where(.annasetu-login) .leaf-9 {
+    bottom: 80px;
+    left: 135px;
+    width: 55px;
+    height: 96px;
+    transform: rotate(-22deg);
+    opacity: 0.27;
+}
+
+:where(.annasetu-login) .leaf-10 {
+    top: 75px;
+    left: 250px;
+    width: 42px;
+    height: 74px;
+    transform: rotate(-42deg);
+    opacity: 0.18;
+}
+
+:where(.annasetu-login) .login-card {
+    width: 500px;
+    max-width: 100%;
+    min-width: 0;
+    padding: 28px 45px 24px;
+    background: rgba(255, 255, 253, 0.97);
+    border-radius: 28px;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 20px 45px rgba(4, 58, 35, 0.17), 0 6px 18px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+:where(.annasetu-login) .login-card::before {
+    content: "";
+    position: absolute;
+    width: 104px;
+    height: 6px;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #078b45;
+    border-radius: 0 0 8px 8px;
+}
+
+:where(.annasetu-login) .login-card h1 {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(42px, 5vw, 54px);
+    line-height: 1.05;
+    letter-spacing: -2px;
+    color: #143d2e;
+    margin-bottom: 7px;
+}
+
+:where(.annasetu-login) .subtitle {
+    color: #718078;
+    font-size: 16px;
+    line-height: 1.55;
+    margin-bottom: 25px;
+    max-width: 470px;
+}
+
+:where(.annasetu-login) .input-group {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+:where(.annasetu-login) .input-group label {
+    display: block;
+    color: #294b3d;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+:where(.annasetu-login) .input-group input {
+    width: 100%;
+    min-width: 0;
+    height: 50px;
+    padding: 0 16px;
+    border-radius: 13px;
+    border: 1px solid #d7ddd7;
+    background: #fcfcf9;
+    color: #29453a;
+    font-family: inherit;
+    font-size: 16px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+:where(.annasetu-login) .input-group input::placeholder {
+    color: #7b857e;
+}
+
+:where(.annasetu-login) .input-group input:focus {
+    outline: 2px solid #079047;
+    outline-offset: 2px;
+    border-color: #079047;
+    box-shadow: 0 0 0 4px rgba(7, 144, 71, 0.08);
+    background: #fff;
+}
+
+:where(.annasetu-login) .forgotPassword {
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-top: 6px;
+    color: #078844;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+:where(.annasetu-login) .forgotPassword:hover {
+    color: #056b34;
+    text-decoration: underline;
+}
+
+:where(.annasetu-login) .login-button {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 13px;
+    background: #078d45;
+    color: white;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+:where(.annasetu-login) .login-button:hover {
+    background: #06793b;
+    transform: translateY(-2px);
+    box-shadow: 0 17px 32px rgba(8, 141, 69, 0.28);
+}
+
+:where(.annasetu-login) .error-message {
+    margin-top: 15px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    background: #fff0ee;
+    border: 1px solid #f0c7c2;
+    color: #b23a32;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+:where(.annasetu-login) .register-text {
+    margin-top: 15px;
+    padding-top: 14px;
+    border-top: 1px solid #e0e5df;
+    text-align: center;
+    color: #78857e;
+    font-size: 13px;
+}
+
+:where(.annasetu-login) .register-text a {
+    color: #078b45;
+    font-weight: 800;
+}
+
+:where(.annasetu-login) .register-text a:hover {
+    color: #056b34;
+    text-decoration: underline;
+}
+
+:where(.annasetu-login) a:focus-visible,
+:where(.annasetu-login) button:focus-visible {
+    outline: 3px solid #b87832;
+    outline-offset: 4px;
+}
+
+@media (max-width: 800px) {
+    :where(.annasetu-login) .top-header {
+        height: 76px;
+        padding: 0 4%;
+    }
+
+    :where(.annasetu-login) .logo-mark {
+        width: 46px;
+        height: 46px;
+    }
+
+    :where(.annasetu-login) .logo-name {
+        font-size: 25px;
+    }
+
+    :where(.annasetu-login) .logo-tagline {
+        font-size: 8px;
+    }
+
+    :where(.annasetu-login) .back-home {
+        min-height: 40px;
+        padding: 0 15px;
+        font-size: 12px;
+    }
+
+    :where(.annasetu-login) .login-page {
+        min-height: calc(100vh - 76px);
+        padding: 45px 18px 55px;
+    }
+
+    :where(.annasetu-login) .login-card {
+        padding: 38px 42px 32px;
+    }
+}
+
+@media (max-width: 560px) {
+    :where(.annasetu-login) .top-header {
+        height: 68px;
+        gap: 12px;
+    }
+
+    :where(.annasetu-login) .logo {
+        gap: 9px;
+    }
+
+    :where(.annasetu-login) .logo-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        flex-shrink: 0;
+    }
+
+    :where(.annasetu-login) .logo-mark::before {
+        width: 16px;
+        height: 27px;
+        left: 12px;
+        top: 5px;
+    }
+
+    :where(.annasetu-login) .logo-mark::after {
+        height: 20px;
+        left: 20px;
+        top: 13px;
+    }
+
+    :where(.annasetu-login) .logo-name {
+        font-size: 21px;
+        letter-spacing: -1px;
+    }
+
+    :where(.annasetu-login) .logo-tagline {
+        display: none;
+    }
+
+    :where(.annasetu-login) .back-home {
+        min-height: 36px;
+        padding: 0 11px;
+        border-radius: 10px;
+        font-size: 10px;
+    }
+
+    :where(.annasetu-login) .login-page {
+        min-height: calc(100vh - 68px);
+        padding: 30px 15px 40px;
+    }
+
+    :where(.annasetu-login) .login-card {
+        padding: 32px 25px;
+        border-radius: 24px;
+    }
+
+    :where(.annasetu-login) .login-card h1 {
+        font-size: 40px;
+        letter-spacing: -1.5px;
+    }
+
+    :where(.annasetu-login) .subtitle {
+        font-size: 13px;
+        margin-bottom: 25px;
+    }
+
+    :where(.annasetu-login) .input-group label {
+        font-size: 12px;
+    }
+
+    :where(.annasetu-login) .input-group input {
+        height: 54px;
+        border-radius: 12px;
+    }
+
+    :where(.annasetu-login) .login-button {
+        min-height: 54px;
+        border-radius: 12px;
+        font-size: 14px;
+    }
+
+    :where(.annasetu-login) .register-text {
+        font-size: 12px;
+    }
+
+    :where(.annasetu-login) .leaf-1,
+    :where(.annasetu-login) .leaf-3,
+    :where(.annasetu-login) .leaf-5,
+    :where(.annasetu-login) .leaf-10 {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :where(.annasetu-login) *,
+    :where(.annasetu-login) *::before,
+    :where(.annasetu-login) *::after {
+        transition: none;
+    }
+}
